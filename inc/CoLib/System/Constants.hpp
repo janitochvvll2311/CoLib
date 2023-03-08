@@ -6,6 +6,7 @@
 namespace co {
 
     const extern s8t COLIB_SYSTEM_API LIBRARY_VERSION;
+    const extern s8t COLIB_SYSTEM_API UNKNOWN_EXCEPTION;
 
 }
 
