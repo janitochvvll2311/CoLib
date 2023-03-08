@@ -7,7 +7,7 @@ int main()
     std::cout << co::LIBRARY_VERSION << "\n";
     try
     {
-        throw co::Exception("Generic exception");
+        throw co::NotImplementedException("Code no implemented yet");
     }
     catch (const std::exception &exception)
     {

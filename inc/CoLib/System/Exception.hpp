@@ -2,6 +2,7 @@
 #define COLIB_EXCEPTION_HPP
 
 #include <exception>
+#include <string>
 #include <CoLib/System/Export.hpp>
 #include <CoLib/System/Constants.hpp>
 
@@ -14,13 +15,36 @@ namespace co
 
     public:
         const char *what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_NOTHROW override final;
-        virtual const s8t getReason() const;
+        const s8t getReason() const;
         Exception(const Exception &other) = delete;
-        Exception(const s8t reason = UNKNOWN_EXCEPTION);
+        Exception(const std::string &reason = UNKNOWN_EXCEPTION_MESSAGE);
         virtual ~Exception();
 
     private:
-        const s8t m_reason;
+        std::string m_reason;
+    };
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    class NotImplementedException : public Exception
+    {
+    public:
+        NotImplementedException(const std::string &reason = NOT_IMPLEMENTED_EXCEPTION_MESSAGE)
+            : Exception(reason) {}
+    };
+
+    class InvalidValueException : public Exception
+    {
+    public:
+        InvalidValueException(const std::string &reason = INVALID_VALUE_EXCEPTION_MESSAGE)
+            : Exception(reason) {}
+    };
+
+    class InvalidOperationException : public Exception
+    {
+    public:
+        InvalidOperationException(const std::string &reason = INVALID_OPERATION_EXCEPTION_MESSAGE)
+            : Exception(reason) {}
     };
 
 }

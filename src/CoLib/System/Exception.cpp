@@ -10,12 +10,11 @@ namespace co
 
     const s8t Exception::getReason() const
     {
-        return m_reason;
+        return m_reason.c_str();
     }
 
-    Exception::Exception(const s8t reason) 
-        : m_reason(reason)
-    {}
+    Exception::Exception(const std::string &reason)
+        : m_reason(reason) {}
 
     Exception::~Exception() = default;
 
