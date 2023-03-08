@@ -1,0 +1,56 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe compile program file",
+			"command": "C:/mingw64/bin/g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"-Iinc",
+				"${file}",
+				"-o",
+				"bin/${fileBasenameNoExtension}.exe",
+				"bin/*.dll"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compilador: C:/mingw64/bin/g++.exe"
+		},
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe compile library file",
+			"command": "C:/mingw64/bin/g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"--shared",
+				"-g",
+				"-Iinc",
+				"${file}",
+				"-o",
+				"bin/${fileBasenameNoExtension}.dll",
+				"bin/*.dll"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compilador: C:/mingw64/bin/g++.exe"
+		}
+	]
+}
