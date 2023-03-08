@@ -1,4 +1,3 @@
-#include <CoLib/System/Constants.hpp>
 #include <CoLib/System/Exception.hpp>
 
 namespace co
@@ -11,10 +10,13 @@ namespace co
 
     const s8t Exception::getReason() const
     {
-        return UNKNOWN_EXCEPTION;
+        return m_reason;
     }
 
-    Exception::Exception() = default;
+    Exception::Exception(const s8t reason) 
+        : m_reason(reason)
+    {}
+
     Exception::~Exception() = default;
 
 }
