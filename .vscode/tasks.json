@@ -35,6 +35,7 @@
 				"--shared",
 				"-g",
 				"-Iinc",
+				"-Isrc",
 				"${file}",
 				"-o",
 				"bin/${fileBasenameNoExtension}.dll",

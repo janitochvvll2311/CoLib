@@ -1,11 +1,9 @@
 #include <iostream>
+#include <CoLib/System/Constants.hpp>
 
 int main()
 {
-    std::cout << "It Works\n";
-    std::cout << sizeof(float);
-    std::cout << sizeof(double);
-    std::cout << sizeof(long double);
+    std::cout << co::LIBRARY_VERSION <<"\n";
     std::cin.get();
     return 0;
 }
