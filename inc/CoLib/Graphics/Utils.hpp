@@ -8,6 +8,7 @@ namespace sf
 {
     class Vertex;
     class VertexArray;
+    class Color;
 }
 
 namespace co
@@ -36,6 +37,29 @@ namespace co
         const sf::FloatRect &dstRect);
 
     void COLIB_GRAPHICS_API fitPoints(
+        sf::VertexArray &array,
+        const sf::FloatRect &dstRect);
+
+    ////////////////////////////////////////////////
+
+    void COLIB_GRAPHICS_API setColors(
+        sf::Vertex *array,
+        szt count,
+        const sf::Color &color);
+
+    void COLIB_GRAPHICS_API setColors(
+        sf::VertexArray &array,
+        const sf::Color &color);
+
+    ////////////////////////////////////////////////
+    
+    void COLIB_GRAPHICS_API setTexCoords(
+        sf::Vertex *array,
+        szt count,
+        const sf::FloatRect &srcRect,
+        const sf::FloatRect &dstRect);
+
+    void COLIB_GRAPHICS_API setTexCoords(
         sf::VertexArray &array,
         const sf::FloatRect &dstRect);
 

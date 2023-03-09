@@ -59,4 +59,46 @@ namespace co
         fitPoints(&array[0], array.getVertexCount(), array.getBounds(), dstRect);
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    void setColors(
+        sf::Vertex *array,
+        szt count,
+        const sf::Color &color)
+    {
+        for (szt i = 0; i < count; i++)
+        {
+            array[i].color = color;
+        }
+    }
+
+    void setColors(
+        sf::VertexArray &array,
+        const sf::Color &color)
+    {
+        setColors(&array[0], array.getVertexCount(), color);
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+
+    void setTexCoords(
+        sf::Vertex *array,
+        szt count,
+        const sf::FloatRect &srcRect,
+        const sf::FloatRect &dstRect)
+    {
+        for (szt i = 0; i < count; i++)
+        {
+            array[i].texCoords.x = (array[i].position.x - srcRect.left) / srcRect.width * dstRect.width + dstRect.left;
+            array[i].texCoords.y = (array[i].position.y - srcRect.top) / srcRect.height * dstRect.height + dstRect.top;
+        }
+    }
+
+    void setTexCoords(
+        sf::VertexArray &array,
+        const sf::FloatRect &dstRect)
+    {
+        setTexCoords(&array[0], array.getVertexCount(), array.getBounds(), dstRect);
+    }
+
 }

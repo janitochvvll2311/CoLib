@@ -14,6 +14,9 @@ int main()
     co::Ellipse elli(250, 50, 100, 50);
     co::Triangle trian({400, 0}, {500, 50}, {450, 100});
 
+    sf::Texture texture;
+    auto _ = texture.loadFromFile("./res/avatar.jpg");
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -36,17 +39,26 @@ int main()
             window.clear();
         }
 
+        auto tsize = sf::Vector2f(texture.getSize());
+        auto tpart = tsize / 2.f;
+
         co::setPoints(array, rect);
-        co::fitPoints(array, {{10, 10}, {50, 50}});
-        window.draw(array);
+        co::setTexCoords(array, sf::FloatRect(tpart, tpart));
+        co::fitPoints(array, {{10, 10}, {100, 100}});
+        // co::setColors(array, sf::Color::Red);
+        window.draw(array, &texture);
 
         co::setPoints(array, elli);
-        co::fitPoints(array, {{10, 110}, {50, 50}});
-        window.draw(array);
+        co::setTexCoords(array, sf::FloatRect(tpart, tpart));
+        co::fitPoints(array, {{10, 120}, {100, 100}});
+        // co::setColors(array, sf::Color::Magenta);
+        window.draw(array, &texture);
 
         co::setPoints(array, trian);
-        co::fitPoints(array, {{10, 210}, {50, 50}});
-        window.draw(array);
+        co::setTexCoords(array, sf::FloatRect(tpart, tpart));
+        co::fitPoints(array, {{10, 230}, {100, 100}});
+        // co::setColors(array, sf::Color::Blue);
+        window.draw(array, &texture);
 
         window.display();
     }
