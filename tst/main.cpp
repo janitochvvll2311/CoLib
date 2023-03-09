@@ -11,7 +11,7 @@ int main()
 
     co::Widget widget;
     widget.setColor(sf::Color::Red);
-    widget.setMaxWidth(400);
+    widget.setMargin(10);
 
     while (window.isOpen())
     {

@@ -6,6 +6,7 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <CoLib/UI/Export.hpp>
 #include <CoLib/UI/Box.hpp>
+#include <CoLib/UI/Thickness.hpp>
 
 namespace co
 {
@@ -20,6 +21,8 @@ namespace co
         const sf::Color &getColor() const;
         void setColor(const sf::Color &value);
 
+        /////////////////////////////////////////////////
+
         f32t getMinWidth() const;
         void setMinWidth(f32t value);
 
@@ -31,6 +34,16 @@ namespace co
 
         f32t getMaxHeight() const;
         void setMaxHeight(f32t value);
+
+        /////////////////////////////////////////////////
+
+        const Thickness& getMargin() const;
+        void setMargin(const Thickness& value);
+
+        virtual f32t getHorizontalSpacing() const;
+        virtual f32t getVerticalSpacing() const;
+
+        /////////////////////////////////////////////////
 
         void invalidate();
 
@@ -53,6 +66,9 @@ namespace co
         f32t m_maxWidth;
         f32t m_minHeight;
         f32t m_maxHeight;
+
+        Thickness m_margin;
+
     };
 
 }

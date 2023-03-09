@@ -24,7 +24,7 @@ namespace co
     {
         return m_minWidth;
     }
-    
+
     void Widget::setMinWidth(f32t value)
     {
         m_minWidth = value;
@@ -62,6 +62,28 @@ namespace co
 
     ////////////////////////////////////////////////////////////////
 
+    const Thickness &Widget::getMargin() const
+    {
+        return m_margin;
+    }
+
+    void Widget::setMargin(const Thickness &value)
+    {
+        m_margin = value;
+    }
+
+    f32t Widget::getHorizontalSpacing() const
+    {
+        return m_margin.getHorizontal();
+    }
+
+    f32t Widget::getVerticalSpacing() const
+    {
+        return m_margin.getVertical();
+    }
+
+    ////////////////////////////////////////////////////////////////
+
     void Widget::invalidate()
     {
         m_isValid = false;
@@ -69,14 +91,18 @@ namespace co
 
     void Widget::compact()
     {
-        setWidth(m_minWidth);
-        setHeight(m_minHeight);
+        setWidth(m_minWidth + getHorizontalSpacing());
+        setHeight(m_minHeight + getVerticalSpacing());
     }
 
     void Widget::inflate(const Box &box)
     {
-        setWidth(std::min(std::max(m_minWidth, box.getWidth()), m_maxWidth));
-        setHeight(std::min(std::max(m_minHeight, box.getHeight()), m_maxHeight));
+        auto _box = box;
+        _box.shrink(m_margin);
+        setWidth(std::min(std::max(m_minWidth, _box.getWidth()), m_maxWidth));
+        setHeight(std::min(std::max(m_minHeight, _box.getHeight()), m_maxHeight));
+        setLeft(_box.getLeft());
+        setTop(_box.getTop());
     }
 
     Widget::Widget()
