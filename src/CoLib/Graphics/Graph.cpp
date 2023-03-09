@@ -7,9 +7,21 @@
 namespace co
 {
 
+    sf::PrimitiveType Graph::getPrimitiveType() const
+    {
+        return m_array.getPrimitiveType();
+    }
+
     void Graph::setPrimitiveType(sf::PrimitiveType type)
     {
         m_array.setPrimitiveType(type);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    const sf::VertexArray &Graph::getVertexes() const
+    {
+        return m_array;
     }
 
     void Graph::setPoints(const PointSource &source, szt precision)
@@ -17,14 +29,37 @@ namespace co
         co::setPoints(m_array, source, precision);
     }
 
+    ///////////////////////////////////////////////////////////////////////
+
+    const sf::Color &Graph::getColor() const
+    {
+        return m_color;
+    }
+
     void Graph::setColor(const sf::Color &color)
     {
-        co::setColors(m_array, color);
+        m_color = color;
+        co::setColors(m_array, m_color);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    const sf::FloatRect &Graph::getTextureRect() const
+    {
+        return m_texRect;
     }
 
     void Graph::setTextureRect(const sf::FloatRect &texRect)
     {
-        co::setTexCoords(m_array, texRect);
+        m_texRect = texRect;
+        co::setTexCoords(m_array, m_texRect);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    const sf::Texture *const Graph::getTexture() const
+    {
+        return m_texture;
     }
 
     void Graph::setTexture(const sf::Texture *const texture)
@@ -32,13 +67,15 @@ namespace co
         m_texture = texture;
     }
 
+    ///////////////////////////////////////////////////////////////////////
+
     void Graph::fitPoints(const sf::FloatRect &bounds)
     {
         co::fitPoints(m_array, bounds);
     }
 
     Graph::Graph()
-        : m_array(), m_color(sf::Color::White), m_texture(nullptr) {}
+        : m_array(), m_color(sf::Color::White), m_texRect(), m_texture(nullptr) {}
 
     Graph::~Graph() {}
 

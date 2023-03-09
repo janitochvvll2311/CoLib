@@ -24,12 +24,22 @@ namespace co
     {
 
     public:
+        sf::PrimitiveType getPrimitiveType() const;
         void setPrimitiveType(sf::PrimitiveType type);
+
+        const sf::VertexArray &getVertexes() const;
         void setPoints(const PointSource &source, szt precision = 1);
+
+        const sf::Color &getColor() const;
         void setColor(const sf::Color &color);
+
+        const sf::FloatRect &getTextureRect() const;
         void setTextureRect(const sf::FloatRect &texRect);
+
+        const sf::Texture*const getTexture() const;
         void setTexture(const sf::Texture *const texture);
-        void fitPoints(const sf::FloatRect& bounds);
+        
+        void fitPoints(const sf::FloatRect &bounds);
 
         Graph();
         ~Graph();
@@ -40,6 +50,7 @@ namespace co
     private:
         sf::VertexArray m_array;
         sf::Color m_color;
+        sf::FloatRect m_texRect;
         const sf::Texture *m_texture;
     };
 
