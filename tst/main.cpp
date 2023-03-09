@@ -1,7 +1,11 @@
 #include <iostream>
+#include <thread>
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Sleep.hpp>
 #include <CoLib/System/Constants.hpp>
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/System/Notifier.hpp>
+#include <CoLib/System/Dispatcher.hpp>
 
 class Ax
 {
@@ -12,6 +16,20 @@ public:
         notifer.notify();
     }
 };
+
+auto makeJob()
+{
+    auto job = std::make_shared<std::function<void()>>(
+        []()
+        {
+            sf::sleep(sf::seconds(2));
+            auto hasher = std::hash<std::thread::id>();
+            std::this_thread::get_id();
+            std::cout << "It Works: Thread " << hasher(std::this_thread::get_id()) << "\n";
+            sf::sleep(sf::seconds(2));
+        });
+    return job;
+}
 
 int main()
 {
@@ -25,8 +43,11 @@ int main()
         std::cout << exception.what() << "\n";
     }
     //
-    auto fx = std::make_shared<std::function<void()>>([]()
-                                                      { std::cout << "Lambda 1 works\n"; });
+    auto fx = std::make_shared<std::function<void()>>(
+        []()
+        {
+            std::cout << "Lambda 1 works\n";
+        });
     co::Notifier<void, void()> notifier;
     notifier.add(fx);
     notifier.notify();
@@ -34,12 +55,40 @@ int main()
     notifier.notify();
 
     Ax ax;
-    auto afx = std::make_shared<std::function<void()>>([]()
-                                                       { std::cout << "Lambda 2 works\n"; });
+    auto afx = std::make_shared<std::function<void()>>(
+        []()
+        {
+            std::cout << "Lambda 2 works\n";
+        });
     ax.notifer.add(afx);
     ax.dispatch();
     ax.notifer.remove(afx);
     ax.dispatch();
+    //
+    std::thread worker1(co::runWorker, co::dispatchers::Main);
+    std::thread worker2(co::runWorker, co::dispatchers::Main);
+    std::thread worker3(co::runWorker, co::dispatchers::Main);
+    std::thread worker4(co::runWorker, co::dispatchers::Main);
+    //
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    sf::sleep(sf::seconds(30));
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
     //
     std::cin.get();
     return 0;

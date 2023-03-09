@@ -4,14 +4,13 @@
 #include <memory>
 #include <list>
 #include <mutex>
-#include <future>
+#include <functional>
 #include <CoLib/System/Export.hpp>
 
 namespace co
 {
 
-    class Dispatchable;
-    using SharedDispatchable = std::shared_ptr<Dispatchable>;
+    using SharedJob = std::shared_ptr<std::function<void()>>;
 
     //////////////////////////////////////////////////////////////////
 
@@ -19,10 +18,12 @@ namespace co
     {
 
     public:
-        bool attach(const SharedDispatchable &dispatchable);
-        bool detach(const SharedDispatchable &dispatchable);
+        bool attach(const SharedJob &job);
+        bool detach(const SharedJob &job);
 
-        SharedDispatchable take();
+        SharedJob take();
+        void wait() const;
+        void run();
 
         Dispatcher(const Dispatcher &other) = delete;
 
@@ -31,14 +32,23 @@ namespace co
 
     private:
         mutable std::mutex m_mutex;
-        std::list<SharedDispatchable> m_dispatchables;
+        mutable std::mutex m_waiter;
+
+        std::list<SharedJob> m_jobs;
     };
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    using SharedDispatcher = std::shared_ptr<Dispatcher>;
+    using WeakDispatcher = std::weak_ptr<Dispatcher>;
+
+    void COLIB_SYSTEM_API runWorker(const WeakDispatcher& dispatcher);
 
     //////////////////////////////////////////////////////////////////////////////
 
     namespace dispatchers
     {
-        const extern COLIB_SYSTEM_API std::shared_ptr<Dispatcher> Main;
+        const extern COLIB_SYSTEM_API SharedDispatcher Main;
     }
 
 }
