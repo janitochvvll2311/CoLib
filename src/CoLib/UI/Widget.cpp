@@ -82,24 +82,24 @@ namespace co
         return m_margin.getVertical();
     }
 
-    Widget::Gravity Widget::getHorizontalGravity() const
+    Widget::Alignment Widget::getHorizontalAlignment() const
     {
-        return m_hGravity;
+        return m_hAlignment;
     }
 
-    void Widget::setHorizontalGravity(Gravity value)
+    void Widget::setHorizontalAlignment(Alignment value)
     {
-        m_hGravity = value;
+        m_hAlignment = value;
     }
 
-    Widget::Gravity Widget::getVerticalGravity() const
+    Widget::Alignment Widget::getVerticalAlignment() const
     {
-        return m_vGravity;
+        return m_vAlignment;
     }
 
-    void Widget::setVerticalGravity(Gravity value)
+    void Widget::setVerticalAlignment(Alignment value)
     {
-        m_vGravity = value;
+        m_vAlignment = value;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -121,8 +121,8 @@ namespace co
         _box.shrink(m_margin);
         setWidth(std::min(std::max(m_minWidth, _box.getWidth()), m_maxWidth));
         setHeight(std::min(std::max(m_minHeight, _box.getHeight()), m_maxHeight));
-        setLeft(_box.getLeft(), m_hGravity);
-        setTop(_box.getTop(), m_vGravity);
+        alignHorizontal(_box, m_hAlignment);
+        alignVertical(_box, m_vAlignment);
     }
 
     Widget::Widget()
@@ -130,7 +130,7 @@ namespace co
           m_isValid(false), m_array(), m_color(sf::Color::White),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
-          m_margin(0), m_hGravity(Start), m_vGravity(Start)
+          m_margin(0), m_hAlignment(Start), m_vAlignment(Start)
     {
     }
 

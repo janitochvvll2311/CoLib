@@ -43,11 +43,11 @@ namespace co
         virtual f32t getHorizontalSpacing() const;
         virtual f32t getVerticalSpacing() const;
 
-        Gravity getHorizontalGravity() const;
-        void setHorizontalGravity(Gravity value);
+        Alignment getHorizontalAlignment() const;
+        void setHorizontalAlignment(Alignment value);
 
-        Gravity getVerticalGravity() const;
-        void setVerticalGravity(Gravity value);
+        Alignment getVerticalAlignment() const;
+        void setVerticalAlignment(Alignment value);
 
         /////////////////////////////////////////////////
 
@@ -74,8 +74,8 @@ namespace co
         f32t m_maxHeight;
 
         Thickness m_margin;
-        Gravity m_hGravity;
-        Gravity m_vGravity;
+        Alignment m_hAlignment;
+        Alignment m_vAlignment;
     };
 
 }

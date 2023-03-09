@@ -14,7 +14,7 @@ namespace co
     {
 
     public:
-        enum Gravity
+        enum Alignment
         {
             Start,
             End,
@@ -34,13 +34,16 @@ namespace co
         void setBottom(f32t value, bool expand = false);
 
         f32t getWidth() const;
-        void setWidth(f32t value, Gravity gravity = Start);
+        void setWidth(f32t value, Alignment alignment = Start);
 
         f32t getHeight() const;
-        void setHeight(f32t value, Gravity gravity = Start);
+        void setHeight(f32t value, Alignment alignment = Start);
 
         void shrink(const Thickness& thickness);
         void expand(const Thickness& thickness);
+
+        void alignHorizontal(const Box& box, Alignment alignment);
+        void alignVertical(const Box& box, Alignment alignment);
 
         Box(f32t width = 0, f32t height = 0);
         Box(f32t left, f32t top, f32t width, f32t height);

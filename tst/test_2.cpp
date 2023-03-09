@@ -21,22 +21,28 @@ int main()
 
     auto wsize = sf::Vector2f(window.getSize());
     co::Box wbox(wsize.x, wsize.y);
+    wbox.shrink(10);
 
     co::Box box(wbox);
     box.shrink(10);
-    box.setWidth(100, co::Box::Center);
-
-    sf::RectangleShape shape({box.getWidth(), box.getHeight()});
-    shape.setPosition({box.getLeft(), box.getTop()});
+    box.setWidth(100);
 
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            switch (event.type)
             {
+            case sf::Event::Closed:
                 window.close();
+                break;
+            case sf::Event::Resized:
+                wsize = sf::Vector2f(window.getSize());
+                wbox = {wsize.x, wsize.y};
+                wbox.shrink(10);
+                window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
+                break;
             }
         }
 
@@ -72,6 +78,11 @@ int main()
         // co::setColors(array, sf::Color::Blue);
         window.draw(array, &texture);
 
+        box.alignHorizontal(wbox, co::Box::Center);
+        box.alignVertical(wbox, co::Box::Center);
+
+        sf::RectangleShape shape({box.getWidth(), box.getHeight()});
+        shape.setPosition({box.getLeft(), box.getTop()});
         window.draw(shape);
 
         window.display();

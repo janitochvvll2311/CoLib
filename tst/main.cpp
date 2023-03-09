@@ -14,9 +14,12 @@ int main()
     widget.setMargin(10);
     widget.setMaxWidth(300);
     widget.setMaxHeight(300);
-    widget.setHorizontalGravity(co::Widget::Center);
-    widget.setVerticalGravity(co::Widget::Start);
-
+    widget.setHorizontalAlignment(co::Widget::Center);
+    widget.setVerticalAlignment(co::Widget::Center);
+    widget.compact();
+    widget.inflate({wsize.x, wsize.y});
+    widget.invalidate();
+    
     while (window.isOpen())
     {
         sf::Event event;
