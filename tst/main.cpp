@@ -9,12 +9,16 @@ int main()
     sf::RenderWindow window({640, 480}, "My Window");
     auto wsize = sf::Vector2f(window.getSize());
 
+    sf::Texture texture;
+    auto _ = texture.loadFromFile("./res/avatar.jpg");
+
     co::Widget widget;
     widget.setColor(sf::Color::Red);
     widget.setMargin(50);
     widget.setMaxWidth(300);
     widget.setMaxHeight(300);
     widget.setRotation(sf::degrees(45));
+    widget.setTexture(&texture);
 
     widget.compact();
     widget.inflate({wsize.x, wsize.y});

@@ -21,6 +21,9 @@ namespace co
         const sf::Color &getColor() const;
         void setColor(const sf::Color &value);
 
+        const sf::Texture *const getTexture() const;
+        void setTexture(const sf::Texture *const value);
+
         /////////////////////////////////////////////////
 
         f32t getMinWidth() const;
@@ -67,6 +70,7 @@ namespace co
         mutable bool m_isValid;
         mutable sf::VertexArray m_array;
         sf::Color m_color;
+        const sf::Texture *m_texture;
 
         f32t m_minWidth;
         f32t m_maxWidth;

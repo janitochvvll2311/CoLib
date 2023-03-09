@@ -2,6 +2,7 @@
 #include <limits>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 #include <CoLib/UI/Widget.hpp>
 
@@ -16,6 +17,16 @@ namespace co
     void Widget::setColor(const sf::Color &value)
     {
         m_color = value;
+    }
+
+    const sf::Texture *const Widget::getTexture() const
+    {
+        return m_texture;
+    }
+
+    void Widget::setTexture(const sf::Texture *const value)
+    {
+        m_texture = value;
     }
 
     /////////////////////////////////////////////////////////////
@@ -127,7 +138,7 @@ namespace co
 
     Widget::Widget()
         : Box(),
-          m_isValid(false), m_array(), m_color(sf::Color::White),
+          m_isValid(false), m_array(), m_color(sf::Color::White), m_texture(nullptr),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
           m_margin(0), m_hAlignment(Start), m_vAlignment(Start)
@@ -141,7 +152,7 @@ namespace co
         setHeight(m_minHeight = m_maxHeight = height);
     }
 
-    ////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     void Widget::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
@@ -153,6 +164,7 @@ namespace co
         auto _states = states;
         _states.transform.translate({getLeft(), getTop()});
         _states.transform.combine(getTransform());
+        _states.texture = m_texture;
         target.draw(m_array, _states);
     }
 
@@ -165,6 +177,11 @@ namespace co
         array[2].position = sf::Vector2f(getWidth(), getHeight());
         array[3].position = sf::Vector2f(0, getHeight());
         setColors(m_array, m_color);
+        if (m_texture)
+        {
+            auto tsize = sf::Vector2f(m_texture->getSize());
+            setTexCoords(array, {{0, 0}, tsize});
+        }
     }
 
 }
