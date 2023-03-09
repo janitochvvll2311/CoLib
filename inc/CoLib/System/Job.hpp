@@ -3,13 +3,20 @@
 
 #include <functional>
 #include <mutex>
+#include <memory>
 #include <CoLib/System/Export.hpp>
 
 namespace co
 {
 
+    class Dispatcher;
+
+    /////////////////////////////////////////
+
     class COLIB_SYSTEM_API JobImpl
     {
+
+        friend Dispatcher;
 
     public:
         enum State
@@ -23,6 +30,8 @@ namespace co
         };
 
         State getState() const;
+
+        Dispatcher *const getDispatcher() const;
 
         void run();
         void wait() const;
@@ -39,6 +48,8 @@ namespace co
         mutable std::mutex m_monitor;
         mutable std::mutex m_waiter;
         mutable State m_state;
+
+        Dispatcher *m_dispatcher;
     };
 
     /////////////////////////////////////////////////////////////////////

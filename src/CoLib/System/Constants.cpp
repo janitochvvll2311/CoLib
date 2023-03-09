@@ -9,4 +9,6 @@ namespace co
     const s8t INVALID_VALUE_EXCEPTION_MESSAGE = "Invalid value exception";
     const s8t INVALID_OPERATION_EXCEPTION_MESSAGE = "Invalid operation exception";
 
+    const s8t INVALID_JOB_STATE_EXCEPTION_MESSAGE = "Invalid job state exception";
+
 }

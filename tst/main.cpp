@@ -19,18 +19,22 @@ public:
     }
 };
 
-auto makeJob()
+auto makeTask(co::Task<void> *_task = nullptr)
 {
-    auto job = std::make_shared<co::Job<void>>(
-        []()
+    co::Task<void> task(
+        [=]()
         {
+            if (_task)
+            {
+                _task->wait();
+            }
             sf::sleep(sf::seconds(2));
             auto hasher = std::hash<std::thread::id>();
             std::this_thread::get_id();
-            std::cout << "It Works: Thread " << hasher(std::this_thread::get_id()) << "\n";
+            std::cout << "Task Works: Thread " << hasher(std::this_thread::get_id()) << "\n";
             sf::sleep(sf::seconds(2));
         });
-    return job;
+    return task;
 }
 
 int main()
@@ -68,34 +72,18 @@ int main()
     ax.dispatch();
     //
     std::thread worker1(co::runWorker, co::dispatchers::Main);
-    worker1.detach();
-    std::thread worker2(co::runWorker, co::dispatchers::Main);
-    worker2.detach();
-    std::thread worker3(co::runWorker, co::dispatchers::Main);
-    worker3.detach();
-    std::thread worker4(co::runWorker, co::dispatchers::Main);
-    worker4.detach();
     //
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    //
-    co::Task<void> task(
-        []()
-        {
-            sf::sleep(sf::seconds(2));
-            auto hasher = std::hash<std::thread::id>();
-            std::this_thread::get_id();
-            std::cout << "Task Works: Thread " << hasher(std::this_thread::get_id()) << "\n";
-            sf::sleep(sf::seconds(2));
-        });
-    task.start();
-    task.wait();
+    auto t1 = makeTask();
+    auto t2 = makeTask();
+    auto t3 = makeTask(&t1);
+    auto t4 = makeTask(&t2);
+
+    t4.start();
+    t3.start();
+    t2.start();
+    t1.start();
+
+    t2.cancel();
     std::cout << "END\n";
     //
     std::cin.get();

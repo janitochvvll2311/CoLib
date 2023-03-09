@@ -47,6 +47,13 @@ namespace co
             : Exception(reason) {}
     };
 
+    class InvalidJobStateException : public Exception
+    {
+    public:
+        InvalidJobStateException(const std::string &reason = INVALID_JOB_STATE_EXCEPTION_MESSAGE)
+            : Exception(reason) {}
+    };
+
 }
 
 #endif // COLIB_EXCEPTION_HPP

@@ -9,7 +9,7 @@ namespace co
     bool Dispatcher::attach(const SharedJob &job)
     {
         m_monitor.lock();
-        if (std::find(m_jobs.begin(), m_jobs.end(), job) != m_jobs.end())
+        if (job->m_dispatcher != nullptr)
         {
             m_monitor.unlock();
             return false;
@@ -26,7 +26,7 @@ namespace co
     bool Dispatcher::detach(const SharedJob &job)
     {
         m_monitor.lock();
-        if (std::find(m_jobs.begin(), m_jobs.end(), job) == m_jobs.end())
+        if (job->m_dispatcher == this)
         {
             m_monitor.unlock();
             return false;
@@ -76,6 +76,10 @@ namespace co
         }
         else
         {
+            for (auto &job : m_jobs)
+            {
+                job->m_dispatcher = nullptr;
+            }
             m_jobs.clear();
         }
         m_monitor.unlock();

@@ -9,13 +9,18 @@ namespace co
         return m_state;
     }
 
+    Dispatcher *const JobImpl::getDispatcher() const
+    {
+        return m_dispatcher;
+    }
+
     void JobImpl::run()
     {
         m_monitor.lock();
         if (m_state != Ready)
         {
             m_monitor.unlock();
-            throw InvalidOperationException();
+            throw InvalidJobStateException();
         }
         m_state = Running;
         m_monitor.unlock();
@@ -73,7 +78,8 @@ namespace co
     JobImpl::JobImpl(State state)
         : m_monitor(),
           m_waiter(),
-          m_state(state)
+          m_state(state),
+          m_dispatcher(nullptr)
     {
         if (m_state == Ready)
         {
