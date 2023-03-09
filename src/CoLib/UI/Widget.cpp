@@ -18,6 +18,50 @@ namespace co
         m_color = value;
     }
 
+    /////////////////////////////////////////////////////////////
+
+    f32t Widget::getMinWidth() const
+    {
+        return m_minWidth;
+    }
+    
+    void Widget::setMinWidth(f32t value)
+    {
+        m_minWidth = value;
+    }
+
+    f32t Widget::getMaxWidth() const
+    {
+        return m_maxWidth;
+    }
+
+    void Widget::setMaxWidth(f32t value)
+    {
+        m_maxWidth = value;
+    }
+
+    f32t Widget::getMinHeight() const
+    {
+        return m_minHeight;
+    }
+
+    void Widget::setMinHeight(f32t value)
+    {
+        m_minHeight = value;
+    }
+
+    f32t Widget::getMaxHeight() const
+    {
+        return m_maxHeight;
+    }
+
+    void Widget::setMaxHeight(f32t value)
+    {
+        m_maxHeight = value;
+    }
+
+    ////////////////////////////////////////////////////////////////
+
     void Widget::invalidate()
     {
         m_isValid = false;
