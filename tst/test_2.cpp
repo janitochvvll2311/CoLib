@@ -4,6 +4,7 @@
 #include <CoLib/Graphics/Ellipse.hpp>
 #include <CoLib/Graphics/Triangle.hpp>
 #include <CoLib/Graphics/Utils.hpp>
+#include <CoLib/Graphics/Graph.hpp>
 #include <CoLib/UI/Box.hpp>
 #include <CoLib/UI/Thickness.hpp>
 
@@ -11,7 +12,9 @@ int main()
 {
 
     sf::RenderWindow window({640, 480}, "My Window");
-    sf::VertexArray array(sf::PrimitiveType::TriangleFan);
+    co::Graph graph;
+    graph.setPrimitiveType(sf::PrimitiveType::TriangleFan);
+
     co::Rectangle rect({10, 10, 100, 100});
     co::Ellipse elli(250, 50, 100, 50);
     co::Triangle trian({400, 0}, {500, 50}, {450, 100});
@@ -59,24 +62,25 @@ int main()
 
         auto tsize = sf::Vector2f(texture.getSize());
         auto tpart = tsize / 2.f;
+        graph.setTexture(&texture);
 
-        co::setPoints(array, rect);
-        co::setTexCoords(array, sf::FloatRect(tpart, tpart));
-        co::fitPoints(array, {{10, 10}, {100, 100}});
-        // co::setColors(array, sf::Color::Red);
-        window.draw(array, &texture);
+        graph.setPoints(rect);
+        graph.setTextureRect(sf::FloatRect(tpart, tpart));
+        graph.fitPoints({{10, 10}, {100, 100}});
+        graph.setColor(sf::Color::Red);
+        window.draw(graph);
 
-        co::setPoints(array, elli);
-        co::setTexCoords(array, sf::FloatRect(tpart, tpart));
-        co::fitPoints(array, {{10, 120}, {100, 100}});
-        // co::setColors(array, sf::Color::Magenta);
-        window.draw(array, &texture);
+        graph.setPoints(elli);
+        graph.setTextureRect(sf::FloatRect(tpart, tpart));
+        graph.fitPoints({{10, 120}, {100, 100}});
+        graph.setColor(sf::Color::Magenta);
+        window.draw(graph);
 
-        co::setPoints(array, trian);
-        co::setTexCoords(array, sf::FloatRect(tpart, tpart));
-        co::fitPoints(array, {{10, 230}, {100, 100}});
-        // co::setColors(array, sf::Color::Blue);
-        window.draw(array, &texture);
+        graph.setPoints(trian);
+        graph.setTextureRect(sf::FloatRect(tpart, tpart));
+        graph.fitPoints({{10, 230}, {100, 100}});
+        graph.setColor(sf::Color::Blue);
+        window.draw(graph);
 
         box.alignHorizontal(wbox, co::Box::Center);
         box.alignVertical(wbox, co::Box::Center);
