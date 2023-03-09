@@ -1,12 +1,12 @@
 #ifndef COLIB_BOX_HPP
 #define COLIB_BOX_HPP
 
-#include <CoLib/Graphics/Export.hpp>
+#include <CoLib/Design/Export.hpp>
 
 namespace co
 {
 
-    class COLIB_GRAPHICS_API Box
+    class COLIB_DESIGN_API Box
     {
 
     public:

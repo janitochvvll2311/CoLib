@@ -3,5 +3,4 @@
 #include <CoLib/Graphics/Rectangle.cpp>
 #include <CoLib/Graphics/Ellipse.cpp>
 #include <CoLib/Graphics/Triangle.cpp>
-#include <CoLib/Graphics/Box.cpp>
 #include <CoLib/Graphics/Utils.cpp>

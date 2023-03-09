@@ -1,4 +1,4 @@
-#include <CoLib/Graphics/Box.hpp>
+#include <CoLib/Design/Box.hpp>
 
 namespace co
 {

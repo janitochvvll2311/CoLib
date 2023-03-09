@@ -3,7 +3,7 @@
 #include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/Graphics/Ellipse.hpp>
 #include <CoLib/Graphics/Triangle.hpp>
-#include <CoLib/Graphics/Box.hpp>
+#include <CoLib/Design/Box.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 
 int main()
