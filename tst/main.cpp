@@ -7,10 +7,9 @@ int main()
 {
 
     sf::RenderWindow window({640, 480}, "My Window");
-    auto wsize = window.getSize();
+    auto wsize = sf::Vector2f(window.getSize());
 
-    co::Widget widget(wsize.x, wsize.y);
-    widget.shrink(10);
+    co::Widget widget;
     widget.setColor(sf::Color::Red);
 
     while (window.isOpen())
@@ -18,9 +17,18 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            switch (event.type)
             {
+            case sf::Event::Closed:
                 window.close();
+                break;
+            case sf::Event::Resized:
+                wsize = sf::Vector2f(window.getSize());
+                window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
+                widget.compact();
+                widget.inflate({wsize.x, wsize.y});
+                widget.invalidate();
+                break;
             }
         }
 

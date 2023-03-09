@@ -20,9 +20,25 @@ namespace co
         const sf::Color &getColor() const;
         void setColor(const sf::Color &value);
 
+        f32t getMinWidth() const;
+        void setMinWidth(f32t value);
+
+        f32t getMaxWidth() const;
+        void setMaxWidth(f32t value);
+
+        f32t getMinHeight() const;
+        void setMinHeight(f32t value);
+
+        f32t getMaxHeight() const;
+        void setMaxHeight(f32t value);
+
         void invalidate();
 
-        Widget(f32t width = 0, f32t heigth = 0);
+        void compact();
+        void inflate(const Box& box);
+
+        Widget();
+        Widget(f32t width, f32t heigth);
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
@@ -31,8 +47,12 @@ namespace co
     private:
         mutable bool m_isValid;
         mutable sf::VertexArray m_array;
-
         sf::Color m_color;
+
+        f32t m_minWidth;
+        f32t m_maxWidth;
+        f32t m_minHeight;
+        f32t m_maxHeight;
     };
 
 }

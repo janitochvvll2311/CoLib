@@ -1,3 +1,5 @@
+#include <math.h>
+#include <limits>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/Graphics/Utils.hpp>
@@ -21,9 +23,31 @@ namespace co
         m_isValid = false;
     }
 
-    Widget::Widget(f32t width, f32t heigth)
-        : Box(width, heigth), m_isValid(false), m_array()
+    void Widget::compact()
     {
+        setWidth(m_minWidth);
+        setHeight(m_minHeight);
+    }
+
+    void Widget::inflate(const Box &box)
+    {
+        setWidth(std::min(std::max(m_minWidth, box.getWidth()), m_maxWidth));
+        setHeight(std::min(std::max(m_minHeight, box.getHeight()), m_maxHeight));
+    }
+
+    Widget::Widget()
+        : Box(),
+          m_isValid(false), m_array(), m_color(sf::Color::White),
+          m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
+          m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity())
+    {
+    }
+
+    Widget::Widget(f32t width, f32t height)
+        : Widget()
+    {
+        setWidth(m_minWidth = m_maxWidth = width);
+        setHeight(m_minHeight = m_maxHeight = height);
     }
 
     ////////////////////////////////////////////////
