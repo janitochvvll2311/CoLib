@@ -6,6 +6,7 @@
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/System/Notifier.hpp>
 #include <CoLib/System/Dispatcher.hpp>
+#include <CoLib/System/Job.hpp>
 
 class Ax
 {
@@ -66,30 +67,36 @@ int main()
     ax.dispatch();
     //
     std::thread worker1(co::runWorker, co::dispatchers::Main);
+    worker1.detach();
     std::thread worker2(co::runWorker, co::dispatchers::Main);
+    worker2.detach();
     std::thread worker3(co::runWorker, co::dispatchers::Main);
+    worker3.detach();
     std::thread worker4(co::runWorker, co::dispatchers::Main);
+    worker4.detach();
     //
     co::dispatchers::Main->attach(makeJob());
     co::dispatchers::Main->attach(makeJob());
     co::dispatchers::Main->attach(makeJob());
     co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    sf::sleep(sf::seconds(30));
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
-    co::dispatchers::Main->attach(makeJob());
     //
+    auto job = std::make_shared<co::Job>(
+        []()
+        {
+            sf::sleep(sf::seconds(2));
+            auto hasher = std::hash<std::thread::id>();
+            std::this_thread::get_id();
+            std::cout << "Job Works: Thread " << hasher(std::this_thread::get_id()) << "\n";
+            sf::sleep(sf::seconds(2));
+        });
+    co::dispatchers::Main->attach(std::make_shared<std::function<void()>>(
+        [=]()
+        {
+            job->run();
+        }));
+    // job->cancel();
+    job->wait();
+    std::cout << "END\n";
     std::cin.get();
     return 0;
 }

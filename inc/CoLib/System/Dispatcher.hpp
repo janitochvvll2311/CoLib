@@ -31,7 +31,7 @@ namespace co
         ~Dispatcher();
 
     private:
-        mutable std::mutex m_mutex;
+        mutable std::mutex m_monitor;
         mutable std::mutex m_waiter;
 
         std::list<SharedJob> m_jobs;

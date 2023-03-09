@@ -7,10 +7,10 @@ namespace co
 
     bool Dispatcher::attach(const SharedJob &job)
     {
-        m_mutex.lock();
+        m_monitor.lock();
         if (std::find(m_jobs.begin(), m_jobs.end(), job) != m_jobs.end())
         {
-            m_mutex.unlock();
+            m_monitor.unlock();
             return false;
         }
         m_jobs.push_back(job);
@@ -18,16 +18,16 @@ namespace co
         {
             m_waiter.unlock();
         }
-        m_mutex.unlock();
+        m_monitor.unlock();
         return true;
     }
 
     bool Dispatcher::detach(const SharedJob &job)
     {
-        m_mutex.lock();
+        m_monitor.lock();
         if (std::find(m_jobs.begin(), m_jobs.end(), job) == m_jobs.end())
         {
-            m_mutex.unlock();
+            m_monitor.unlock();
             return false;
         }
         m_jobs.remove(job);
@@ -35,20 +35,20 @@ namespace co
         {
             m_waiter.lock();
         }
-        m_mutex.unlock();
+        m_monitor.unlock();
         return true;
     }
 
     SharedJob Dispatcher::take()
     {
-        m_mutex.lock();
+        m_monitor.lock();
         SharedJob job(nullptr);
         if (m_jobs.size() > 0)
         {
             job = m_jobs.front();
             m_jobs.pop_front();
         }
-        m_mutex.unlock();
+        m_monitor.unlock();
         return job;
     }
 
@@ -59,7 +59,7 @@ namespace co
     }
 
     Dispatcher::Dispatcher()
-        : m_mutex(),
+        : m_monitor(),
           m_waiter(),
           m_jobs()
     {
@@ -68,7 +68,7 @@ namespace co
 
     Dispatcher::~Dispatcher()
     {
-        m_mutex.lock();
+        m_monitor.lock();
         if (m_jobs.size() == 0)
         {
             m_waiter.unlock();
@@ -77,7 +77,7 @@ namespace co
         {
             m_jobs.clear();
         }
-        m_mutex.unlock();
+        m_monitor.unlock();
     }
 
     ////////////////////////////////////////////////////////////////
