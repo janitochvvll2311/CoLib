@@ -8,13 +8,7 @@
 namespace co
 {
 
-    template <typename T = void>
-    class Job;
-
-    /////////////////////////////////////////////
-
-    template <>
-    class COLIB_SYSTEM_API Job<void>
+    class COLIB_SYSTEM_API JobImpl
     {
 
     public:
@@ -34,33 +28,49 @@ namespace co
         void wait() const;
         void cancel();
 
-        Job(const Job &other) = delete;
+        JobImpl(const JobImpl &other) = delete;
+        ~JobImpl();
 
-        Job(const std::function<void()> &job = nullptr);
-        ~Job();
+    protected:
+        virtual void onRun() = 0;
+        JobImpl(State state);
 
     private:
         mutable std::mutex m_monitor;
         mutable std::mutex m_waiter;
         mutable State m_state;
-
-        std::function<void()> m_job;
     };
 
     /////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class COLIB_SYSTEM_API Job
+    class Job : public JobImpl
     {
 
     public:
         const T &getResult() const;
-
         Job(const std::function<T()> &job = nullptr);
-        ~Job() = default;
 
     private:
+        void onRun() override;
+
         T m_result;
+        const std::function<T()> m_job;
+    };
+
+    /////////////////////////////////////////////////////////////////////
+
+    template <>
+    class Job<void> : public JobImpl
+    {
+
+    public:
+        Job(const std::function<void()> &job = nullptr);
+
+    private:
+        void onRun() override;
+
+        const std::function<void()> m_job;
     };
 
 }

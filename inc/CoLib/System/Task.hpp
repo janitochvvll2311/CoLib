@@ -8,18 +8,7 @@
 namespace co
 {
 
-    template <typename T>
-    using SharedJob = std::shared_ptr<Job<T>>;
-
-    //////////////////////////////////
-
-    template <typename T>
-    class Task;
-
-    ///////////////////////////////
-
-    template <>
-    class COLIB_SYSTEM_API Task<void>
+    class COLIB_SYSTEM_API TaskImpl
     {
 
     public:
@@ -27,18 +16,32 @@ namespace co
         void wait() const;
         void cancel();
 
-        Task(const std::function<void()> &job);
-        ~Task() = default;
+        ~TaskImpl();
+
+    protected:
+        TaskImpl(const SharedJob &job);
 
     private:
-        SharedJob<void> m_job;
+        SharedJob m_job;
     };
 
-    ///////////////////////////////
+    /////////////////////////////////////////////////
 
     template <typename T>
-    class Task : public Task<void>
+    class Task : public TaskImpl
     {
+    public:
+        const T &await() const;
+        Task(const std::function<T()> &job = nullptr);
+    };
+
+    /////////////////////////////////////////////////
+
+    template <>
+    class Task<void> : public TaskImpl
+    {
+    public:
+        Task(const std::function<void()> &job = nullptr);
     };
 
 }

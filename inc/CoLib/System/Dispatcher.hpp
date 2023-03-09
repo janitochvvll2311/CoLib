@@ -10,7 +10,8 @@
 namespace co
 {
 
-    using SharedJobFunction = std::shared_ptr<std::function<void()>>;
+    class JobImpl;
+    using SharedJob = std::shared_ptr<JobImpl>;
 
     //////////////////////////////////////////////////////////////////
 
@@ -18,10 +19,10 @@ namespace co
     {
 
     public:
-        bool attach(const SharedJobFunction &job);
-        bool detach(const SharedJobFunction &job);
+        bool attach(const SharedJob &job);
+        bool detach(const SharedJob &job);
 
-        SharedJobFunction take();
+        SharedJob take();
         void wait() const;
         void run();
 
@@ -34,7 +35,7 @@ namespace co
         mutable std::mutex m_monitor;
         mutable std::mutex m_waiter;
 
-        std::list<SharedJobFunction> m_jobs;
+        std::list<SharedJob> m_jobs;
     };
 
     //////////////////////////////////////////////////////////////////////////////
@@ -42,7 +43,7 @@ namespace co
     using SharedDispatcher = std::shared_ptr<Dispatcher>;
     using WeakDispatcher = std::weak_ptr<Dispatcher>;
 
-    void COLIB_SYSTEM_API runWorker(const WeakDispatcher& dispatcher);
+    void COLIB_SYSTEM_API runWorker(const WeakDispatcher &dispatcher);
 
     //////////////////////////////////////////////////////////////////////////////
 

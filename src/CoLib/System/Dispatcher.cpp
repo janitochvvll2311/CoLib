@@ -1,11 +1,12 @@
 #include <algorithm>
 #include <CoLib/System/Exception.hpp>
+#include <CoLib/System/Job.hpp>
 #include <CoLib/System/Dispatcher.hpp>
 
 namespace co
 {
 
-    bool Dispatcher::attach(const SharedJobFunction &job)
+    bool Dispatcher::attach(const SharedJob &job)
     {
         m_monitor.lock();
         if (std::find(m_jobs.begin(), m_jobs.end(), job) != m_jobs.end())
@@ -22,7 +23,7 @@ namespace co
         return true;
     }
 
-    bool Dispatcher::detach(const SharedJobFunction &job)
+    bool Dispatcher::detach(const SharedJob &job)
     {
         m_monitor.lock();
         if (std::find(m_jobs.begin(), m_jobs.end(), job) == m_jobs.end())
@@ -39,10 +40,10 @@ namespace co
         return true;
     }
 
-    SharedJobFunction Dispatcher::take()
+    SharedJob Dispatcher::take()
     {
         m_monitor.lock();
-        SharedJobFunction job(nullptr);
+        SharedJob job(nullptr);
         if (m_jobs.size() > 0)
         {
             job = m_jobs.front();
@@ -95,7 +96,7 @@ namespace co
                 {
                     try
                     {
-                        (*job)();
+                        job->run();
                     }
                     catch (...)
                     {

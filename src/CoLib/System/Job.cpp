@@ -1,18 +1,15 @@
-#ifndef COLIB_JOB_INL
-#define COLIB_JOB_INL
-
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/System/Job.hpp>
 
 namespace co
 {
 
-    Job<void>::State Job<void>::getState() const
+    JobImpl::State JobImpl::getState() const
     {
         return m_state;
     }
 
-    void Job<void>::run()
+    void JobImpl::run()
     {
         m_monitor.lock();
         if (m_state != Ready)
@@ -24,7 +21,7 @@ namespace co
         m_monitor.unlock();
         try
         {
-            m_job();
+            onRun();
             m_monitor.lock();
             if (m_state == Running)
             {
@@ -45,13 +42,13 @@ namespace co
         }
     }
 
-    void Job<void>::wait() const
+    void JobImpl::wait() const
     {
         m_waiter.lock();
         m_waiter.unlock();
     }
 
-    void Job<void>::cancel()
+    void JobImpl::cancel()
     {
         m_monitor.lock();
         if (m_state != Running)
@@ -66,24 +63,22 @@ namespace co
         m_monitor.unlock();
     }
 
-    Job<void>::Job(const std::function<void()> &job)
-        : m_monitor(),
-          m_waiter(),
-          m_state(Empty),
-          m_job(job)
-    {
-        if (m_job)
-        {
-            m_state = Ready;
-            m_waiter.lock();
-        }
-    }
-
-    Job<void>::~Job()
+    JobImpl::~JobImpl()
     {
         cancel();
     }
 
-}
+    ///////////////////////////////////////////////////
 
-#endif // COLIB_JOB_INL
+    JobImpl::JobImpl(State state)
+        : m_monitor(),
+          m_waiter(),
+          m_state(state)
+    {
+        if (m_state == Ready)
+        {
+            m_waiter.lock();
+        }
+    }
+
+}

@@ -7,6 +7,7 @@
 #include <CoLib/System/Notifier.hpp>
 #include <CoLib/System/Dispatcher.hpp>
 #include <CoLib/System/Job.hpp>
+#include <CoLib/System/Task.hpp>
 
 class Ax
 {
@@ -20,7 +21,7 @@ public:
 
 auto makeJob()
 {
-    auto job = std::make_shared<std::function<void()>>(
+    auto job = std::make_shared<co::Job<void>>(
         []()
         {
             sf::sleep(sf::seconds(2));
@@ -79,24 +80,24 @@ int main()
     co::dispatchers::Main->attach(makeJob());
     co::dispatchers::Main->attach(makeJob());
     co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
+    co::dispatchers::Main->attach(makeJob());
     //
-    auto job = std::make_shared<co::Job<void>>(
+    co::Task<void> task(
         []()
         {
             sf::sleep(sf::seconds(2));
             auto hasher = std::hash<std::thread::id>();
             std::this_thread::get_id();
-            std::cout << "Job Works: Thread " << hasher(std::this_thread::get_id()) << "\n";
+            std::cout << "Task Works: Thread " << hasher(std::this_thread::get_id()) << "\n";
             sf::sleep(sf::seconds(2));
         });
-    co::dispatchers::Main->attach(std::make_shared<std::function<void()>>(
-        [=]()
-        {
-            job->run();
-        }));
-    // job->cancel();
-    job->wait();
+    task.start();
+    task.wait();
     std::cout << "END\n";
+    //
     std::cin.get();
     return 0;
 }
