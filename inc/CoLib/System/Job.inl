@@ -7,7 +7,7 @@ namespace co
 {
 
     template <typename T>
-    inline const T &Job<T>::getResult() const
+    inline const Optional<T> &Job<T>::getResult() const
     {
         return m_result;
     }

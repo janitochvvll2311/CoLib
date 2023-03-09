@@ -5,6 +5,7 @@
 #include <mutex>
 #include <memory>
 #include <CoLib/System/Export.hpp>
+#include <CoLib/System/Optional.hpp>
 
 namespace co
 {
@@ -59,13 +60,13 @@ namespace co
     {
 
     public:
-        const T &getResult() const;
+        const Optional<T> &getResult() const;
         Job(const std::function<T()> &job = nullptr);
 
     private:
         void onRun() override;
 
-        T m_result;
+        Optional<T> m_result;
         const std::function<T()> m_job;
     };
 
