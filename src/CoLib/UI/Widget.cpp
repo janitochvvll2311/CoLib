@@ -9,24 +9,14 @@
 namespace co
 {
 
-    const sf::Color &Widget::getColor() const
+    const Graph *const Widget::getBackground() const
     {
-        return m_color;
+        return m_background.get();
     }
 
-    void Widget::setColor(const sf::Color &value)
+    void Widget::setBackground(const Graph &value)
     {
-        m_color = value;
-    }
-
-    const sf::Texture *const Widget::getTexture() const
-    {
-        return m_texture;
-    }
-
-    void Widget::setTexture(const sf::Texture *const value)
-    {
-        m_texture = value;
+        m_background.reset(new Graph(value));
     }
 
     /////////////////////////////////////////////////////////////
@@ -115,6 +105,11 @@ namespace co
 
     ////////////////////////////////////////////////////////////////
 
+    bool Widget::isValid() const
+    {
+        return m_isValid;
+    }
+
     void Widget::invalidate()
     {
         m_isValid = false;
@@ -138,7 +133,7 @@ namespace co
 
     Widget::Widget()
         : Box(),
-          m_isValid(false), m_array(), m_color(sf::Color::White), m_texture(nullptr),
+          m_isValid(false), m_background(),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
           m_margin(0), m_hAlignment(Start), m_vAlignment(Start)
@@ -158,29 +153,23 @@ namespace co
     {
         if (!m_isValid)
         {
-            onUpdate(m_array);
+            onUpdate(m_background.get());
             m_isValid = true;
         }
-        auto _states = states;
-        _states.transform.translate({getLeft(), getTop()});
-        _states.transform.combine(getTransform());
-        _states.texture = m_texture;
-        target.draw(m_array, _states);
+        if (m_background)
+        {
+            auto _states = states;
+            _states.transform.translate({getLeft(), getTop()});
+            _states.transform.combine(getTransform());
+            target.draw(*m_background, _states);
+        }
     }
 
-    void Widget::onUpdate(sf::VertexArray &array) const
+    void Widget::onUpdate(Graph *const background) const
     {
-        array.setPrimitiveType(sf::PrimitiveType::TriangleFan);
-        array.resize(4);
-        array[0].position = sf::Vector2f(0, 0);
-        array[1].position = sf::Vector2f(getWidth(), 0);
-        array[2].position = sf::Vector2f(getWidth(), getHeight());
-        array[3].position = sf::Vector2f(0, getHeight());
-        setColors(m_array, m_color);
-        if (m_texture)
+        if (background)
         {
-            auto tsize = sf::Vector2f(m_texture->getSize());
-            setTexCoords(array, {{0, 0}, tsize});
+            background->fitPoints({{0, 0}, {getWidth(), getHeight()}});
         }
     }
 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/UI/Widget.hpp>
 #include <CoLib/UI/Thickness.hpp>
 
@@ -13,12 +14,16 @@ int main()
     auto _ = texture.loadFromFile("./res/avatar.jpg");
 
     co::Widget widget;
-    widget.setColor(sf::Color::Red);
     widget.setMargin(50);
     widget.setMaxWidth(300);
     widget.setMaxHeight(300);
     widget.setRotation(sf::degrees(45));
-    widget.setTexture(&texture);
+
+    co::Rectangle rect(100, 100);
+    co::Graph background;
+    background.setPrimitiveType(sf::PrimitiveType::TriangleFan);
+    background.setPoints(rect);
+    widget.setBackground(background);
 
     widget.compact();
     widget.inflate({wsize.x, wsize.y});
