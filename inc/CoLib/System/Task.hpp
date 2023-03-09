@@ -2,6 +2,7 @@
 #define COLIB_TASK_HPP
 
 #include <CoLib/System/Export.hpp>
+#include <CoLib/System/Optional.hpp>
 #include <CoLib/System/Dispatcher.hpp>
 #include <CoLib/System/Job.hpp>
 
@@ -31,7 +32,7 @@ namespace co
     class Task : public TaskImpl
     {
     public:
-        const T &await() const;
+        const Optional<T> &await() const;
         Task(const std::function<T()> &job = nullptr);
     };
 

@@ -7,7 +7,7 @@ namespace co
 {
 
     template <typename T>
-    inline const T &Task<T>::await() const
+    inline const Optional<T> &Task<T>::await() const
     {
         std::shared_ptr<Job<T>> job(m_job);
         job->wait();
