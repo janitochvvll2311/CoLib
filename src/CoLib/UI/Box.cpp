@@ -1,4 +1,5 @@
-#include <CoLib/Design/Box.hpp>
+#include <CoLib/UI/Thickness.hpp>
+#include <CoLib/UI/Box.hpp>
 
 namespace co
 {
@@ -99,6 +100,22 @@ namespace co
             break;
         }
         m_height = value;
+    }
+
+    void Box::shrink(const Thickness &thickness)
+    {
+        m_left += thickness.left;
+        m_top += thickness.top;
+        m_width -= thickness.getHorizontal();
+        m_height -= thickness.getVertical();
+    }
+
+    void Box::expand(const Thickness &thickness)
+    {
+        m_left -= thickness.left;
+        m_top -= thickness.top;
+        m_width += thickness.getHorizontal();
+        m_height += thickness.getVertical();
     }
 
     Box::Box(f32t width, f32t height)

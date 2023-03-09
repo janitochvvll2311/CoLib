@@ -3,8 +3,9 @@
 #include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/Graphics/Ellipse.hpp>
 #include <CoLib/Graphics/Triangle.hpp>
-#include <CoLib/Design/Box.hpp>
 #include <CoLib/Graphics/Utils.hpp>
+#include <CoLib/UI/Box.hpp>
+#include <CoLib/UI/Thickness.hpp>
 
 int main()
 {
@@ -22,8 +23,8 @@ int main()
     co::Box wbox(wsize.x, wsize.y);
 
     co::Box box(wbox);
+    box.shrink(10);
     box.setWidth(100, co::Box::Center);
-    box.setHeight(100, co::Box::Center);
 
     sf::RectangleShape shape({box.getWidth(), box.getHeight()});
     shape.setPosition({box.getLeft(), box.getTop()});

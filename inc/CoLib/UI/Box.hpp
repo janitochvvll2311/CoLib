@@ -1,12 +1,16 @@
 #ifndef COLIB_BOX_HPP
 #define COLIB_BOX_HPP
 
-#include <CoLib/Design/Export.hpp>
+#include <CoLib/UI/Export.hpp>
 
 namespace co
 {
 
-    class COLIB_DESIGN_API Box
+    class Thickness;
+
+    ////////////////////////////////////////////
+
+    class COLIB_UI_API Box
     {
 
     public:
@@ -34,6 +38,9 @@ namespace co
 
         f32t getHeight() const;
         void setHeight(f32t value, Gravity gravity = Start);
+
+        void shrink(const Thickness& thickness);
+        void expand(const Thickness& thickness);
 
         Box(f32t width = 0, f32t height = 0);
         Box(f32t left, f32t top, f32t width, f32t height);
