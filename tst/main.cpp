@@ -12,6 +12,10 @@ int main()
     co::Widget widget;
     widget.setColor(sf::Color::Red);
     widget.setMargin(10);
+    widget.setMaxWidth(300);
+    widget.setMaxHeight(300);
+    widget.setHorizontalGravity(co::Widget::Center);
+    widget.setVerticalGravity(co::Widget::Start);
 
     while (window.isOpen())
     {

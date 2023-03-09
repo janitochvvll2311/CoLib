@@ -82,6 +82,26 @@ namespace co
         return m_margin.getVertical();
     }
 
+    Widget::Gravity Widget::getHorizontalGravity() const
+    {
+        return m_hGravity;
+    }
+
+    void Widget::setHorizontalGravity(Gravity value)
+    {
+        m_hGravity = value;
+    }
+
+    Widget::Gravity Widget::getVerticalGravity() const
+    {
+        return m_vGravity;
+    }
+
+    void Widget::setVerticalGravity(Gravity value)
+    {
+        m_vGravity = value;
+    }
+
     ////////////////////////////////////////////////////////////////
 
     void Widget::invalidate()
@@ -101,15 +121,16 @@ namespace co
         _box.shrink(m_margin);
         setWidth(std::min(std::max(m_minWidth, _box.getWidth()), m_maxWidth));
         setHeight(std::min(std::max(m_minHeight, _box.getHeight()), m_maxHeight));
-        setLeft(_box.getLeft());
-        setTop(_box.getTop());
+        setLeft(_box.getLeft(), m_hGravity);
+        setTop(_box.getTop(), m_vGravity);
     }
 
     Widget::Widget()
         : Box(),
           m_isValid(false), m_array(), m_color(sf::Color::White),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
-          m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity())
+          m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
+          m_margin(0), m_hGravity(Start), m_vGravity(Start)
     {
     }
 

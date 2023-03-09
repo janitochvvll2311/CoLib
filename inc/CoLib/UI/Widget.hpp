@@ -37,18 +37,24 @@ namespace co
 
         /////////////////////////////////////////////////
 
-        const Thickness& getMargin() const;
-        void setMargin(const Thickness& value);
+        const Thickness &getMargin() const;
+        void setMargin(const Thickness &value);
 
         virtual f32t getHorizontalSpacing() const;
         virtual f32t getVerticalSpacing() const;
+
+        Gravity getHorizontalGravity() const;
+        void setHorizontalGravity(Gravity value);
+
+        Gravity getVerticalGravity() const;
+        void setVerticalGravity(Gravity value);
 
         /////////////////////////////////////////////////
 
         void invalidate();
 
         void compact();
-        void inflate(const Box& box);
+        void inflate(const Box &box);
 
         Widget();
         Widget(f32t width, f32t heigth);
@@ -68,7 +74,8 @@ namespace co
         f32t m_maxHeight;
 
         Thickness m_margin;
-
+        Gravity m_hGravity;
+        Gravity m_vGravity;
     };
 
 }
