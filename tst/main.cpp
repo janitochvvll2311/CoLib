@@ -80,7 +80,7 @@ int main()
     co::dispatchers::Main->attach(makeJob());
     co::dispatchers::Main->attach(makeJob());
     //
-    auto job = std::make_shared<co::Job>(
+    auto job = std::make_shared<co::Job<void>>(
         []()
         {
             sf::sleep(sf::seconds(2));

@@ -3,12 +3,18 @@
 
 #include <functional>
 #include <mutex>
-#include <CoLib/Config.hpp>
+#include <CoLib/System/Export.hpp>
 
 namespace co
 {
 
-    class COLIB_SYSTEM_API Job
+    template <typename T = void>
+    class Job;
+
+    /////////////////////////////////////////////
+
+    template <>
+    class COLIB_SYSTEM_API Job<void>
     {
 
     public:
@@ -30,7 +36,7 @@ namespace co
 
         Job(const Job &other) = delete;
 
-        Job(const std::function<void()> &job);
+        Job(const std::function<void()> &job = nullptr);
         ~Job();
 
     private:
@@ -41,6 +47,24 @@ namespace co
         std::function<void()> m_job;
     };
 
+    /////////////////////////////////////////////////////////////////////
+
+    template <typename T>
+    class COLIB_SYSTEM_API Job
+    {
+
+    public:
+        const T &getResult() const;
+
+        Job(const std::function<T()> &job = nullptr);
+        ~Job() = default;
+
+    private:
+        T m_result;
+    };
+
 }
+
+#include <CoLib/System/Job.inl>
 
 #endif // COLIB_JOB_HPP

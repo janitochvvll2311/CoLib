@@ -10,7 +10,7 @@
 namespace co
 {
 
-    using SharedJob = std::shared_ptr<std::function<void()>>;
+    using SharedJobFunction = std::shared_ptr<std::function<void()>>;
 
     //////////////////////////////////////////////////////////////////
 
@@ -18,10 +18,10 @@ namespace co
     {
 
     public:
-        bool attach(const SharedJob &job);
-        bool detach(const SharedJob &job);
+        bool attach(const SharedJobFunction &job);
+        bool detach(const SharedJobFunction &job);
 
-        SharedJob take();
+        SharedJobFunction take();
         void wait() const;
         void run();
 
@@ -34,7 +34,7 @@ namespace co
         mutable std::mutex m_monitor;
         mutable std::mutex m_waiter;
 
-        std::list<SharedJob> m_jobs;
+        std::list<SharedJobFunction> m_jobs;
     };
 
     //////////////////////////////////////////////////////////////////////////////

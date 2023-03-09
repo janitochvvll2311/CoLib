@@ -5,7 +5,7 @@
 namespace co
 {
 
-    bool Dispatcher::attach(const SharedJob &job)
+    bool Dispatcher::attach(const SharedJobFunction &job)
     {
         m_monitor.lock();
         if (std::find(m_jobs.begin(), m_jobs.end(), job) != m_jobs.end())
@@ -22,7 +22,7 @@ namespace co
         return true;
     }
 
-    bool Dispatcher::detach(const SharedJob &job)
+    bool Dispatcher::detach(const SharedJobFunction &job)
     {
         m_monitor.lock();
         if (std::find(m_jobs.begin(), m_jobs.end(), job) == m_jobs.end())
@@ -39,10 +39,10 @@ namespace co
         return true;
     }
 
-    SharedJob Dispatcher::take()
+    SharedJobFunction Dispatcher::take()
     {
         m_monitor.lock();
-        SharedJob job(nullptr);
+        SharedJobFunction job(nullptr);
         if (m_jobs.size() > 0)
         {
             job = m_jobs.front();

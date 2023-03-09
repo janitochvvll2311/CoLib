@@ -7,9 +7,12 @@
 namespace co
 {
 
-    Job::State Job::getState() const { return m_state; }
+    Job<void>::State Job<void>::getState() const
+    {
+        return m_state;
+    }
 
-    void Job::run()
+    void Job<void>::run()
     {
         m_monitor.lock();
         if (m_state != Ready)
@@ -42,13 +45,13 @@ namespace co
         }
     }
 
-    void Job::wait() const
+    void Job<void>::wait() const
     {
         m_waiter.lock();
         m_waiter.unlock();
     }
 
-    void Job::cancel()
+    void Job<void>::cancel()
     {
         m_monitor.lock();
         if (m_state != Running)
@@ -63,7 +66,7 @@ namespace co
         m_monitor.unlock();
     }
 
-    Job::Job(const std::function<void()> &job)
+    Job<void>::Job(const std::function<void()> &job)
         : m_monitor(),
           m_waiter(),
           m_state(Empty),
@@ -76,7 +79,7 @@ namespace co
         }
     }
 
-    Job::~Job()
+    Job<void>::~Job()
     {
         cancel();
     }
