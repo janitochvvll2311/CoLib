@@ -3,6 +3,7 @@
 #include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/Graphics/Ellipse.hpp>
 #include <CoLib/Graphics/Triangle.hpp>
+#include <CoLib/Graphics/Box.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 
 int main()
@@ -16,6 +17,16 @@ int main()
 
     sf::Texture texture;
     auto _ = texture.loadFromFile("./res/avatar.jpg");
+
+    auto wsize = sf::Vector2f(window.getSize());
+    co::Box wbox(wsize.x, wsize.y);
+
+    co::Box box(wbox);
+    box.setWidth(100, co::Box::Center);
+    box.setHeight(100, co::Box::Center);
+
+    sf::RectangleShape shape({box.getWidth(), box.getHeight()});
+    shape.setPosition({box.getLeft(), box.getTop()});
 
     while (window.isOpen())
     {
@@ -59,6 +70,8 @@ int main()
         co::fitPoints(array, {{10, 230}, {100, 100}});
         // co::setColors(array, sf::Color::Blue);
         window.draw(array, &texture);
+
+        window.draw(shape);
 
         window.display();
     }
