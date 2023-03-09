@@ -37,4 +37,26 @@ namespace co
         setPoints(&array[0], pCount, geometry, 0, precision);
     }
 
+    ///////////////////////////////////////////////////////////////////
+
+    void fitPoints(
+        sf::Vertex *array,
+        szt count,
+        const sf::FloatRect &srcRect,
+        const sf::FloatRect &dstRect)
+    {
+        for (szt i = 0; i < count; i++)
+        {
+            array[i].position.x = (array[i].position.x - srcRect.left) / srcRect.width * dstRect.width + dstRect.left;
+            array[i].position.y = (array[i].position.y - srcRect.top) / srcRect.height * dstRect.height + dstRect.top;
+        }
+    }
+
+    void fitPoints(
+        sf::VertexArray &array,
+        const sf::FloatRect &dstRect)
+    {
+        fitPoints(&array[0], array.getVertexCount(), array.getBounds(), dstRect);
+    }
+
 }

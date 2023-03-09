@@ -37,13 +37,15 @@ int main()
         }
 
         co::setPoints(array, rect);
+        co::fitPoints(array, {{10, 10}, {50, 50}});
         window.draw(array);
 
         co::setPoints(array, elli);
+        co::fitPoints(array, {{10, 110}, {50, 50}});
         window.draw(array);
 
         co::setPoints(array, trian);
-
+        co::fitPoints(array, {{10, 210}, {50, 50}});
         window.draw(array);
 
         window.display();
