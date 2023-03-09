@@ -11,15 +11,15 @@ int main()
 
     co::Widget widget;
     widget.setColor(sf::Color::Red);
-    widget.setMargin(10);
+    widget.setMargin(50);
     widget.setMaxWidth(300);
     widget.setMaxHeight(300);
-    widget.setHorizontalAlignment(co::Widget::Center);
-    widget.setVerticalAlignment(co::Widget::Center);
+    widget.setRotation(sf::degrees(45));
+
     widget.compact();
     widget.inflate({wsize.x, wsize.y});
     widget.invalidate();
-    
+
     while (window.isOpen())
     {
         sf::Event event;

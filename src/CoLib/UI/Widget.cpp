@@ -151,6 +151,7 @@ namespace co
             m_isValid = true;
         }
         auto _states = states;
+        _states.transform.translate({getLeft(), getTop()});
         _states.transform.combine(getTransform());
         target.draw(m_array, _states);
     }
@@ -159,10 +160,10 @@ namespace co
     {
         array.setPrimitiveType(sf::PrimitiveType::TriangleFan);
         array.resize(4);
-        array[0].position = sf::Vector2f(getLeft(), getTop());
-        array[1].position = sf::Vector2f(getRight(), getTop());
-        array[2].position = sf::Vector2f(getRight(), getBottom());
-        array[3].position = sf::Vector2f(getLeft(), getBottom());
+        array[0].position = sf::Vector2f(0, 0);
+        array[1].position = sf::Vector2f(getWidth(), 0);
+        array[2].position = sf::Vector2f(getWidth(), getHeight());
+        array[3].position = sf::Vector2f(0, getHeight());
         setColors(m_array, m_color);
     }
 
