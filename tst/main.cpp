@@ -11,21 +11,20 @@ int main()
     sf::RenderWindow window({640, 480}, "My Window");
     auto wsize = sf::Vector2f(window.getSize());
 
-    sf::Texture texture;
-    auto _ = texture.loadFromFile("./res/avatar.jpg");
+    auto texture = std::make_shared<sf::Texture>();
+    auto _ = texture->loadFromFile("./res/avatar.jpg");
 
     co::Widget widget;
     widget.setMargin(50);
     widget.setMaxWidth(300);
     widget.setMaxHeight(300);
-    widget.setRotation(sf::degrees(45));
+    // widget.setRotation(sf::degrees(45));
 
     co::Rectangle rect(100, 100);
     co::Graph background;
     background.setPrimitiveType(sf::PrimitiveType::TriangleFan);
     background.setPoints(rect);
-    background.setTexture(&texture);
-    background.setTextureRect(sf::FloatRect({0, 0}, sf::Vector2f(texture.getSize())));
+    background.setTexture(texture);
     widget.setBackground(background);
 
     widget.compact();

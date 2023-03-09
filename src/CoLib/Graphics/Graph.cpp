@@ -1,5 +1,6 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <CoLib/Graphics/PointSource.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 #include <CoLib/Graphics/Graph.hpp>
@@ -57,14 +58,18 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////
 
-    const sf::Texture *const Graph::getTexture() const
+    const SharedTexture &Graph::getTexture() const
     {
         return m_texture;
     }
 
-    void Graph::setTexture(const sf::Texture *const texture)
+    void Graph::setTexture(const SharedTexture &texture, bool reset)
     {
         m_texture = texture;
+        if (m_texture && reset)
+        {
+            setTextureRect({{0, 0}, sf::Vector2f(m_texture->getSize())});
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -85,7 +90,7 @@ namespace co
     {
         auto _states = states;
         _states.transform.combine(getTransform());
-        _states.texture = m_texture;
+        _states.texture = m_texture.get();
         target.draw(m_array, _states);
     }
 

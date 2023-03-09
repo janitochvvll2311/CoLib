@@ -1,6 +1,7 @@
 #ifndef COLIB_GRAPH_HPP
 #define COLIB_GRAPH_HPP
 
+#include <memory>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -15,6 +16,8 @@ namespace co
 {
 
     class PointSource;
+
+    using SharedTexture = std::shared_ptr<sf::Texture>;
 
     ////////////////////////////////////////////////////
 
@@ -36,9 +39,9 @@ namespace co
         const sf::FloatRect &getTextureRect() const;
         void setTextureRect(const sf::FloatRect &texRect);
 
-        const sf::Texture*const getTexture() const;
-        void setTexture(const sf::Texture *const texture);
-        
+        const SharedTexture &getTexture() const;
+        void setTexture(const SharedTexture &texture, bool reset = true);
+
         void fitPoints(const sf::FloatRect &bounds);
 
         Graph();
@@ -51,7 +54,7 @@ namespace co
         sf::VertexArray m_array;
         sf::Color m_color;
         sf::FloatRect m_texRect;
-        const sf::Texture *m_texture;
+        SharedTexture m_texture;
     };
 
 }

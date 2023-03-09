@@ -168,7 +168,7 @@ namespace co
 
     void Widget::onUpdate(const UniqueGraph &background) const
     {
-        if (background)
+        if (background && getWidth() > 0 && getHeight() > 0)
         {
             background->fitPoints({{0, 0}, {getWidth(), getHeight()}});
         }
