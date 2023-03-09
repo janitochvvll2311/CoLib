@@ -20,7 +20,7 @@ namespace co
 
     class COLIB_GRAPHICS_API Graph
         : public sf::Transformable,
-          public sf::Drawable
+          public virtual sf::Drawable
     {
 
     public:

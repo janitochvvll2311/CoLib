@@ -4,19 +4,20 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <CoLib/Graphics/Utils.hpp>
+#include <CoLib/UI/Background.hpp>
 #include <CoLib/UI/Widget.hpp>
 
 namespace co
 {
 
-    const Graph *const Widget::getBackground() const
+    const SharedBackground &Widget::getBackground() const
     {
-        return m_background.get();
+        return m_background;
     }
 
-    void Widget::setBackground(const Graph &value)
+    void Widget::setBackground(const SharedBackground &value)
     {
-        m_background.reset(new Graph(value));
+        m_background = value;
     }
 
     /////////////////////////////////////////////////////////////
@@ -133,7 +134,7 @@ namespace co
 
     Widget::Widget()
         : Box(),
-          m_isValid(false), m_background(),
+          m_isValid(false), m_background(nullptr),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
           m_margin(0), m_hAlignment(Start), m_vAlignment(Start)
@@ -153,7 +154,7 @@ namespace co
     {
         if (!m_isValid)
         {
-            onUpdate(m_background.get());
+            onUpdate(m_background);
             m_isValid = true;
         }
         if (m_background)
@@ -165,11 +166,11 @@ namespace co
         }
     }
 
-    void Widget::onUpdate(Graph *const background) const
+    void Widget::onUpdate(const SharedBackground &background) const
     {
         if (background)
         {
-            background->fitPoints({{0, 0}, {getWidth(), getHeight()}});
+            background->setBounds({{0, 0}, {getWidth(), getHeight()}});
         }
     }
 

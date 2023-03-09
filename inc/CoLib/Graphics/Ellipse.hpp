@@ -7,7 +7,7 @@
 namespace co
 {
 
-    class COLIB_GRAPHICS_API Ellipse : public Geometry
+    class COLIB_GRAPHICS_API Ellipse : public virtual Geometry
     {
 
     public:

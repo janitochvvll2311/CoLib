@@ -9,7 +9,7 @@
 namespace co
 {
 
-    class COLIB_GRAPHICS_API Geometry : public PointSource
+    class COLIB_GRAPHICS_API Geometry : public virtual PointSource
     {
 
     public:

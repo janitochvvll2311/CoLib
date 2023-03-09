@@ -5,7 +5,6 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
-#include <CoLib/Graphics/Graph.hpp>
 #include <CoLib/UI/Export.hpp>
 #include <CoLib/UI/Box.hpp>
 #include <CoLib/UI/Thickness.hpp>
@@ -13,7 +12,8 @@
 namespace co
 {
 
-    using UniqueGraph = std::unique_ptr<Graph>;
+    class Background;
+    using SharedBackground = std::shared_ptr<Background>;
 
     ///////////////////////////////////////////////////////
 
@@ -24,8 +24,8 @@ namespace co
     {
 
     public:
-        const Graph *const getBackground() const;
-        void setBackground(const Graph &value);
+        const SharedBackground &getBackground() const;
+        void setBackground(const SharedBackground &value);
 
         /////////////////////////////////////////////////
 
@@ -68,11 +68,11 @@ namespace co
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        virtual void onUpdate(Graph *const background) const;
+        virtual void onUpdate(const SharedBackground &background) const;
 
     private:
         mutable bool m_isValid;
-        mutable UniqueGraph m_background;
+        mutable SharedBackground m_background;
 
         f32t m_minWidth;
         f32t m_maxWidth;

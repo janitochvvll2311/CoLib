@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <CoLib/Graphics/Rectangle.hpp>
+#include <CoLib/UI/GraphBackground.hpp>
 #include <CoLib/UI/Widget.hpp>
 #include <CoLib/UI/Thickness.hpp>
 
@@ -20,10 +21,10 @@ int main()
     widget.setRotation(sf::degrees(45));
 
     co::Rectangle rect(100, 100);
-    co::Graph background;
+    co::GraphBackground background;
     background.setPrimitiveType(sf::PrimitiveType::TriangleFan);
     background.setPoints(rect);
-    widget.setBackground(background);
+    widget.setBackground(std::make_shared<co::Background>(background));
 
     widget.compact();
     widget.inflate({wsize.x, wsize.y});
