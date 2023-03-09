@@ -3,21 +3,21 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <CoLib/Graphics/Graph.hpp>
 #include <CoLib/Graphics/Utils.hpp>
-#include <CoLib/UI/Background.hpp>
 #include <CoLib/UI/Widget.hpp>
 
 namespace co
 {
 
-    const SharedBackground &Widget::getBackground() const
+    const Graph *const Widget::getBackground() const
     {
-        return m_background;
+        return m_background.get();
     }
 
-    void Widget::setBackground(const SharedBackground &value)
+    void Widget::setBackground(const Graph &value)
     {
-        m_background = value;
+        m_background.reset(new Graph(value));
     }
 
     /////////////////////////////////////////////////////////////
@@ -166,11 +166,11 @@ namespace co
         }
     }
 
-    void Widget::onUpdate(const SharedBackground &background) const
+    void Widget::onUpdate(const UniqueGraph &background) const
     {
         if (background)
         {
-            background->setBounds({{0, 0}, {getWidth(), getHeight()}});
+            background->fitPoints({{0, 0}, {getWidth(), getHeight()}});
         }
     }
 

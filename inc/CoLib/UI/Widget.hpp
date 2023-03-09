@@ -12,20 +12,20 @@
 namespace co
 {
 
-    class Background;
-    using SharedBackground = std::shared_ptr<Background>;
+    class Graph;
+    using UniqueGraph = std::unique_ptr<Graph>;
 
     ///////////////////////////////////////////////////////
 
     class COLIB_UI_API Widget
         : public sf::Transformable,
-          public sf::Drawable,
-          public Box
+          public Box,
+          public virtual sf::Drawable
     {
 
     public:
-        const SharedBackground &getBackground() const;
-        void setBackground(const SharedBackground &value);
+        const Graph *const getBackground() const;
+        void setBackground(const Graph &value);
 
         /////////////////////////////////////////////////
 
@@ -68,11 +68,11 @@ namespace co
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        virtual void onUpdate(const SharedBackground &background) const;
+        virtual void onUpdate(const UniqueGraph &background) const;
 
     private:
         mutable bool m_isValid;
-        mutable SharedBackground m_background;
+        mutable UniqueGraph m_background;
 
         f32t m_minWidth;
         f32t m_maxWidth;
