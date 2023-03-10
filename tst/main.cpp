@@ -26,12 +26,27 @@ int main()
     layout.setPadding(10);
 
     background.setColor(sf::Color::Red);
+    auto subLayout = std::make_shared<co::FrameLayout>();
+    subLayout->setBackground(background);
+    subLayout->setMargin(10);
+    subLayout->setPadding(10);
+    subLayout->setMinWidth(300);
+    subLayout->setMaxWidth(400);
+    subLayout->setMaxHeight(400);
+    subLayout->setHorizontalAlignment(co::Layout::Center);
+    subLayout->setVerticalAlignment(co::Layout::Center);
+    layout.attach(subLayout);
 
+    background.setColor(sf::Color::Blue);
     auto widget = std::make_shared<co::Widget>();
     widget->setBackground(background);
     widget->setMargin(10);
-
-    layout.attach(widget);
+    widget->setMinHeight(100);
+    widget->setMaxWidth(200);
+    widget->setMaxHeight(200);
+    widget->setHorizontalAlignment(co::Widget::Center);
+    widget->setVerticalAlignment(co::Widget::Center);
+    subLayout->attach(widget);
 
     layout.compact({0, 0});
     layout.inflate({wsize.x, wsize.y});
