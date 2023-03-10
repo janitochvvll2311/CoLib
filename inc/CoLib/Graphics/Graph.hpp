@@ -17,8 +17,6 @@ namespace co
 
     class PointSource;
 
-    using SharedTexture = std::shared_ptr<sf::Texture>;
-
     ////////////////////////////////////////////////////
 
     class COLIB_GRAPHICS_API Graph
@@ -39,10 +37,17 @@ namespace co
         const sf::FloatRect &getTextureRect() const;
         void setTextureRect(const sf::FloatRect &texRect);
 
-        const SharedTexture &getTexture() const;
-        void setTexture(const SharedTexture &texture, bool reset = true);
+        const sf::Texture *const getTexture() const;
+        void setTexture(const sf::Texture *const texture, bool reset = true);
 
         void fitPoints(const sf::FloatRect &bounds);
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+        void setGlyphs(const sf::Glyph *const glyphs, szt count);
+        void setText(const sf::String &text, const sf::Font &font, f32t size);
+
+        /////////////////////////////////////////////////////////////////////////////////////
 
         Graph();
         ~Graph();
@@ -54,7 +59,7 @@ namespace co
         sf::VertexArray m_array;
         sf::Color m_color;
         sf::FloatRect m_texRect;
-        SharedTexture m_texture;
+        const sf::Texture *m_texture;
     };
 
 }

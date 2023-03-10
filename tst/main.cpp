@@ -12,8 +12,9 @@ int main()
     sf::Font font;
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
-    sf::VertexArray array;
-    co::setText(array, "It Works", font, 50);
+    co::Graph graph;
+    graph.setText("It Works", font, 50);
+    graph.setOrigin({0, -50});
 
     while (window.isOpen())
     {
@@ -29,11 +30,7 @@ int main()
         }
 
         window.clear();
-        sf::RenderStates states;
-        states.transform.translate({0, 50});
-        states.texture = &font.getTexture(50);
-
-        window.draw(array, states);
+        window.draw(graph);
         window.display();
     }
 
