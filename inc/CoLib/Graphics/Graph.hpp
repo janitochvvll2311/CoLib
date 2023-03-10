@@ -9,7 +9,10 @@
 
 namespace sf
 {
+    class String;
     class Texture;
+    class Glyph;
+    class Font;
 }
 
 namespace co
