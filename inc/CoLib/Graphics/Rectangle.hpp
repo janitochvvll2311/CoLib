@@ -7,7 +7,7 @@
 namespace co
 {
 
-    class COLIB_GRAPHICS_API Rectangle : public Geometry
+    class COLIB_GRAPHICS_API Rectangle : public virtual Geometry
     {
 
     public:

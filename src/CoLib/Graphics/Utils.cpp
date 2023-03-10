@@ -1,6 +1,6 @@
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
-#include <CoLib/Graphics/Geometry.hpp>
+#include <CoLib/Graphics/PointSource.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 
 namespace co
@@ -9,7 +9,7 @@ namespace co
     void setPoints(
         sf::Vertex *array,
         szt count,
-        const Geometry &geometry,
+        const PointSource &source,
         szt index,
         szt precision)
     {
@@ -19,22 +19,22 @@ namespace co
         }
         for (szt i = 0; i < count; i++)
         {
-            array[i].position = geometry.getPoint(index + i, precision);
+            array[i].position = source.getPoint(index + i, precision);
         }
     }
 
     void setPoints(
         sf::VertexArray &array,
-        const Geometry &geometry,
+        const PointSource &source,
         szt precision)
     {
         if (precision == 0)
         {
             precision = 1;
         }
-        auto pCount = geometry.getPointCount() * precision;
+        auto pCount = source.getPointCount() * precision;
         array.resize(pCount);
-        setPoints(&array[0], pCount, geometry, 0, precision);
+        setPoints(&array[0], pCount, source, 0, precision);
     }
 
     ///////////////////////////////////////////////////////////////////

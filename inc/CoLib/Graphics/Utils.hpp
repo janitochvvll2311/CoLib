@@ -14,18 +14,18 @@ namespace sf
 namespace co
 {
 
-    class Geometry;
+    class PointSource;
 
     void COLIB_GRAPHICS_API setPoints(
         sf::Vertex *array,
         szt count,
-        const Geometry &geometry,
+        const PointSource &source,
         szt index = 0,
         szt precision = 1);
 
     void COLIB_GRAPHICS_API setPoints(
         sf::VertexArray &array,
-        const Geometry &geometry,
+        const PointSource &source,
         szt precision = 1);
 
     ///////////////////////////////////////////////

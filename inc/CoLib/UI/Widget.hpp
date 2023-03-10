@@ -1,6 +1,7 @@
 #ifndef COLIB_WIDGET_HPP
 #define COLIB_WIDGET_HPP
 
+#include <memory>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -11,18 +12,20 @@
 namespace co
 {
 
+    class Graph;
+    using UniqueGraph = std::unique_ptr<Graph>;
+
+    ///////////////////////////////////////////////////////
+
     class COLIB_UI_API Widget
         : public sf::Transformable,
-          public sf::Drawable,
-          public Box
+          public Box,
+          public virtual sf::Drawable
     {
 
     public:
-        const sf::Color &getColor() const;
-        void setColor(const sf::Color &value);
-
-        const sf::Texture *const getTexture() const;
-        void setTexture(const sf::Texture *const value);
+        const Graph *const getBackground() const;
+        void setBackground(const Graph &value);
 
         /////////////////////////////////////////////////
 
@@ -54,6 +57,7 @@ namespace co
 
         /////////////////////////////////////////////////
 
+        bool isValid() const;
         void invalidate();
 
         void compact();
@@ -64,13 +68,11 @@ namespace co
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        virtual void onUpdate(sf::VertexArray &array) const;
+        virtual void onUpdate(const UniqueGraph &background) const;
 
     private:
         mutable bool m_isValid;
-        mutable sf::VertexArray m_array;
-        sf::Color m_color;
-        const sf::Texture *m_texture;
+        mutable UniqueGraph m_background;
 
         f32t m_minWidth;
         f32t m_maxWidth;
