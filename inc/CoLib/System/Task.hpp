@@ -1,7 +1,6 @@
 #ifndef COLIB_TASK_HPP
 #define COLIB_TASK_HPP
 
-#include <CoLib/System/Export.hpp>
 #include <CoLib/System/Optional.hpp>
 #include <CoLib/System/Dispatcher.hpp>
 #include <CoLib/System/Job.hpp>

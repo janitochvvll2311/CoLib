@@ -5,12 +5,13 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
-#include <CoLib/UI/Export.hpp>
 #include <CoLib/UI/Box.hpp>
 #include <CoLib/UI/Thickness.hpp>
 
 namespace co
 {
+
+    class Layout;
 
     class Graph;
     using UniqueGraph = std::unique_ptr<Graph>;
@@ -22,6 +23,8 @@ namespace co
           public Box,
           public virtual sf::Drawable
     {
+
+        friend Layout;
 
     public:
         const Graph *const getBackground() const;
@@ -57,17 +60,19 @@ namespace co
 
         /////////////////////////////////////////////////
 
-        bool isValid() const;
-        void invalidate();
+        virtual bool isValid() const;
+        virtual void invalidate();
 
-        void compact();
-        void inflate(const Box &box);
+        virtual void compact(const sf::Vector2f& size);
+        virtual void inflate(const Box &box);
 
         Widget();
-        Widget(f32t width, f32t heigth);
+        ~Widget();
 
     protected:
-        void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
+        void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
+
+        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
         virtual void onUpdate(const UniqueGraph &background) const;
 
     private:
@@ -82,6 +87,8 @@ namespace co
         Thickness m_margin;
         Alignment m_hAlignment;
         Alignment m_vAlignment;
+
+        Layout *m_parent;
     };
 
 }

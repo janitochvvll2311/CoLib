@@ -1,7 +1,6 @@
 #ifndef COLIB_RECTANGLE_HPP
 #define COLIB_RECTANGLE_HPP
 
-#include <CoLib/Graphics/Export.hpp>
 #include <CoLib/Graphics/Geometry.hpp>
 
 namespace co

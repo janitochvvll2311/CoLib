@@ -116,20 +116,18 @@ namespace co
         m_isValid = false;
     }
 
-    void Widget::compact()
+    void Widget::compact(const sf::Vector2f &size)
     {
-        setWidth(m_minWidth + getHorizontalSpacing());
-        setHeight(m_minHeight + getVerticalSpacing());
+        setWidth(std::min(std::max(m_minWidth + getHorizontalSpacing(), size.x), m_maxWidth));
+        setHeight(std::min(std::max(m_minHeight + getVerticalSpacing(), size.y), m_maxHeight));
     }
 
     void Widget::inflate(const Box &box)
     {
-        auto _box = box;
-        _box.shrink(m_margin);
-        setWidth(std::min(std::max(m_minWidth, _box.getWidth()), m_maxWidth));
-        setHeight(std::min(std::max(m_minHeight, _box.getHeight()), m_maxHeight));
-        alignHorizontal(_box, m_hAlignment);
-        alignVertical(_box, m_vAlignment);
+        compact({std::max(getWidth(), box.getWidth()), std::max(getHeight(), box.getHeight())});
+        alignHorizontal(box, m_hAlignment);
+        alignVertical(box, m_vAlignment);
+        shrink(m_margin);
     }
 
     Widget::Widget()
@@ -137,16 +135,12 @@ namespace co
           m_isValid(false), m_background(nullptr),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
-          m_margin(0), m_hAlignment(Start), m_vAlignment(Start)
+          m_margin(0), m_hAlignment(Start), m_vAlignment(Start),
+          m_parent(nullptr)
     {
     }
 
-    Widget::Widget(f32t width, f32t height)
-        : Widget()
-    {
-        setWidth(m_minWidth = m_maxWidth = width);
-        setHeight(m_minHeight = m_maxHeight = height);
-    }
+    Widget::~Widget() {}
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -157,12 +151,17 @@ namespace co
             onUpdate(m_background);
             m_isValid = true;
         }
-        if (m_background)
+        auto _states = states;
+        _states.transform.translate({getLeft(), getTop()});
+        _states.transform.combine(getTransform());
+        onDraw(target, _states);
+    }
+
+    void Widget::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
+    {
+        if (m_background && getWidth() > 0 && getHeight() > 0)
         {
-            auto _states = states;
-            _states.transform.translate({getLeft(), getTop()});
-            _states.transform.combine(getTransform());
-            target.draw(*m_background, _states);
+            target.draw(*m_background, states);
         }
     }
 
