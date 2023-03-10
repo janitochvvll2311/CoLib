@@ -1,7 +1,6 @@
 #ifndef COLIB_ELLIPSE_HPP
 #define COLIB_ELLIPSE_HPP
 
-#include <CoLib/Graphics/Export.hpp>
 #include <CoLib/Graphics/Geometry.hpp>
 
 namespace co

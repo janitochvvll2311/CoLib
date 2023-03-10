@@ -1,7 +1,6 @@
 #ifndef COLIB_TRIANGLE_HPP
 #define COLIB_TRIANGLE_HPP
 
-#include <CoLib/Graphics/Export.hpp>
 #include <CoLib/Graphics/Geometry.hpp>
 
 namespace co

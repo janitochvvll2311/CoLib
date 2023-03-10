@@ -3,7 +3,6 @@
 
 #include <exception>
 #include <string>
-#include <CoLib/System/Export.hpp>
 #include <CoLib/System/Constants.hpp>
 
 namespace co

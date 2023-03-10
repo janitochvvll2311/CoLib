@@ -137,16 +137,12 @@ namespace co
           m_isValid(false), m_background(nullptr),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
-          m_margin(0), m_hAlignment(Start), m_vAlignment(Start)
+          m_margin(0), m_hAlignment(Start), m_vAlignment(Start),
+          m_parent(nullptr)
     {
     }
 
-    Widget::Widget(f32t width, f32t height)
-        : Widget()
-    {
-        setWidth(m_minWidth = m_maxWidth = width);
-        setHeight(m_minHeight = m_maxHeight = height);
-    }
+    Widget::~Widget() {}
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,7 +1,6 @@
 #ifndef COLIB_GEOMENTRY_HPP
 #define COLIB_GEOMENTRY_HPP
 
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <CoLib/Graphics/Export.hpp>
 #include <CoLib/Graphics/PointSource.hpp>
