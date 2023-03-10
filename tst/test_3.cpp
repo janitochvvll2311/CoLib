@@ -3,7 +3,6 @@
 #include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/Graphics/Graph.hpp>
 #include <CoLib/UI/Widget.hpp>
-#include <CoLib/UI/FrameLayout.hpp>
 #include <CoLib/UI/Thickness.hpp>
 
 int main()
@@ -15,19 +14,25 @@ int main()
     auto texture = std::make_shared<sf::Texture>();
     auto _ = texture->loadFromFile("./res/avatar.jpg");
 
+    co::Widget widget;
+    widget.setMargin(50);
+    widget.setMaxWidth(300);
+    widget.setMaxHeight(300);
+    widget.setHorizontalAlignment(co::Widget::Center);
+    widget.setVerticalAlignment(co::Widget::Center);
+    // widget.setRotation(sf::degrees(45));
+
     co::Rectangle rect(100, 100);
     co::Graph background;
     background.setPrimitiveType(sf::PrimitiveType::TriangleFan);
     background.setPoints(rect);
+    background.setTexture(texture);
+    widget.setBackground(background);
 
-    co::Widget layout;
-    layout.setBackground(background);
-    layout.setMargin(10);
-    // layout.setPadding(10);
+    widget.compact({0, 0});
+    widget.inflate({wsize.x, wsize.y});
+    widget.invalidate();
 
-    layout.compact({0, 0});
-    layout.inflate({wsize.x, wsize.y});
-    layout.invalidate();
     while (window.isOpen())
     {
         sf::Event event;
@@ -41,15 +46,15 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact({0, 0});
-                layout.inflate({wsize.x, wsize.y});
-                layout.invalidate();
+                widget.compact({0, 0});
+                widget.inflate({wsize.x, wsize.y});
+                widget.invalidate();
                 break;
             }
         }
 
         window.clear();
-        window.draw(layout);
+        window.draw(widget);
         window.display();
     }
 

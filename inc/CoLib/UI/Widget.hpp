@@ -60,17 +60,19 @@ namespace co
 
         /////////////////////////////////////////////////
 
-        bool isValid() const;
-        void invalidate();
+        virtual bool isValid() const;
+        virtual void invalidate();
 
-        void compact();
-        void inflate(const Box &box);
+        virtual void compact(const sf::Vector2f& size);
+        virtual void inflate(const Box &box);
 
         Widget();
         ~Widget();
 
     protected:
-        void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
+        void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
+
+        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
         virtual void onUpdate(const UniqueGraph &background) const;
 
     private:

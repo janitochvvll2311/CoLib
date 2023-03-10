@@ -28,9 +28,18 @@ namespace co
 
     void Layout::attach(const SharedWidget &widget)
     {
-        if (widget->m_parent)
+        if (widget->m_parent || widget.get() == this)
         {
             throw InvalidOperationException();
+        }
+        auto parent = m_parent;
+        while (parent)
+        {
+            if (parent == this)
+            {
+                throw InvalidOperationException();
+            }
+            parent = parent->m_parent;
         }
         widget->m_parent = this;
         onAttach(widget);

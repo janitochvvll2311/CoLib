@@ -116,20 +116,19 @@ namespace co
         m_isValid = false;
     }
 
-    void Widget::compact()
+    void Widget::compact(const sf::Vector2f &size)
     {
-        setWidth(m_minWidth + getHorizontalSpacing());
-        setHeight(m_minHeight + getVerticalSpacing());
+        setWidth(std::min(std::max(m_minWidth, size.x), m_maxWidth));
+        setHeight(std::min(std::max(m_minHeight, size.y), m_maxHeight));
     }
 
     void Widget::inflate(const Box &box)
     {
-        auto _box = box;
-        _box.shrink(m_margin);
-        setWidth(std::min(std::max(m_minWidth, _box.getWidth()), m_maxWidth));
-        setHeight(std::min(std::max(m_minHeight, _box.getHeight()), m_maxHeight));
-        alignHorizontal(_box, m_hAlignment);
-        alignVertical(_box, m_vAlignment);
+        setWidth(std::min(std::max(m_minWidth, box.getWidth()), m_maxWidth));
+        setHeight(std::min(std::max(m_minHeight, box.getHeight()), m_maxHeight));
+        alignHorizontal(box, m_hAlignment);
+        alignVertical(box, m_vAlignment);
+        shrink(m_margin);
     }
 
     Widget::Widget()
@@ -153,12 +152,17 @@ namespace co
             onUpdate(m_background);
             m_isValid = true;
         }
-        if (m_background)
+        auto _states = states;
+        _states.transform.translate({getLeft(), getTop()});
+        _states.transform.combine(getTransform());
+        onDraw(target, _states);
+    }
+
+    void Widget::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
+    {
+        if (m_background && getWidth() > 0 && getHeight() > 0)
         {
-            auto _states = states;
-            _states.transform.translate({getLeft(), getTop()});
-            _states.transform.combine(getTransform());
-            target.draw(*m_background, _states);
+            target.draw(*m_background, states);
         }
     }
 
