@@ -10,6 +10,8 @@ namespace sf
     class VertexArray;
     class Color;
     class Glyph;
+    class String;
+    class Font;
 }
 
 namespace co
@@ -76,6 +78,21 @@ namespace co
         sf::VertexArray &array,
         const sf::Glyph *const glyphs,
         szt gCount);
+
+    /////////////////////////////////////////////////
+
+    void COLIB_GRAPHICS_API setText(
+        sf::Vertex *array,
+        szt vCount,
+        const sf::String &text,
+        const sf::Font &font,
+        f32t cSize);
+
+    void COLIB_GRAPHICS_API setText(
+        sf::VertexArray &array,
+        const sf::String &text,
+        const sf::Font &font,
+        f32t cSize);
 
 }
 

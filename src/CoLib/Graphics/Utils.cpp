@@ -1,6 +1,8 @@
+#include <SFML/System/String.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Glyph.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <CoLib/Graphics/PointSource.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 
@@ -158,6 +160,34 @@ namespace co
         array.setPrimitiveType(sf::PrimitiveType::Triangles);
         array.resize(gCount * 6);
         setGlyphs(&array[0], array.getVertexCount(), glyphs, gCount);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    void setText(
+        sf::Vertex *array,
+        szt vCount,
+        const sf::String &text,
+        const sf::Font &font,
+        f32t cSize)
+    {
+        std::vector<sf::Glyph> glyphs;
+        for (auto &c : text)
+        {
+            glyphs.push_back(font.getGlyph(c, cSize, false, 0));
+        }
+        setGlyphs(array, vCount, &glyphs.front(), glyphs.size());
+    }
+
+    void setText(
+        sf::VertexArray &array,
+        const sf::String &text,
+        const sf::Font &font,
+        f32t cSize)
+    {
+        array.setPrimitiveType(sf::PrimitiveType::Triangles);
+        array.resize(text.getSize() * 6);
+        setText(&array[0], array.getVertexCount(), text, font, cSize);
     }
 
 }

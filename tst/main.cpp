@@ -12,15 +12,8 @@ int main()
     sf::Font font;
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
-    sf::String text = "It Works";
-    std::vector<sf::Glyph> glyphs;
-    for (auto &c : text)
-    {
-        glyphs.push_back(font.getGlyph(c, 50, false));
-    }
-
     sf::VertexArray array;
-    co::setGlyphs(array, &glyphs.front(), glyphs.size());
+    co::setText(array, "It Works", font, 50);
 
     while (window.isOpen())
     {
