@@ -9,6 +9,7 @@ namespace sf
     class Vertex;
     class VertexArray;
     class Color;
+    class Glyph;
 }
 
 namespace co
@@ -52,7 +53,7 @@ namespace co
         const sf::Color &color);
 
     ////////////////////////////////////////////////
-    
+
     void COLIB_GRAPHICS_API setTexCoords(
         sf::Vertex *array,
         szt count,
@@ -62,6 +63,19 @@ namespace co
     void COLIB_GRAPHICS_API setTexCoords(
         sf::VertexArray &array,
         const sf::FloatRect &dstRect);
+
+    ////////////////////////////////////////////////
+
+    void COLIB_GRAPHICS_API setGlyphs(
+        sf::Vertex *array,
+        szt vCount,
+        const sf::Glyph *const glyphs,
+        szt gCount);
+
+    void COLIB_GRAPHICS_API setGlyphs(
+        sf::VertexArray &array,
+        const sf::Glyph *const glyphs,
+        szt gCount);
 
 }
 
