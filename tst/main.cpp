@@ -26,17 +26,9 @@ int main()
     graph.setPoints(rect);
     graph.setColor(sf::Color::Red);
 
-    sf::Text text;
-    text.setString("It Works Fine");
-    text.setFont(font);
-    text.setCharacterSize(50);
-    // text.setRotation(sf::degrees(30));
-    text.setStyle(sf::Text::Bold | sf::Text::Italic);
-    text.setOutlineColor(sf::Color::Green);
-    text.setOutlineThickness(10);
-
     auto span = std::make_shared<co::Span>();
-    span->setText(text);
+    span->setString("It Works");
+    span->setFont(font);
     span->setBackground(graph);
     span->setMaxWidth(100);
     span->setMaxHeight(100);
