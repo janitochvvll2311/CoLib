@@ -13,6 +13,11 @@ namespace co
         f32t getHorizontal() const;
         f32t getVertical() const;
 
+        Thickness &add(const Thickness &other);
+        Thickness &subtract(const Thickness &other);
+        Thickness &multiply(f32t factor);
+        Thickness &divide(f32t factor);
+
         f32t left;
         f32t top;
         f32t right;

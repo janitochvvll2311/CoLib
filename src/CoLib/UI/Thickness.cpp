@@ -13,6 +13,46 @@ namespace co
         return top + bottom;
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    Thickness &Thickness::add(const Thickness &other)
+    {
+        left += other.left;
+        top += other.top;
+        right += other.right;
+        bottom += other.bottom;
+        return *this;
+    }
+
+    Thickness &Thickness::subtract(const Thickness &other)
+    {
+        left -= other.left;
+        top -= other.top;
+        right -= other.right;
+        bottom -= other.bottom;
+        return *this;
+    }
+
+    Thickness &Thickness::multiply(f32t factor)
+    {
+        left *= factor;
+        top *= factor;
+        right *= factor;
+        bottom *= factor;
+        return *this;
+    }
+
+    Thickness &Thickness::divide(f32t factor)
+    {
+        left /= factor;
+        top /= factor;
+        right /= factor;
+        bottom /= factor;
+        return *this;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
     Thickness::Thickness(f32t value)
         : left(value), top(value), right(value), bottom(value) {}
 
