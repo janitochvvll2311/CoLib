@@ -21,12 +21,29 @@ namespace co
 
     void FrameLayout::compact(const sf::Vector2f &size)
     {
-        
+        if (m_widget)
+        {
+            auto spacing = sf::Vector2f(getHorizontalSpacing(), getVerticalSpacing());
+            m_widget->compact(size - spacing);
+            //
+            auto &padding = getPadding();
+            Layout::compact({std::max(size.x, m_widget->getWidth() + spacing.x),
+                             std::max(size.y, m_widget->getHeight() + spacing.y)});
+        }
+        else
+        {
+            Layout::compact(size);
+        }
     }
 
     void FrameLayout::inflate(const Box &box)
     {
-        
+        Layout::inflate(box);
+        if (m_widget)
+        {
+            auto &padding = getPadding();
+            m_widget->inflate({getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical()});
+        }
     }
 
     FrameLayout::FrameLayout()

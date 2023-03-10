@@ -118,14 +118,13 @@ namespace co
 
     void Widget::compact(const sf::Vector2f &size)
     {
-        setWidth(std::min(std::max(m_minWidth, size.x), m_maxWidth));
-        setHeight(std::min(std::max(m_minHeight, size.y), m_maxHeight));
+        setWidth(std::min(std::max(m_minWidth + getHorizontalSpacing(), size.x), m_maxWidth));
+        setHeight(std::min(std::max(m_minHeight + getVerticalSpacing(), size.y), m_maxHeight));
     }
 
     void Widget::inflate(const Box &box)
     {
-        setWidth(std::min(std::max(m_minWidth, box.getWidth()), m_maxWidth));
-        setHeight(std::min(std::max(m_minHeight, box.getHeight()), m_maxHeight));
+        compact({std::max(getWidth(), box.getWidth()), std::max(getHeight(), box.getHeight())});
         alignHorizontal(box, m_hAlignment);
         alignVertical(box, m_vAlignment);
         shrink(m_margin);
