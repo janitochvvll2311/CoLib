@@ -13,7 +13,7 @@ namespace co
         bool isValid() const override;
         void invalidate() override;
 
-        void compact(const sf::Vector2f& size) override;
+        void compact() override;
         void inflate(const Box &box) override;
 
         FrameLayout();

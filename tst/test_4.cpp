@@ -48,7 +48,7 @@ int main()
     widget->setVerticalAlignment(co::Widget::Center);
     subLayout->attach(widget);
 
-    layout.compact({0, 0});
+    layout.compact();
     layout.inflate({wsize.x, wsize.y});
     layout.invalidate();
     while (window.isOpen())
@@ -64,13 +64,13 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact({0, 0});
+                layout.compact();
                 layout.inflate({wsize.x, wsize.y});
                 layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
-                layout.compact({0, 0});
+                layout.compact();
                 layout.inflate({cursor.x, cursor.y});
                 layout.invalidate();
                 break;

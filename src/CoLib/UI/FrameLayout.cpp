@@ -19,19 +19,14 @@ namespace co
         }
     }
 
-    void FrameLayout::compact(const sf::Vector2f &size)
+    void FrameLayout::compact()
     {
+        Layout::compact();
         if (m_widget)
         {
-            auto spacing = sf::Vector2f(getHorizontalSpacing(), getVerticalSpacing());
-            auto &padding = getPadding();
-            m_widget->compact(size - spacing);
-            Layout::compact({std::max(size.x, m_widget->getWidth() + spacing.x),
-                             std::max(size.y, m_widget->getHeight() + spacing.y)});
-        }
-        else
-        {
-            Layout::compact(size);
+            m_widget->compact();
+            setWidth(std::max(getWidth(), m_widget->getWidth() + getHorizontalSpacing()));
+            setHeight(std::max(getHeight(), m_widget->getHeight() + getVerticalSpacing()));
         }
     }
 

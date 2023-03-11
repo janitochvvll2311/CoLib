@@ -37,7 +37,7 @@ namespace co
         const sf::Text &getText() const;
         void setText(const sf::Text &value);
 
-        void compact(const sf::Vector2f &size) override;
+        void compact() override;
         void inflate(const Box &box) override;
 
         Span();

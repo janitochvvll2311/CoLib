@@ -11,8 +11,8 @@ int main()
     sf::RenderWindow window({640, 480}, "My Window");
     auto wsize = sf::Vector2f(window.getSize());
 
-    auto texture = std::make_shared<sf::Texture>();
-    auto _ = texture->loadFromFile("./res/avatar.jpg");
+    sf::Texture texture;
+    auto _ = texture.loadFromFile("./res/avatar.jpg");
 
     co::Widget widget;
     widget.setMargin(50);
@@ -26,10 +26,10 @@ int main()
     co::Graph background;
     background.setPrimitiveType(sf::PrimitiveType::TriangleFan);
     background.setPoints(rect);
-    background.setTexture(texture);
+    background.setTexture(&texture);
     widget.setBackground(background);
 
-    widget.compact({0, 0});
+    widget.compact();
     widget.inflate({wsize.x, wsize.y});
     widget.invalidate();
 
@@ -46,7 +46,7 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                widget.compact({0, 0});
+                widget.compact();
                 widget.inflate({wsize.x, wsize.y});
                 widget.invalidate();
                 break;

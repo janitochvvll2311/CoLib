@@ -63,7 +63,7 @@ namespace co
         virtual bool isValid() const;
         virtual void invalidate();
 
-        virtual void compact(const sf::Vector2f& size);
+        virtual void compact();
         virtual void inflate(const Box &box);
 
         Widget();

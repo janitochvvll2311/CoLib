@@ -87,7 +87,7 @@ namespace co
         m_text = value;
     }
 
-    void Span::compact(const sf::Vector2f &size)
+    void Span::compact()
     {
         auto bounds = m_text.getLocalBounds();
         setWidth(bounds.width + getHorizontalSpacing());
@@ -96,7 +96,7 @@ namespace co
 
     void Span::inflate(const Box &box)
     {
-        compact({0, 0});
+        compact();
         alignHorizontal(box, getHorizontalAlignment());
         alignVertical(box, getVerticalAlignment());
         shrink(getMargin());

@@ -14,6 +14,7 @@ auto makeWidget(const sf::Font &font, const co::Graph &background)
     widget->setBackground(background);
     widget->setMinWidth(100);
     widget->setMinHeight(100);
+    widget->setMargin(10);
     return widget;
 }
 
@@ -36,6 +37,8 @@ int main()
     layout.setBackground(graph);
     layout.setMargin(10);
     layout.setPadding(10);
+    layout.setMaxWidth(0);
+    layout.setMaxHeight(0);
 
     //////////////////////////////////////////////
 
@@ -50,7 +53,7 @@ int main()
 
     //////////////////////////////////////////////
 
-    layout.compact({0, 0});
+    layout.compact();
     layout.inflate({wsize.x, wsize.y});
     layout.invalidate();
 
@@ -67,13 +70,13 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact({0, 0});
+                layout.compact();
                 layout.inflate({wsize.x, wsize.y});
                 layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
-                layout.compact({0, 0});
+                layout.compact();
                 layout.inflate({cursor.x, cursor.y});
                 layout.invalidate();
                 break;

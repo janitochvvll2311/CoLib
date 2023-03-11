@@ -44,42 +44,34 @@ namespace co
 
     ///////////////////////////////////////////////////////////////
 
-    void LinearLayout::compact(const sf::Vector2f &size)
+    void LinearLayout::compact()
     {
+        Layout::compact();
         if (m_widgets.size() > 0)
         {
-            auto spacing = sf::Vector2f(getHorizontalSpacing(), getVerticalSpacing());
-            auto _size = size - spacing;
-            auto &padding = getPadding();
-            sf::Vector2f msize(0, 0);
+            sf::Vector2f size(0, 0);
             switch (m_orientation)
             {
             case Horizontal:
-                _size.x = 0;
                 for (auto &widget : m_widgets)
                 {
-                    widget->compact(_size);
-                    msize.x += widget->getWidth();
-                    msize.y = std::max(msize.y, widget->getHeight());
+                    widget->compact();
+                    size.x += widget->getWidth();
+                    size.y = std::max(size.y, widget->getHeight());
                 }
                 break;
 
             case Vertical:
-                _size.y = 0;
                 for (auto &widget : m_widgets)
                 {
-                    widget->compact(_size);
-                    msize.y += widget->getHeight();
-                    msize.x = std::max(msize.x, widget->getWidth());
+                    widget->compact();
+                    size.y += widget->getHeight();
+                    size.x = std::max(size.x, widget->getWidth());
                 }
                 break;
             }
-            Layout::compact({std::max(size.x, msize.x + spacing.x),
-                             std::max(size.y, msize.y + spacing.y)});
-        }
-        else
-        {
-            Layout::compact(size);
+            setWidth(std::max(getWidth(), size.x + getHorizontalSpacing()));
+            setHeight(std::max(getHeight(), size.y + getVerticalSpacing()));
         }
     }
 
