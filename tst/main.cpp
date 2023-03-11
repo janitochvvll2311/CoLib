@@ -12,6 +12,8 @@ auto makeWidget(const co::Graph &background)
 {
     auto widget = std::make_shared<co::Widget>();
     widget->setBackground(background);
+    widget->setMinWidth(50);
+    widget->setMinHeight(50);
     return widget;
 }
 
@@ -54,7 +56,7 @@ int main()
 
     graph.setColor(sf::Color::Yellow);
     auto w4 = makeWidget(graph);
-    w4->setMaxWidth(100);
+    // w4->setMaxWidth(100);
     layout.attach(w4);
 
     //////////////////////////////////////////////

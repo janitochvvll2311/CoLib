@@ -89,10 +89,9 @@ namespace co
             case Horizontal:
             {
                 auto spacing = std::max(0.f, box.getWidth() - cSize.x);
-                auto strechness = spacing / m_widgets.size();
                 for (auto &widget : m_widgets)
                 {
-                    auto width = widget->getWidth() + strechness;
+                    auto width = widget->getWidth();
                     widget->inflate(Box(offset, 0, width, size.y));
                     offset += width;
                 }
@@ -101,10 +100,9 @@ namespace co
             case Vertical:
             {
                 auto spacing = std::max(0.f, box.getHeight() - cSize.y);
-                auto strechness = spacing / m_widgets.size();
                 for (auto &widget : m_widgets)
                 {
-                    auto height = widget->getHeight() + strechness;
+                    auto height = widget->getHeight();
                     widget->inflate(Box(0, offset, size.x, height));
                     offset += height;
                 }
