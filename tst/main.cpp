@@ -8,7 +8,7 @@
 #include <CoLib/UI/FrameLayout.hpp>
 #include <CoLib/UI/LinearLayout.hpp>
 
-auto makeWidget(const sf::Font &font, const co::Graph &background)
+auto makeWidget(const co::Graph &background)
 {
     auto widget = std::make_shared<co::Widget>();
     widget->setBackground(background);
@@ -37,19 +37,32 @@ int main()
     layout.setBackground(graph);
     layout.setMargin(10);
     layout.setPadding(10);
-    layout.setMaxWidth(0);
-    layout.setMaxHeight(0);
+    // layout.setMaxWidth(0);
+    // layout.setMaxHeight(0);
 
     //////////////////////////////////////////////
 
     graph.setColor(sf::Color::Red);
-    layout.attach(makeWidget(font, graph));
+    auto w1 = makeWidget(graph);
+    layout.attach(w1);
 
     graph.setColor(sf::Color::Green);
-    layout.attach(makeWidget(font, graph));
+    auto w2 = makeWidget(graph);
+    w2->setMaxHeight(0);
+    w2->setVerticalAlignment(co::Widget::Start);
+    layout.attach(w2);
 
     graph.setColor(sf::Color::Blue);
-    layout.attach(makeWidget(font, graph));
+    auto w3 = makeWidget(graph);
+    w3->setMaxHeight(0);
+    w3->setVerticalAlignment(co::Widget::Center);
+    layout.attach(w3);
+
+    graph.setColor(sf::Color::Yellow);
+    auto w4 = makeWidget(graph);
+    w4->setMaxHeight(0);
+    w4->setVerticalAlignment(co::Widget::End);
+    layout.attach(w4);
 
     //////////////////////////////////////////////
 

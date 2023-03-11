@@ -88,21 +88,17 @@ namespace co
             case Horizontal:
                 for (auto &widget : m_widgets)
                 {
-                    widget->setTop(0);
-                    widget->setHeight(size.y);
-                    widget->setLeft(offset);
-                    offset += widget->getWidth();
-                    widget->inflate(Box(*widget));
+                    auto width = widget->getWidth();
+                    widget->inflate(Box(offset, 0, width, size.y));
+                    offset += width;
                 }
                 break;
             case Vertical:
                 for (auto &widget : m_widgets)
                 {
-                    widget->setLeft(0);
-                    widget->setWidth(size.x);
-                    widget->setTop(offset);
-                    offset += widget->getHeight();
-                    widget->inflate(Box(*widget));
+                    auto height = widget->getHeight();
+                    widget->inflate(Box(0, offset, size.x, height));
+                    offset += height;
                 }
                 break;
             }
