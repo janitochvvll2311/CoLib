@@ -12,7 +12,6 @@ auto makeWidget(const co::Graph &background)
 {
     auto widget = std::make_shared<co::Widget>();
     widget->setBackground(background);
-    widget->setHorizontalAlignment(co::Widget::Center);
     return widget;
 }
 
@@ -34,13 +33,13 @@ int main()
     co::LinearLayout layout;
     layout.setBackground(graph);
     layout.setMargin(10);
-    layout.setPadding(10);
+    layout.setPadding(1);
 
     //////////////////////////////////////////////
 
     graph.setColor(sf::Color::Red);
     auto w1 = makeWidget(graph);
-    w1->setMinWidth(100);
+    w1->setMaxWidth(100);
     layout.attach(w1);
 
     graph.setColor(sf::Color::Green);
@@ -50,12 +49,12 @@ int main()
 
     graph.setColor(sf::Color::Blue);
     auto w3 = makeWidget(graph);
-    w3->setMinWidth(100);
+    w3->setMaxWidth(100);
     layout.attach(w3);
 
     graph.setColor(sf::Color::Yellow);
     auto w4 = makeWidget(graph);
-    w4->setMinWidth(100);
+    w4->setMaxWidth(100);
     layout.attach(w4);
 
     //////////////////////////////////////////////

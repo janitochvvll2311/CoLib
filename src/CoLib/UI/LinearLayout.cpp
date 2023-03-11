@@ -82,7 +82,7 @@ namespace co
         if (m_widgets.size() > 0)
         {
             auto &padding = getPadding();
-            sf::Vector2f size(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
+            sf::Vector2f size(getInnerWidth(), getInnerHeight());
             f32t offset = 0;
             switch (m_orientation)
             {

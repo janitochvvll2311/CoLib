@@ -14,6 +14,16 @@ namespace co
         m_padding = value;
     }
 
+    f32t Layout::getInnerWidth() const
+    {
+        return getWidth() - m_padding.getHorizontal();
+    }
+
+    f32t Layout::getInnerHeight() const
+    {
+        return getHeight() - m_padding.getVertical();
+    }
+
     f32t Layout::getHorizontalSpacing() const
     {
         return Widget::getHorizontalSpacing() + m_padding.getHorizontal();

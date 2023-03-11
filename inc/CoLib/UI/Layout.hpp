@@ -17,6 +17,11 @@ namespace co
         const Thickness &getPadding() const;
         void setPadding(const Thickness &value);
 
+        f32t getInnerWidth() const;
+        f32t getInnerHeight() const;
+
+        ////////////////////////////////////////////////////
+
         f32t getHorizontalSpacing() const override;
         f32t getVerticalSpacing() const override;
 

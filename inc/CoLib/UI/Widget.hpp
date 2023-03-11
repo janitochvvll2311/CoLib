@@ -49,6 +49,9 @@ namespace co
         const Thickness &getMargin() const;
         void setMargin(const Thickness &value);
 
+        f32t getOuterWidth() const;
+        f32t getOuterHeight() const;
+
         virtual f32t getHorizontalSpacing() const;
         virtual f32t getVerticalSpacing() const;
 

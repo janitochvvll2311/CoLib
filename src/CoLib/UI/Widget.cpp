@@ -74,6 +74,16 @@ namespace co
         m_margin = value;
     }
 
+    f32t Widget::getOuterWidth() const
+    {
+        return getWidth() + m_margin.getHorizontal();
+    }
+
+    f32t Widget::getOuterHeight() const
+    {
+        return getHeight() + m_margin.getVertical();
+    }
+
     f32t Widget::getHorizontalSpacing() const
     {
         return m_margin.getHorizontal();
