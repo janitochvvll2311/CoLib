@@ -11,7 +11,8 @@ namespace co
     {
 
     public:
-        enum Orientation {
+        enum Orientation
+        {
             Horizontal,
             Vertical
         };

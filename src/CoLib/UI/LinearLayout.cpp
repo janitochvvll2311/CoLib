@@ -83,33 +83,40 @@ namespace co
         {
             auto &padding = getPadding();
             sf::Vector2f size(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
-            auto hStrechness = std::max(0.f, box.getWidth() - cSize.x) / m_widgets.size();
-            auto vStrechness = std::max(0.f, box.getHeight() - cSize.y) / m_widgets.size();
             f32t offset = 0;
             switch (m_orientation)
             {
             case Horizontal:
+            {
+                auto spacing = std::max(0.f, box.getWidth() - cSize.x);
+                auto strechness = spacing / m_widgets.size();
                 for (auto &widget : m_widgets)
                 {
-                    auto width = widget->getWidth() + hStrechness;
+                    auto width = widget->getWidth() + strechness;
                     widget->inflate(Box(offset, 0, width, size.y));
                     offset += width;
                 }
-                break;
+            }
+            break;
             case Vertical:
+            {
+                auto spacing = std::max(0.f, box.getHeight() - cSize.y);
+                auto strechness = spacing / m_widgets.size();
                 for (auto &widget : m_widgets)
                 {
-                    auto height = widget->getHeight() + vStrechness;
+                    auto height = widget->getHeight() + strechness;
                     widget->inflate(Box(0, offset, size.x, height));
                     offset += height;
                 }
-                break;
+            }
+            break;
             }
         }
     }
 
     LinearLayout::LinearLayout()
-        : m_widgets(), m_orientation(Horizontal) {}
+        : m_widgets(),
+          m_orientation(Horizontal) {}
 
     LinearLayout::~LinearLayout() {}
 
