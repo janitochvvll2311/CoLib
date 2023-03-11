@@ -14,7 +14,7 @@ auto makeWidget(const co::Graph &background)
     widget->setBackground(background);
     widget->setMinWidth(100);
     widget->setMinHeight(100);
-    widget->setMargin(10);
+    // widget->setMargin(10);
     return widget;
 }
 
@@ -44,23 +44,26 @@ int main()
 
     graph.setColor(sf::Color::Red);
     auto w1 = makeWidget(graph);
+    w1->setMinWidth(0);
     layout.attach(w1);
 
     graph.setColor(sf::Color::Green);
     auto w2 = makeWidget(graph);
-    w2->setMaxHeight(0);
+    // w2->setMaxHeight(0);
     w2->setVerticalAlignment(co::Widget::Start);
     layout.attach(w2);
 
     graph.setColor(sf::Color::Blue);
     auto w3 = makeWidget(graph);
-    w3->setMaxHeight(0);
+    w3->setMinWidth(300);
+    w3->setHorizontalAlignment(co::Widget::Center);
+    // w3->setMaxHeight(0);
     w3->setVerticalAlignment(co::Widget::Center);
     layout.attach(w3);
 
     graph.setColor(sf::Color::Yellow);
     auto w4 = makeWidget(graph);
-    w4->setMaxHeight(0);
+    // w4->setMaxHeight(0);
     w4->setVerticalAlignment(co::Widget::End);
     layout.attach(w4);
 
