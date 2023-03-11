@@ -8,15 +8,6 @@
 #include <CoLib/UI/FrameLayout.hpp>
 #include <CoLib/UI/LinearLayout.hpp>
 
-auto makeWidget(const sf::Font &font, const co::Graph &background)
-{
-    auto widget = std::make_shared<co::Widget>();
-    widget->setBackground(background);
-    widget->setMinWidth(100);
-    widget->setMinHeight(100);
-    return widget;
-}
-
 int main()
 {
 
@@ -29,26 +20,29 @@ int main()
     co::Rectangle rect(100, 100);
 
     co::Graph graph;
+    // graph.setText("It Works", font, 50);
+    // graph.setOrigin({0, -50});
+    // graph.setPosition({0, 50});
     graph.setPrimitiveType(sf::PrimitiveType::TriangleFan);
     graph.setPoints(rect);
+    graph.setColor(sf::Color::Red);
 
-    co::LinearLayout layout;
+    auto span = std::make_shared<co::Span>();
+    span->setString("It Works");
+    span->setFont(font);
+    span->setBackground(graph);
+    span->setMaxWidth(100);
+    span->setMaxHeight(100);
+    span->setHorizontalAlignment(co::Span::Center);
+    span->setVerticalAlignment(co::Span::Center);
+    span->setMargin(10);
+
+    co::FrameLayout layout;
+    layout.attach(span);
+    graph.setColor(sf::Color::Blue);
     layout.setBackground(graph);
     layout.setMargin(10);
     layout.setPadding(10);
-
-    //////////////////////////////////////////////
-
-    graph.setColor(sf::Color::Red);
-    layout.attach(makeWidget(font, graph));
-
-    graph.setColor(sf::Color::Green);
-    layout.attach(makeWidget(font, graph));
-
-    graph.setColor(sf::Color::Blue);
-    layout.attach(makeWidget(font, graph));
-
-    //////////////////////////////////////////////
 
     layout.compact({0, 0});
     layout.inflate({wsize.x, wsize.y});
@@ -81,6 +75,8 @@ int main()
         }
 
         window.clear();
+        // window.draw(graph);
+        // window.draw(text);
         window.draw(layout);
         window.display();
     }

@@ -5,3 +5,4 @@
 #include <CoLib/UI/Span.cpp>
 #include <CoLib/UI/Layout.cpp>
 #include <CoLib/UI/FrameLayout.cpp>
+#include <CoLib/UI/LinearLayout.cpp>

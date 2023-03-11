@@ -24,9 +24,8 @@ namespace co
         if (m_widget)
         {
             auto spacing = sf::Vector2f(getHorizontalSpacing(), getVerticalSpacing());
-            m_widget->compact(size - spacing);
-            //
             auto &padding = getPadding();
+            m_widget->compact(size - spacing);
             Layout::compact({std::max(size.x, m_widget->getWidth() + spacing.x),
                              std::max(size.y, m_widget->getHeight() + spacing.y)});
         }
@@ -55,7 +54,7 @@ namespace co
 
     void FrameLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
-        Widget::onDraw(target, states);
+        Layout::onDraw(target, states);
         if (m_widget)
         {
             auto _states = states;
