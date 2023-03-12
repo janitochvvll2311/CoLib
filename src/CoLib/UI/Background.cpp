@@ -5,6 +5,16 @@
 namespace co
 {
 
+    const sf::Color &Background::getColor() const
+    {
+        return m_background.getColor();
+    }
+
+    void Background::setColor(const sf::Color &value)
+    {
+        m_background.setColor(value);
+    }
+
     Background::Background()
         : m_background()
     {

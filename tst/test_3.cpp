@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <CoLib/Graphics/Rectangle.hpp>
+#include <CoLib/UI/Thickness.hpp>
 #include <CoLib/UI/Background.hpp>
 
 int main()
@@ -13,7 +14,9 @@ int main()
     co::Background background;
 
     background.compact();
+    background.setColor(sf::Color::Red);
     background.inflate(wsize);
+    background.shrink(10);
     background.invalidate();
 
     while (window.isOpen())
@@ -31,12 +34,14 @@ int main()
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 background.compact();
                 background.inflate(wsize);
+                background.shrink(10);
                 background.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
                 background.compact();
                 background.inflate(cursor);
+                background.shrink(10);
                 background.invalidate();
                 break;
             }
