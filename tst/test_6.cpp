@@ -14,46 +14,7 @@ auto makeWidget(const co::Graph &background)
     widget->setBackground(background);
     widget->setMinWidth(50);
     widget->setMinHeight(50);
-    widget->setMargin(10);
     return widget;
-}
-
-auto makeSpan(const sf::Font &font, const co::Graph &background)
-{
-    auto span = std::make_shared<co::Span>();
-    span->setBackground(background);
-    span->setString("It Works");
-    span->setFont(font);
-    span->setCharacterSize(50);
-    return span;
-}
-
-auto makeLayout(co::Graph &background, const sf::Font &font)
-{
-    auto graph = background;
-    auto layout = std::make_shared<co::LinearLayout>();
-    layout->setBackground(graph);
-    layout->setMargin(10);
-    layout->setPadding(10);
-    layout->setContentAlignment(co::LinearLayout::Center);
-
-    ////////////////////////////////////
-
-    graph.setColor(sf::Color::Red);
-    auto w1 = makeSpan(font, graph);
-    layout->attach(w1);
-
-    graph.setColor(sf::Color::Green);
-    auto w2 = makeSpan(font, graph);
-    layout->attach(w2);
-
-    graph.setColor(sf::Color::Blue);
-    auto w3 = makeSpan(font, graph);
-    layout->attach(w3);
-
-    ////////////////////////////////////
-
-    return layout;
 }
 
 int main()
@@ -73,23 +34,37 @@ int main()
 
     co::LinearLayout layout;
     layout.setBackground(graph);
+    layout.setReverse();
+    layout.setContentAlignment(co::Layout::End);
     layout.setMargin(10);
     layout.setPadding(1);
-    layout.setOrientation(co::LinearLayout::Vertical);
 
     //////////////////////////////////////////////
 
+    graph.setColor(sf::Color::Red);
+    auto w1 = makeWidget(graph);
+    w1->setMaxHeight(200);
+    layout.attach(w1);
+
+    graph.setColor(sf::Color::Green);
+    auto w2 = makeWidget(graph);
+    w2->setMinWidth(500);
+    w2->setMaxHeight(100);
+    w2->setVerticalAlignment(co::LinearLayout::Start);
+    layout.attach(w2);
+
+    graph.setColor(sf::Color::Blue);
+    auto w3 = makeWidget(graph);
+    w3->setMaxWidth(100);
+    w3->setMaxHeight(100);
+    w3->setVerticalAlignment(co::LinearLayout::Center);
+    layout.attach(w3);
+
     graph.setColor(sf::Color::Yellow);
-    auto sl1 = makeLayout(graph, font);
-    layout.attach(sl1);
-
-    graph.setColor(sf::Color::Cyan);
-    auto sl2 = makeLayout(graph, font);
-    layout.attach(sl2);
-
-    graph.setColor(sf::Color::Magenta);
-    auto sl3 = makeLayout(graph, font);
-    layout.attach(sl3);
+    auto w4 = makeWidget(graph);
+    w4->setMaxHeight(100);
+    w4->setVerticalAlignment(co::LinearLayout::End);
+    layout.attach(w4);
 
     //////////////////////////////////////////////
 
