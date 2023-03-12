@@ -97,8 +97,6 @@ namespace co
     void Span::inflate(const Box &box)
     {
         compact();
-        alignHorizontal(box, getHorizontalAlignment());
-        alignVertical(box, getVerticalAlignment());
         shrink(getMargin());
     };
 

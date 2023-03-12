@@ -94,26 +94,6 @@ namespace co
         return m_margin.getVertical();
     }
 
-    Widget::Alignment Widget::getHorizontalAlignment() const
-    {
-        return m_hAlignment;
-    }
-
-    void Widget::setHorizontalAlignment(Alignment value)
-    {
-        m_hAlignment = value;
-    }
-
-    Widget::Alignment Widget::getVerticalAlignment() const
-    {
-        return m_vAlignment;
-    }
-
-    void Widget::setVerticalAlignment(Alignment value)
-    {
-        m_vAlignment = value;
-    }
-
     ////////////////////////////////////////////////////////////////
 
     bool Widget::isValid() const
@@ -136,8 +116,6 @@ namespace co
     {
         setWidth(std::max(getWidth(), std::min(m_maxWidth, box.getWidth())));
         setHeight(std::max(getHeight(), std::min(m_maxHeight, box.getHeight())));
-        alignHorizontal(box, m_hAlignment);
-        alignVertical(box, m_vAlignment);
         shrink(m_margin);
     }
 
@@ -146,7 +124,7 @@ namespace co
           m_isValid(false), m_background(nullptr),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
-          m_margin(0), m_hAlignment(Start), m_vAlignment(Start),
+          m_margin(0),
           m_parent(nullptr)
     {
     }

@@ -42,9 +42,6 @@ namespace co
         void shrink(const Thickness& thickness);
         void expand(const Thickness& thickness);
 
-        void alignHorizontal(const Box& box, Alignment alignment);
-        void alignVertical(const Box& box, Alignment alignment);
-
         Box(f32t width = 0, f32t height = 0);
         Box(f32t left, f32t top, f32t width, f32t height);
         ~Box();

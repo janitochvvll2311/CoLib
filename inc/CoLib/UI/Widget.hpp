@@ -55,12 +55,6 @@ namespace co
         virtual f32t getHorizontalSpacing() const;
         virtual f32t getVerticalSpacing() const;
 
-        Alignment getHorizontalAlignment() const;
-        void setHorizontalAlignment(Alignment value);
-
-        Alignment getVerticalAlignment() const;
-        void setVerticalAlignment(Alignment value);
-
         /////////////////////////////////////////////////
 
         virtual bool isValid() const;
@@ -88,8 +82,6 @@ namespace co
         f32t m_maxHeight;
 
         Thickness m_margin;
-        Alignment m_hAlignment;
-        Alignment m_vAlignment;
 
         Layout *m_parent;
     };

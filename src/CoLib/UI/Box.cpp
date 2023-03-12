@@ -118,38 +118,6 @@ namespace co
         m_height += thickness.getVertical();
     }
 
-    void Box::alignHorizontal(const Box &box, Alignment alignment)
-    {
-        switch (alignment)
-        {
-        case Start:
-            m_left = box.m_left;
-            break;
-        case End:
-            m_left = box.m_left + box.m_width - m_width;
-            break;
-        case Center:
-            m_left = box.m_left + (box.m_width - m_width) / 2;
-            break;
-        }
-    }
-
-    void Box::alignVertical(const Box &box, Alignment alignment)
-    {
-        switch (alignment)
-        {
-        case Start:
-            m_top = box.m_top;
-            break;
-        case End:
-            m_top = box.m_top + box.m_height - m_height;
-            break;
-        case Center:
-            m_top = box.m_top + (box.m_height - m_height) / 2;
-            break;
-        }
-    }
-
     Box::Box(f32t width, f32t height)
         : m_left(0), m_top(0), m_width(width), m_height(height) {}
 
