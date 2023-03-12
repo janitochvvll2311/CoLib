@@ -15,26 +15,6 @@ namespace co
         m_orientation = value;
     }
 
-    LinearLayout::Alignment LinearLayout::getContentAlignment() const
-    {
-        return m_cAlignment;
-    }
-
-    void LinearLayout::setContentAlignment(Alignment value)
-    {
-        m_cAlignment = value;
-    }
-
-    bool LinearLayout::isReverse() const
-    {
-        return m_isReverse;
-    }
-
-    void LinearLayout::setReverse(bool value)
-    {
-        m_isReverse = value;
-    }
-
     ///////////////////////////////////////////////////////////////
 
     bool LinearLayout::isValid() const
@@ -126,25 +106,6 @@ namespace co
                         offset += width;
                     }
                 }
-                auto spacing = getInnerWidth() - offset;
-                switch (m_cAlignment)
-                {
-                case Start:
-                    spacing = 0;
-                    break;
-                case End:
-                    break;
-                case Center:
-                    spacing /= 2;
-                    break;
-                }
-                if (spacing > 0)
-                {
-                    for (auto &widget : m_widgets)
-                    {
-                        widget->setLeft(widget->getLeft() + spacing);
-                    }
-                }
             }
             break;
             case Vertical:
@@ -170,25 +131,6 @@ namespace co
                         offset += height;
                     }
                 }
-                auto spacing = getInnerWidth() - offset;
-                switch (m_cAlignment)
-                {
-                case Start:
-                    spacing = 0;
-                    break;
-                case End:
-                    break;
-                case Center:
-                    spacing /= 2;
-                    break;
-                }
-                if (spacing > 0)
-                {
-                    for (auto &widget : m_widgets)
-                    {
-                        widget->setTop(widget->getTop() + spacing);
-                    }
-                }
             }
             break;
             }
@@ -197,7 +139,7 @@ namespace co
 
     LinearLayout::LinearLayout()
         : m_widgets(),
-          m_orientation(Horizontal), m_cAlignment(Start), m_isReverse(false) {}
+          m_orientation(Horizontal), m_isReverse(false) {}
 
     LinearLayout::~LinearLayout() {}
 
