@@ -26,7 +26,19 @@ namespace co
         void onDetach(const SharedWidget &widget) override;
 
     private:
-        SharedWidget m_widget;
+        class WidgetHolder
+        {
+        public:
+            const SharedWidget &getWidget() const;
+
+            WidgetHolder(const SharedWidget &widget);
+            ~WidgetHolder();
+
+        private:
+            SharedWidget m_widget;
+        };
+
+        std::shared_ptr<WidgetHolder> m_holder;
     };
 
 }
