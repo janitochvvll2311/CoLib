@@ -22,6 +22,12 @@ namespace co
         Orientation getOrientation() const;
         void setOrientation(Orientation value);
 
+        Alignment getContentAlignment() const;
+        void setContentAlignment(Alignment value);
+
+        bool isReverse() const;
+        void setReverse(bool value = true);
+
         ////////////////////////////////////////////////////////
 
         bool isValid() const override;
@@ -43,6 +49,8 @@ namespace co
         std::list<SharedWidget> m_widgets;
 
         Orientation m_orientation;
+        Alignment m_cAlignment;
+        bool m_isReverse;
     };
 
 }

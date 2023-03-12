@@ -34,6 +34,8 @@ int main()
 
     co::LinearLayout layout;
     layout.setBackground(graph);
+    layout.setReverse();
+    layout.setContentAlignment(co::Layout::End);
     layout.setMargin(10);
     layout.setPadding(1);
 
