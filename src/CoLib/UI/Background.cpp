@@ -1,0 +1,30 @@
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <CoLib/Graphics/Rectangle.hpp>
+#include <CoLib/UI/Background.hpp>
+
+namespace co
+{
+
+    Background::Background()
+        : m_background()
+    {
+        co::Rectangle rectangle(1, 1);
+        m_background.setPrimitiveType(sf::PrimitiveType::TriangleFan);
+        m_background.setPoints(rectangle);
+    }
+
+    Background::~Background() {}
+
+    ///////////////////////////////////////////////////
+
+    void Background::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
+    {
+        target.draw(m_background, states);
+    }
+
+    void Background::onUpdate() const
+    {
+        m_background.fitPoints({{getLeft(), getTop()}, {getWidth(), getHeight()}});
+    }
+
+}
