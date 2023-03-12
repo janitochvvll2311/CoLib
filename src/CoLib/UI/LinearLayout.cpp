@@ -77,33 +77,30 @@ namespace co
 
     void LinearLayout::inflate(const Box &box)
     {
-        sf::Vector2f cSize(getWidth(), getHeight());
         Layout::inflate(box);
         if (m_widgets.size() > 0)
         {
-            auto &padding = getPadding();
-            sf::Vector2f size(getInnerWidth(), getInnerHeight());
             f32t offset = 0;
             switch (m_orientation)
             {
             case Horizontal:
             {
-                auto spacing = std::max(0.f, box.getWidth() - cSize.x);
+                auto innerHeight = getInnerHeight();
                 for (auto &widget : m_widgets)
                 {
                     auto width = widget->getWidth();
-                    widget->inflate(Box(offset, 0, width, size.y));
+                    widget->inflate(Box(offset, 0, width, innerHeight));
                     offset += width;
                 }
             }
             break;
             case Vertical:
             {
-                auto spacing = std::max(0.f, box.getHeight() - cSize.y);
+                auto innerWidth = getInnerWidth();
                 for (auto &widget : m_widgets)
                 {
                     auto height = widget->getHeight();
-                    widget->inflate(Box(0, offset, size.x, height));
+                    widget->inflate(Box(0, offset, innerWidth, height));
                     offset += height;
                 }
             }
@@ -113,8 +110,7 @@ namespace co
     }
 
     LinearLayout::LinearLayout()
-        : m_widgets(),
-          m_orientation(Horizontal) {}
+        : m_widgets(), m_orientation(Horizontal) {}
 
     LinearLayout::~LinearLayout() {}
 

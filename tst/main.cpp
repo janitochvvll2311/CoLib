@@ -41,22 +41,27 @@ int main()
 
     graph.setColor(sf::Color::Red);
     auto w1 = makeWidget(graph);
-    w1->setMaxWidth(100);
+    w1->setMaxHeight(200);
     layout.attach(w1);
 
     graph.setColor(sf::Color::Green);
     auto w2 = makeWidget(graph);
     w2->setMinWidth(500);
+    w2->setMaxHeight(100);
+    w2->setVerticalAlignment(co::LinearLayout::Start);
     layout.attach(w2);
 
     graph.setColor(sf::Color::Blue);
     auto w3 = makeWidget(graph);
     w3->setMaxWidth(100);
+    w3->setMaxHeight(100);
+    w3->setVerticalAlignment(co::LinearLayout::Center);
     layout.attach(w3);
 
     graph.setColor(sf::Color::Yellow);
     auto w4 = makeWidget(graph);
-    // w4->setMaxWidth(100);
+    w4->setMaxHeight(100);
+    w4->setVerticalAlignment(co::LinearLayout::End);
     layout.attach(w4);
 
     //////////////////////////////////////////////
