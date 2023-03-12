@@ -9,8 +9,12 @@ namespace co
         return m_left;
     }
 
-    void Box::setLeft(f32t value)
+    void Box::setLeft(f32t value, bool resize)
     {
+        if (resize)
+        {
+            m_width += m_left - value;
+        }
         m_left = value;
     }
 
@@ -19,8 +23,12 @@ namespace co
         return m_left + m_width;
     }
 
-    void Box::setRight(f32t value)
+    void Box::setRight(f32t value, bool resize)
     {
+        if (resize)
+        {
+            m_width = value - m_left;
+        }
         m_left = value - m_width;
     }
 
@@ -29,8 +37,12 @@ namespace co
         return m_top;
     }
 
-    void Box::setTop(f32t value)
+    void Box::setTop(f32t value, bool resize)
     {
+        if (resize)
+        {
+            m_height += m_top - value;
+        }
         m_top = value;
     }
 
@@ -39,8 +51,12 @@ namespace co
         return m_top + m_height;
     }
 
-    void Box::setBottom(f32t value)
+    void Box::setBottom(f32t value, bool resize)
     {
+        if (resize)
+        {
+            m_height = value - m_top;
+        }
         m_top = value - m_height;
     }
 
@@ -49,8 +65,19 @@ namespace co
         return m_width;
     }
 
-    void Box::setWidth(f32t value)
+    void Box::setWidth(f32t value, Anchor anchor)
     {
+        switch (anchor)
+        {
+        case Start:
+            break;
+        case End:
+            m_left -= value - m_width;
+            break;
+        case Center:
+            m_left -= (value - m_width) / 2;
+            break;
+        }
         m_width = value;
     }
 
@@ -59,8 +86,19 @@ namespace co
         return m_height;
     }
 
-    void Box::setHeight(f32t value)
+    void Box::setHeight(f32t value, Anchor anchor)
     {
+        switch (anchor)
+        {
+        case Start:
+            break;
+        case End:
+            m_top -= value - m_height;
+            break;
+        case Center:
+            m_top -= (value - m_height) / 2;
+            break;
+        }
         m_height = value;
     }
 
