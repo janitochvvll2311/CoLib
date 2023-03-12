@@ -108,6 +108,8 @@ namespace co
 
     void Widget::compact()
     {
+        setLeft(0);
+        setTop(0);
         setWidth(m_minWidth + getHorizontalSpacing());
         setHeight(m_minHeight + getVerticalSpacing());
     }

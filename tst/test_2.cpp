@@ -26,10 +26,6 @@ int main()
     co::Box wbox(wsize.x, wsize.y);
     wbox.shrink(10);
 
-    co::Box box(wbox);
-    box.shrink(10);
-    box.setWidth(100);
-
     while (window.isOpen())
     {
         sf::Event event;
@@ -46,6 +42,11 @@ int main()
                 wbox.shrink(10);
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 break;
+            case sf::Event::MouseButtonPressed:
+                auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
+                wbox = {cursor.x, cursor.y};
+                wbox.shrink(10);
+                break;
             }
         }
 
@@ -59,6 +60,10 @@ int main()
         {
             window.clear();
         }
+
+        sf::RectangleShape shape({wbox.getWidth(), wbox.getHeight()});
+        shape.setPosition({wbox.getLeft(), wbox.getTop()});
+        window.draw(shape);
 
         auto tsize = sf::Vector2f(texture.getSize());
         auto tpart = tsize / 2.f;
@@ -81,13 +86,6 @@ int main()
         graph.fitPoints({{10, 230}, {100, 100}});
         graph.setColor(sf::Color::Blue);
         window.draw(graph);
-
-        box.alignHorizontal(wbox, co::Box::Center);
-        box.alignVertical(wbox, co::Box::Center);
-
-        sf::RectangleShape shape({box.getWidth(), box.getHeight()});
-        shape.setPosition({box.getLeft(), box.getTop()});
-        window.draw(shape);
 
         window.display();
     }

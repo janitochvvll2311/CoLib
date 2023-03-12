@@ -15,11 +15,9 @@ int main()
     auto _ = texture.loadFromFile("./res/avatar.jpg");
 
     co::Widget widget;
-    widget.setMargin(50);
+    widget.setMargin(10);
     widget.setMaxWidth(300);
     widget.setMaxHeight(300);
-    widget.setHorizontalAlignment(co::Widget::Center);
-    widget.setVerticalAlignment(co::Widget::Center);
     // widget.setRotation(sf::degrees(45));
 
     co::Rectangle rect(100, 100);
@@ -48,6 +46,12 @@ int main()
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 widget.compact();
                 widget.inflate({wsize.x, wsize.y});
+                widget.invalidate();
+                break;
+            case sf::Event::MouseButtonPressed:
+                auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
+                widget.compact();
+                widget.inflate({cursor.x, cursor.y});
                 widget.invalidate();
                 break;
             }

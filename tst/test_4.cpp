@@ -33,8 +33,6 @@ int main()
     subLayout->setMinWidth(300);
     subLayout->setMaxWidth(400);
     subLayout->setMaxHeight(400);
-    subLayout->setHorizontalAlignment(co::Layout::Center);
-    subLayout->setVerticalAlignment(co::Layout::Center);
     layout.attach(subLayout);
 
     background.setColor(sf::Color::Blue);
@@ -44,8 +42,6 @@ int main()
     widget->setMinHeight(100);
     widget->setMaxWidth(200);
     widget->setMaxHeight(200);
-    widget->setHorizontalAlignment(co::Widget::Center);
-    widget->setVerticalAlignment(co::Widget::Center);
     subLayout->attach(widget);
 
     layout.compact();
