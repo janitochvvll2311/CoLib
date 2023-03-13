@@ -7,6 +7,9 @@
 namespace co
 {
 
+    class Background;
+    using SharedBackground = std::shared_ptr<Background>;
+
     class Block;
     using SharedBlock = std::shared_ptr<Block>;
 
@@ -19,8 +22,23 @@ namespace co
         const Thickness &getPadding() const;
         void setPadding(const Thickness &value);
 
-        SharedBackground getBackground() const;
+        const SharedBackground &getBackground() const;
         void setBackground(const SharedBackground &value);
+
+        f32t getMinWidth() const;
+        void setMinWidth(f32t value);
+
+        f32t getMaxWidth() const;
+        void setMaxWidth(f32t value);
+
+        f32t getMinHeight() const;
+        void setMinHeight(f32t value);
+
+        f32t getMaxHeight() const;
+        void setMaxHeight(f32t value);
+
+        const Thickness &getMargin() const;
+        void setMargin(const Thickness &value);
 
         ///////////////////////////////////////////////////
 
@@ -33,8 +51,11 @@ namespace co
         FrameLayout();
         virtual ~FrameLayout();
 
+        static const SharedBackground NoBackground;
+
     protected:
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
+        void
+        onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;
 
         void onAttach(const SharedWidget &widget) override;

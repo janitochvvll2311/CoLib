@@ -78,7 +78,8 @@ namespace co
 
     void Block::inflate(const sf::Vector2f &size, const Aligner *const aligner)
     {
-        sf::Vector2f _size(std::max(getWidth(), std::min(size.x, m_maxWidth)), std::max(getHeight(), std::min(size.y, m_maxHeight)));
+        sf::Vector2f _size(std::max(getWidth(), std::min(size.x, m_maxWidth + m_margin.getHorizontal())),
+                           std::max(getHeight(), std::min(size.y, m_maxHeight + m_margin.getVertical())));
         Widget::inflate(_size, aligner);
         shrink(m_margin);
         if (m_background)

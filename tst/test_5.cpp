@@ -22,14 +22,17 @@ int main()
     background.setColor(sf::Color::Red);
     block->setBackground(std::make_shared<co::Background>(background));
     // block->setMargin(10);
-    // block->setMinWidth(100);
-    // block->setMinHeight(100);
-    // block->setMaxWidth(0);
-    // block->setMaxHeight(0);
+    block->setMinWidth(100);
+    block->setMinHeight(100);
+    block->setMaxWidth(0);
+    block->setMaxHeight(0);
 
     co::FrameLayout frame;
-    frame.setPadding(10);
+    frame.setPadding(1);
     background.setColor(sf::Color::White);
+    frame.setMargin(10);
+    frame.setMaxWidth(0);
+    frame.setMaxHeight(0);
     frame.setBackground(std::make_shared<co::Background>(background));
     frame.attach(block);
 
