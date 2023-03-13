@@ -32,6 +32,15 @@ namespace co
         }
     }
 
+    void Widget::update(bool force) const
+    {
+        if (!m_isValid || force)
+        {
+            onUpdate();
+            m_isValid = true;
+        }
+    }
+
     Widget::Widget()
         : m_isValid(false) {}
 
@@ -41,11 +50,7 @@ namespace co
 
     void Widget::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
-        if (!m_isValid)
-        {
-            onUpdate();
-            m_isValid = true;
-        }
+        update(false);
         onDraw(target, states);
     }
 

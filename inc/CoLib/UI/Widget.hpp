@@ -24,14 +24,15 @@ namespace co
 
         virtual void compact();
         virtual void inflate(const sf::Vector2f &size, const Aligner *const aligner = nullptr);
+        virtual void update(bool force = false) const;
 
         Widget();
         ~Widget();
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
+        
         virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const = 0;
-
         virtual void onUpdate() const = 0;
 
     private:
