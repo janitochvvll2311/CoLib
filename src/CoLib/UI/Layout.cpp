@@ -10,15 +10,6 @@ namespace co
         {
             throw InvalidOperationException();
         }
-        auto parent = this;
-        while (parent)
-        {
-            if (parent == widget.get())
-            {
-                throw InvalidOperationException();
-            }
-            parent = parent->m_parent;
-        }
         widget->m_parent = this;
         onAttach(widget);
     }

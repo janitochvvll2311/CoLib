@@ -31,8 +31,8 @@ int main()
     frame.setPadding(1);
     background.setColor(sf::Color::White);
     frame.setMargin(10);
-    frame.setMaxWidth(0);
-    frame.setMaxHeight(0);
+    frame.setMinWidth(200);
+    frame.setMinHeight(200);
     frame.setBackground(std::make_shared<co::Background>(background));
     frame.attach(block);
 

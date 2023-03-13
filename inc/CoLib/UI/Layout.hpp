@@ -11,7 +11,7 @@ namespace co
 
     //////////////////////////////////////////////
 
-    class COLIB_UI_API Layout : public Widget
+    class COLIB_UI_API Layout
     {
 
     public:
