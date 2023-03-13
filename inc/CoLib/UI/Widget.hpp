@@ -27,13 +27,13 @@ namespace co
         virtual void update(bool force = false) const;
 
         Widget();
-        ~Widget();
+        virtual ~Widget();
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
         
-        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const = 0;
-        virtual void onUpdate() const = 0;
+        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
+        virtual void onUpdate() const;
 
     private:
         mutable bool m_isValid;

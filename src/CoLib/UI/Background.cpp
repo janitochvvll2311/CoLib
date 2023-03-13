@@ -34,7 +34,7 @@ namespace co
 
     void Background::onUpdate() const
     {
-        m_background.fitPoints({{getLeft(), getTop()}, {getWidth(), getHeight()}});
+        m_background.fitPoints({{0, 0}, {getWidth(), getHeight()}});
     }
 
 }

@@ -1,3 +1,4 @@
+#include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/Aligner.hpp>
 #include <CoLib/UI/Widget.hpp>
 
@@ -51,7 +52,12 @@ namespace co
     void Widget::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
         update(false);
-        onDraw(target, states);
+        auto _states = states;
+        _states.transform.translate({getLeft(), getTop()});
+        onDraw(target, _states);
     }
+
+    void Widget::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const {}
+    void Widget::onUpdate() const {}
 
 }

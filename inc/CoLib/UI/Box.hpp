@@ -44,7 +44,7 @@ namespace co
 
         Box(f32t width = 0, f32t height = 0);
         Box(f32t left, f32t top, f32t width, f32t height);
-        ~Box();
+        virtual ~Box();
 
     private:
         f32t m_left;

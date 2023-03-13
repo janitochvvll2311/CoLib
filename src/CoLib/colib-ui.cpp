@@ -3,3 +3,4 @@
 #include <CoLib/UI/Thickness.cpp>
 #include <CoLib/UI/Widget.cpp>
 #include <CoLib/UI/Background.cpp>
+#include <CoLib/UI/Span.cpp>
