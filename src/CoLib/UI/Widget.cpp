@@ -5,6 +5,28 @@
 namespace co
 {
 
+    f32t Widget::getOuterWidth() const
+    {
+        return getWidth();
+    }
+
+    f32t Widget::getInnerWidth() const
+    {
+        return getWidth();
+    }
+
+    f32t Widget::getOuterHeight() const
+    {
+        return getHeight();
+    }
+
+    f32t Widget::getInnerHeight() const
+    {
+        return getHeight();
+    }
+
+    ////////////////////////////////////////////////////////
+
     bool Widget::isValid() const
     {
         return m_isValid;
@@ -23,14 +45,12 @@ namespace co
         setHeight(0);
     }
 
-    void Widget::inflate(const sf::Vector2f &size, const Aligner *const aligner)
+    void Widget::inflate(const sf::Vector2f &size)
     {
+        setLeft(0);
+        setTop(0);
         setWidth(size.x);
         setHeight(size.y);
-        if (aligner)
-        {
-            aligner->align(*this);
-        }
     }
 
     void Widget::update(bool force) const

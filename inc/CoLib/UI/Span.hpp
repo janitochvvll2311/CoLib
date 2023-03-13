@@ -33,7 +33,7 @@ namespace co
         void setOutlineColor(const sf::Color &value);
 
         void compact() override;
-        void inflate(const sf::Vector2f &size, const Aligner *const aligner = nullptr) override;
+        void inflate(const sf::Vector2f &size) override;
 
         Span();
         virtual ~Span();

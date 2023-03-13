@@ -85,10 +85,10 @@ namespace co
         setHeight(bounds.height);
     }
 
-    void Span::inflate(const sf::Vector2f &size, const Aligner *const aligner)
+    void Span::inflate(const sf::Vector2f &size)
     {
         auto bounds = m_text.getLocalBounds();
-        Widget::inflate({bounds.width, bounds.height}, aligner);
+        Widget::inflate({bounds.width, bounds.height});
     }
 
     Span::Span()

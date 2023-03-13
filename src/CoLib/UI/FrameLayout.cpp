@@ -1,10 +1,47 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <CoLib/System/Exception.hpp>
 #include <CoLib/UI/Block.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
 
 namespace co
 {
+
+    FrameLayout::Alignment FrameLayout::getHorizontalAlignment(const SharedWidget &widget) const
+    {
+        if (!m_holder || m_holder->getWidget() != widget)
+        {
+            throw InvalidOperationException();
+        }
+        return m_holder->getHorizontalAlignment();
+    }
+
+    void FrameLayout::setHorizontalAlignment(const SharedWidget &widget, Alignment value) const
+    {
+        if (!m_holder || m_holder->getWidget() != widget)
+        {
+            throw InvalidOperationException();
+        }
+        m_holder->setHorizontalAlignment(value);
+    }
+
+    FrameLayout::Alignment FrameLayout::getVerticalAlignment(const SharedWidget &widget) const
+    {
+        if (!m_holder || m_holder->getWidget() != widget)
+        {
+            throw InvalidOperationException();
+        }
+        return m_holder->getVerticalAlignment();
+    }
+
+    void FrameLayout::setVerticalAlignment(const SharedWidget &widget, Alignment value) const
+    {
+        if (!m_holder || m_holder->getWidget() != widget)
+        {
+            throw InvalidOperationException();
+        }
+        m_holder->setVerticalAlignment(value);
+    }
 
     const Thickness &FrameLayout::getPadding() const
     {
@@ -16,30 +53,41 @@ namespace co
         m_padding = value;
     }
 
+    f32t FrameLayout::getInnerWidth() const
+    {
+        return getWidth() - m_padding.getHorizontal();
+    }
+
+    f32t FrameLayout::getInnerHeight() const
+    {
+        return getHeight() - m_padding.getVertical();
+    }
+
     ////////////////////////////////////////////////////////////////
 
     bool FrameLayout::isValid() const
     {
-        return (Block::isValid() && (!m_widget || m_widget->isValid()));
+        return (Block::isValid() && (!m_holder || m_holder->getWidget()->isValid()));
     }
 
     void FrameLayout::invalidate()
     {
         Block::invalidate();
-        if (m_widget)
+        if (m_holder)
         {
-            m_widget->invalidate();
+            m_holder->getWidget()->invalidate();
         }
     }
 
     void FrameLayout::compact()
     {
         sf::Vector2f size(0, 0);
-        if (m_widget)
+        if (m_holder)
         {
-            m_widget->compact();
-            size.x = m_widget->getWidth();
-            size.y = m_widget->getHeight();
+            auto &widget = m_holder->getWidget();
+            widget->compact();
+            size.x = widget->getWidth();
+            size.y = widget->getHeight();
         }
         Block::compact();
         auto &margin = getMargin();
@@ -47,17 +95,40 @@ namespace co
         setHeight(std::max(size.y, getMinHeight()) + margin.getVertical() + m_padding.getVertical());
     }
 
-    void FrameLayout::inflate(const sf::Vector2f &size, const Aligner *const aligner)
+    void FrameLayout::inflate(const sf::Vector2f &size)
     {
-        Block::inflate(size, aligner);
-        if (m_widget)
+        Block::inflate(size);
+        if (m_holder)
         {
-            m_widget->inflate({getWidth() - m_padding.getHorizontal(), getHeight() - m_padding.getVertical()}, nullptr);
+            auto &widget = m_holder->getWidget();
+            widget->inflate({getWidth() - m_padding.getHorizontal(), getHeight() - m_padding.getVertical()});
+            switch (m_holder->getHorizontalAlignment())
+            {
+            case Start:
+                break;
+            case End:
+                widget->setLeft(widget->getLeft() + getInnerWidth() - widget->getOuterWidth());
+                break;
+            case Center:
+                widget->setLeft(widget->getLeft() + (getInnerWidth() - widget->getOuterWidth()) / 2);
+                break;
+            }
+            switch (m_holder->getVerticalAlignment())
+            {
+            case Start:
+                break;
+            case End:
+                widget->setTop(widget->getTop() + getInnerWidth() - widget->getOuterWidth());
+                break;
+            case Center:
+                widget->setTop(widget->getTop() + (getInnerHeight() - widget->getOuterHeight()) / 2);
+                break;
+            }
         }
     }
 
     FrameLayout::FrameLayout()
-        : m_widget(nullptr), m_padding(0) {}
+        : m_holder(nullptr), m_padding(0) {}
 
     FrameLayout::~FrameLayout() {}
 
@@ -66,32 +137,70 @@ namespace co
     void FrameLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
         Block::onDraw(target, states);
-        if (m_widget)
+        if (m_holder)
         {
             auto _states = states;
             auto &margin = getMargin();
             _states.transform.translate({m_padding.left, m_padding.top});
-            target.draw(*m_widget, _states);
+            target.draw(*m_holder->getWidget(), _states);
         }
     }
 
     void FrameLayout::onUpdate() const
     {
         Block::onUpdate();
-        if (m_widget)
+        if (m_holder)
         {
-            m_widget->update(true);
+            m_holder->getWidget()->update(true);
         }
     }
 
     void FrameLayout::onAttach(const SharedWidget &widget)
     {
-        m_widget = widget;
+        m_holder.reset(new WidgetHolder());
+        m_holder->setWidget(widget);
     }
 
     void FrameLayout::onDetach(const SharedWidget &widget)
     {
-        m_widget = nullptr;
+        m_holder.reset();
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    FrameLayout::Alignment FrameLayout::WidgetHolder::getHorizontalAlignment() const
+    {
+        return m_hAlignment;
+    }
+
+    void FrameLayout::WidgetHolder::setHorizontalAlignment(Alignment value)
+    {
+        m_hAlignment = value;
+    }
+
+    FrameLayout::Alignment FrameLayout::WidgetHolder::getVerticalAlignment() const
+    {
+        return m_vAlignment;
+    }
+
+    void FrameLayout::WidgetHolder::setVerticalAlignment(Alignment value)
+    {
+        m_vAlignment = value;
+    }
+
+    const SharedWidget &FrameLayout::WidgetHolder::getWidget() const
+    {
+        return m_widget;
+    }
+
+    void FrameLayout::WidgetHolder::setWidget(const SharedWidget &value)
+    {
+        m_widget = value;
+    }
+
+    FrameLayout::WidgetHolder::WidgetHolder()
+        : m_hAlignment(Start), m_vAlignment(Start), m_widget(nullptr) {}
+
+    FrameLayout::WidgetHolder::~WidgetHolder() {}
 
 }

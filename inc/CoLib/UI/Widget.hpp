@@ -21,12 +21,22 @@ namespace co
         friend Layout;
 
     public:
+        virtual f32t getOuterWidth() const;
+        virtual f32t getInnerWidth() const;
+
+        virtual f32t getOuterHeight() const;
+        virtual f32t getInnerHeight() const;
+
+        ///////////////////////////////////////////////
+
         virtual bool isValid() const;
         virtual void invalidate();
 
         virtual void compact();
-        virtual void inflate(const sf::Vector2f &size, const Aligner *const aligner = nullptr);
+        virtual void inflate(const sf::Vector2f &size);
         void update(bool force = false) const;
+
+        Widget(const Widget &other) = delete;
 
         Widget();
         virtual ~Widget();
@@ -39,7 +49,7 @@ namespace co
 
     private:
         mutable bool m_isValid;
-        Layout* m_parent;
+        Layout *m_parent;
     };
 
 }

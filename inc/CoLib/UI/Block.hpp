@@ -31,11 +31,16 @@ namespace co
         f32t getMaxHeight() const;
         void setMaxHeight(f32t value);
 
+        f32t getOuterWidth() const override;
+        f32t getOuterHeight() const override;
+
+        //////////////////////////////////////////////////////////////
+
         const Thickness &getMargin() const;
         void setMargin(const Thickness &value);
 
         void compact() override;
-        void inflate(const sf::Vector2f &size, const Aligner *const aligner = nullptr) override;
+        void inflate(const sf::Vector2f &size) override;
 
         Block();
         ~Block();

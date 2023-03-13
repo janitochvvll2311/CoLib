@@ -67,6 +67,16 @@ namespace co
         m_margin = value;
     }
 
+    f32t Block::getOuterWidth() const
+    {
+        return getWidth() + m_margin.getHorizontal();
+    }
+
+    f32t Block::getOuterHeight() const
+    {
+        return getHeight() + m_margin.getVertical();
+    }
+
     /////////////////////////////////////////////////////////
 
     void Block::compact()
@@ -76,15 +86,15 @@ namespace co
         setHeight(m_minHeight + m_margin.getVertical());
     }
 
-    void Block::inflate(const sf::Vector2f &size, const Aligner *const aligner)
+    void Block::inflate(const sf::Vector2f &size)
     {
         sf::Vector2f _size(std::max(getWidth(), std::min(size.x, m_maxWidth + m_margin.getHorizontal())),
                            std::max(getHeight(), std::min(size.y, m_maxHeight + m_margin.getVertical())));
-        Widget::inflate(_size, aligner);
+        Widget::inflate(_size);
         shrink(m_margin);
         if (m_background)
         {
-            m_background->inflate({getWidth(), getHeight()}, nullptr);
+            m_background->inflate({getWidth(), getHeight()});
         }
     }
 

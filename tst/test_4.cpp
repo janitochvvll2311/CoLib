@@ -26,7 +26,7 @@ int main()
     block.setMaxHeight(0);
 
     block.compact();
-    block.inflate(wsize, nullptr);
+    block.inflate(wsize);
     block.invalidate();
 
     while (window.isOpen())
@@ -43,13 +43,13 @@ int main()
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 block.compact();
-                block.inflate(wsize, nullptr);
+                block.inflate(wsize);
                 block.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
                 block.compact();
-                block.inflate(cursor, nullptr);
+                block.inflate(cursor);
                 block.invalidate();
                 break;
             }

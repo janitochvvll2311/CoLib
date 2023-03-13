@@ -6,6 +6,13 @@
 #include <CoLib/UI/Block.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
 
+auto makeBackground(const sf::Color &color)
+{
+    auto background = std::make_shared<co::Background>();
+    background->setColor(color);
+    return background;
+}
+
 int main()
 {
 
@@ -16,28 +23,28 @@ int main()
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
     co::Rectangle rectangle(100, 100);
-    co::Background background;
+
+    co::FrameLayout frame;
+    frame.setBackground(makeBackground(sf::Color::White));
+    frame.setPadding(10);
+    frame.setMargin(10);
+    frame.setMinWidth(200);
+    frame.setMinHeight(200);
 
     auto block = std::make_shared<co::Block>();
-    background.setColor(sf::Color::Red);
-    block->setBackground(std::make_shared<co::Background>(background));
+    block->setBackground(makeBackground(sf::Color::Red));
     // block->setMargin(10);
     block->setMinWidth(100);
     block->setMinHeight(100);
     block->setMaxWidth(0);
     block->setMaxHeight(0);
 
-    co::FrameLayout frame;
-    frame.setPadding(1);
-    background.setColor(sf::Color::White);
-    frame.setMargin(10);
-    frame.setMinWidth(200);
-    frame.setMinHeight(200);
-    frame.setBackground(std::make_shared<co::Background>(background));
     frame.attach(block);
+    frame.setHorizontalAlignment(block, co::FrameLayout::Center);
+    frame.setVerticalAlignment(block, co::FrameLayout::Center);
 
     frame.compact();
-    frame.inflate(wsize, nullptr);
+    frame.inflate(wsize);
     frame.invalidate();
 
     while (window.isOpen())
@@ -54,13 +61,13 @@ int main()
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 frame.compact();
-                frame.inflate(wsize, nullptr);
+                frame.inflate(wsize);
                 frame.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
                 frame.compact();
-                frame.inflate(cursor, nullptr);
+                frame.inflate(cursor);
                 frame.invalidate();
                 break;
             }
