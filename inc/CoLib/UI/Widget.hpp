@@ -8,7 +8,6 @@
 namespace co
 {
 
-    class Aligner;
     class Layout;
 
     ///////////////////////////////////////

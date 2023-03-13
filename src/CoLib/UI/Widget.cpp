@@ -1,5 +1,4 @@
 #include <SFML/Graphics/RenderStates.hpp>
-#include <CoLib/UI/Aligner.hpp>
 #include <CoLib/UI/Widget.hpp>
 
 namespace co

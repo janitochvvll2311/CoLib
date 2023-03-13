@@ -1,5 +1,4 @@
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <CoLib/UI/Aligner.hpp>
 #include <CoLib/UI/Span.hpp>
 
 namespace co
