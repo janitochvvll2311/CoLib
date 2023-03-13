@@ -20,10 +20,11 @@ int main()
     co::Block block;
     block.setBackground(background);
     block.setMargin(10);
-    block.setMinWidth(100);
-    block.setMinHeight(100);
-    block.setMaxWidth(0);
-    block.setMaxHeight(0);
+    block.setPadding(10);
+    // block.setMinWidth(100);
+    // block.setMinHeight(100);
+    // block.setMaxWidth(0);
+    // block.setMaxHeight(0);
 
     block.compact();
     block.inflate(wsize);

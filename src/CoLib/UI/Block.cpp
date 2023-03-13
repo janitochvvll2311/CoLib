@@ -67,9 +67,24 @@ namespace co
         m_margin = value;
     }
 
+    const Thickness &Block::getPadding() const
+    {
+        return m_padding;
+    }
+
+    void Block::setPadding(const Thickness &value)
+    {
+        m_padding = value;
+    }
+
     f32t Block::getOuterWidth() const
     {
         return getWidth() + m_margin.getHorizontal();
+    }
+
+    f32t Block::getInnerWidth() const
+    {
+        return getWidth() - m_padding.getHorizontal();
     }
 
     f32t Block::getOuterHeight() const
@@ -77,13 +92,18 @@ namespace co
         return getHeight() + m_margin.getVertical();
     }
 
+    f32t Block::getInnerHeight() const
+    {
+        return getHeight() - m_padding.getVertical();
+    }
+
     /////////////////////////////////////////////////////////
 
     void Block::compact()
     {
         Widget::compact();
-        setWidth(m_minWidth + m_margin.getHorizontal());
-        setHeight(m_minHeight + m_margin.getVertical());
+        setWidth(m_minWidth + m_margin.getHorizontal() + m_padding.getHorizontal());
+        setHeight(m_minHeight + m_margin.getVertical() + m_padding.getVertical());
     }
 
     void Block::inflate(const sf::Vector2f &size)
@@ -102,7 +122,7 @@ namespace co
         : m_background(),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
-          m_margin(0) {}
+          m_margin(0), m_padding(0) {}
 
     Block::~Block() {}
 

@@ -43,26 +43,6 @@ namespace co
         m_holder->setVerticalAlignment(value);
     }
 
-    const Thickness &FrameLayout::getPadding() const
-    {
-        return m_padding;
-    }
-
-    void FrameLayout::setPadding(const Thickness &value)
-    {
-        m_padding = value;
-    }
-
-    f32t FrameLayout::getInnerWidth() const
-    {
-        return getWidth() - m_padding.getHorizontal();
-    }
-
-    f32t FrameLayout::getInnerHeight() const
-    {
-        return getHeight() - m_padding.getVertical();
-    }
-
     ////////////////////////////////////////////////////////////////
 
     bool FrameLayout::isValid() const
@@ -91,8 +71,9 @@ namespace co
         }
         Block::compact();
         auto &margin = getMargin();
-        setWidth(std::max(size.x, getMinWidth()) + margin.getHorizontal() + m_padding.getHorizontal());
-        setHeight(std::max(size.y, getMinHeight()) + margin.getVertical() + m_padding.getVertical());
+        auto &padding = getPadding();
+        setWidth(std::max(size.x, getMinWidth()) + margin.getHorizontal() + padding.getHorizontal());
+        setHeight(std::max(size.y, getMinHeight()) + margin.getVertical() + padding.getVertical());
     }
 
     void FrameLayout::inflate(const sf::Vector2f &size)
@@ -100,8 +81,9 @@ namespace co
         Block::inflate(size);
         if (m_holder)
         {
+            auto &padding = getPadding();
             auto &widget = m_holder->getWidget();
-            widget->inflate({getWidth() - m_padding.getHorizontal(), getHeight() - m_padding.getVertical()});
+            widget->inflate({getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical()});
             switch (m_holder->getHorizontalAlignment())
             {
             case Start:
@@ -128,7 +110,7 @@ namespace co
     }
 
     FrameLayout::FrameLayout()
-        : m_holder(nullptr), m_padding(0) {}
+        : m_holder(nullptr) {}
 
     FrameLayout::~FrameLayout() {}
 
@@ -139,9 +121,9 @@ namespace co
         Block::onDraw(target, states);
         if (m_holder)
         {
+            auto &padding = getPadding();
             auto _states = states;
-            auto &margin = getMargin();
-            _states.transform.translate({m_padding.left, m_padding.top});
+            _states.transform.translate({padding.left, padding.top});
             target.draw(*m_holder->getWidget(), _states);
         }
     }

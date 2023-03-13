@@ -31,13 +31,19 @@ namespace co
         f32t getMaxHeight() const;
         void setMaxHeight(f32t value);
 
-        f32t getOuterWidth() const override;
-        f32t getOuterHeight() const override;
-
         //////////////////////////////////////////////////////////////
 
         const Thickness &getMargin() const;
         void setMargin(const Thickness &value);
+
+        const Thickness &getPadding() const;
+        void setPadding(const Thickness &value);
+
+        f32t getOuterWidth() const override;
+        f32t getInnerWidth() const override;
+
+        f32t getOuterHeight() const override;
+        f32t getInnerHeight() const override;
 
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
@@ -57,6 +63,7 @@ namespace co
         f32t m_minHeight;
         f32t m_maxHeight;
         Thickness m_margin;
+        Thickness m_padding;
     };
 
 }

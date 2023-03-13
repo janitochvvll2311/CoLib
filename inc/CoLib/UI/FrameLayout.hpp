@@ -32,12 +32,6 @@ namespace co
         Alignment getVerticalAlignment(const SharedWidget &widget) const;
         void setVerticalAlignment(const SharedWidget &widget, Alignment value) const;
 
-        const Thickness &getPadding() const;
-        void setPadding(const Thickness &value);
-
-        f32t getInnerWidth() const override;
-        f32t getInnerHeight() const override;
-
         bool isValid() const override;
         void invalidate() override;
 
@@ -76,7 +70,6 @@ namespace co
             SharedWidget m_widget;
         };
 
-        Thickness m_padding;
         std::shared_ptr<WidgetHolder> m_holder;
     };
 
