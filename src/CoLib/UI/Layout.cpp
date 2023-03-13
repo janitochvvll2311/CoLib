@@ -1,0 +1,44 @@
+#include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/Layout.hpp>
+
+namespace co
+{
+
+    void Layout::attach(const SharedWidget &widget)
+    {
+        if (widget->m_parent != nullptr)
+        {
+            throw InvalidOperationException();
+        }
+        auto parent = this;
+        while (parent)
+        {
+            if (parent == widget.get())
+            {
+                throw InvalidOperationException();
+            }
+            parent = parent->m_parent;
+        }
+        widget->m_parent = this;
+        onAttach(widget);
+    }
+
+    void Layout::detach(const SharedWidget &widget)
+    {
+        if (widget->m_parent != this)
+        {
+            throw InvalidOperationException();
+        }
+        widget->m_parent = nullptr;
+        onDetach(widget);
+    }
+
+    Layout::Layout() {}
+    Layout::Layout::~Layout() {}
+
+    ////////////////////////////////////////////////////
+
+    void Layout::onAttach(const SharedWidget &widget) {}
+    void Layout::onDetach(const SharedWidget &widget) {}
+
+}

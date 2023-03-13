@@ -43,7 +43,7 @@ namespace co
     }
 
     Widget::Widget()
-        : m_isValid(false) {}
+        : m_isValid(false), m_parent(nullptr) {}
 
     Widget::~Widget() {}
 
