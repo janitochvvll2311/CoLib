@@ -16,10 +16,11 @@ int main()
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
     co::Rectangle rectangle(100, 100);
-    auto background = std::make_shared<co::Background>();
+    co::Background background;
 
     auto block = std::make_shared<co::Block>();
-    block->setBackground(background);
+    background.setColor(sf::Color::Red);
+    block->setBackground(std::make_shared<co::Background>(background));
     // block->setMargin(10);
     // block->setMinWidth(100);
     // block->setMinHeight(100);
@@ -28,6 +29,8 @@ int main()
 
     co::FrameLayout frame;
     frame.setPadding(10);
+    background.setColor(sf::Color::White);
+    frame.setBackground(std::make_shared<co::Background>(background));
     frame.attach(block);
 
     frame.compact();

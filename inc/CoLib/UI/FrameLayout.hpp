@@ -7,12 +7,22 @@
 namespace co
 {
 
+    class Block;
+    using SharedBlock = std::shared_ptr<Block>;
+
+    ///////////////////////////////////////////////////////
+
     class COLIB_UI_API FrameLayout : public Layout
     {
 
     public:
         const Thickness &getPadding() const;
         void setPadding(const Thickness &value);
+
+        SharedBackground getBackground() const;
+        void setBackground(const SharedBackground &value);
+
+        ///////////////////////////////////////////////////
 
         bool isValid() const override;
         void invalidate() override;
@@ -31,8 +41,9 @@ namespace co
         void onDetach(const SharedWidget &widget) override;
 
     private:
-        SharedWidget m_widget;
+        SharedBlock m_block;
         Thickness m_padding;
+        SharedWidget m_widget;
     };
 
 }

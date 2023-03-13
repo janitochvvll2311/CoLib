@@ -29,12 +29,18 @@ namespace co
 
     void Background::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
-        target.draw(m_background, states);
+        if (getWidth() > 0 && getHeight() > 0)
+        {
+            target.draw(m_background, states);
+        }
     }
 
     void Background::onUpdate() const
     {
-        m_background.fitPoints({{0, 0}, {getWidth(), getHeight()}});
+        if (getWidth() > 0 && getHeight() > 0)
+        {
+            m_background.fitPoints({{0, 0}, {getWidth(), getHeight()}});
+        }
     }
 
 }

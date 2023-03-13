@@ -15,6 +15,24 @@ namespace co
         m_padding = value;
     }
 
+    SharedBackground FrameLayout::getBackground() const
+    {
+        if (m_block)
+        {
+            return m_block->getBackground();
+        }
+        return nullptr;
+    }
+
+    void FrameLayout::setBackground(const SharedBackground &value)
+    {
+        if (!m_block)
+        {
+            m_block.reset(new Block());
+        }
+        m_block->setBackground(value);
+    }
+
     ////////////////////////////////////////////////////////////////
 
     bool FrameLayout::isValid() const
@@ -33,22 +51,34 @@ namespace co
 
     void FrameLayout::compact()
     {
+        sf::Vector2f size(0, 0);
+        if (m_block)
+        {
+            m_block->compact();
+            size.x += m_block->getWidth();
+            size.y += m_block->getHeight();
+        }
         if (m_widget)
         {
             m_widget->compact();
-            setWidth(m_widget->getWidth() + m_padding.getHorizontal());
-            setHeight(m_widget->getHeight() + m_padding.getVertical());
+            size.x += m_widget->getWidth();
+            size.y += m_widget->getHeight();
         }
-        else
-        {
-            setWidth(m_padding.getHorizontal());
-            setHeight(m_padding.getVertical());
-        }
+        size.x += m_padding.getHorizontal();
+        size.y += m_padding.getVertical();
+        setWidth(size.x);
+        setHeight(size.y);
     }
 
     void FrameLayout::inflate(const sf::Vector2f &size, const Aligner *const aligner)
     {
         sf::Vector2f _size(std::max(getWidth(), size.x), std::max(getHeight(), size.y));
+        if (m_block)
+        {
+            m_block->inflate(_size, nullptr);
+            _size.x = m_block->getWidth();
+            _size.y = m_block->getHeight();
+        }
         Layout::inflate(_size, aligner);
         if (m_widget)
         {
@@ -67,6 +97,10 @@ namespace co
     void FrameLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
         Layout::onDraw(target, states);
+        if (m_block)
+        {
+            target.draw(*m_block, states);
+        }
         if (m_widget)
         {
             auto _states = states;
@@ -78,6 +112,10 @@ namespace co
     void FrameLayout::onUpdate() const
     {
         Layout::onUpdate();
+        if (m_block)
+        {
+            m_block->update(true);
+        }
         if (m_widget)
         {
             m_widget->update(true);
