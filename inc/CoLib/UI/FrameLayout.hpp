@@ -2,6 +2,7 @@
 #define COLIB_FRAME_LAYOUT_HPP
 
 #include <CoLib/UI/Layout.hpp>
+#include <CoLib/UI/Thickness.hpp>
 
 namespace co
 {
@@ -10,6 +11,9 @@ namespace co
     {
 
     public:
+        const Thickness &getPadding() const;
+        void setPadding(const Thickness &value);
+
         bool isValid() const override;
         void invalidate() override;
 
@@ -25,6 +29,10 @@ namespace co
 
         void onAttach(const SharedWidget &widget) override;
         void onDetach(const SharedWidget &widget) override;
+
+    private:
+        SharedWidget m_widget;
+        Thickness m_padding;
     };
 
 }
