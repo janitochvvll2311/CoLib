@@ -3,7 +3,7 @@
 #include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/UI/Thickness.hpp>
 #include <CoLib/UI/Background.hpp>
-#include <CoLib/UI/Span.hpp>
+#include <CoLib/UI/Block.hpp>
 
 int main()
 {
@@ -15,28 +15,19 @@ int main()
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
     co::Rectangle rectangle(100, 100);
+    auto background = std::make_shared<co::Background>();
 
-    co::Span span;
-    span.setString("It Works");
-    span.setFont(font);
-    span.setCharacterSize(50);
-    // span.setStyle(sf::Text::Bold | sf::Text::Italic | sf::Text::StrikeThrough | sf::Text::Underlined);
-    span.setFillColor(sf::Color::Green);
-    span.setOutlineThickness(10);
-    span.setOutlineColor(sf::Color::Blue);
-    span.compact();
-    span.inflate(wsize);
-    span.setLeft(100);
-    span.setTop(100);
-    span.invalidate();
+    co::Block block;
+    block.setBackground(background);
+    block.setMargin(10);
+    block.setMinWidth(100);
+    block.setMinHeight(100);
+    block.setMaxWidth(0);
+    block.setMaxHeight(0);
 
-    co::Background background;
-    background.setColor(sf::Color::Red);
-    background.compact();
-    background.inflate({span.getWidth(), span.getHeight()});
-    background.setLeft(100);
-    background.setTop(100);
-    background.invalidate();
+    block.compact();
+    block.inflate(wsize, nullptr);
+    block.invalidate();
 
     while (window.isOpen())
     {
@@ -51,36 +42,21 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                span.compact();
-                span.inflate(wsize);
-                span.setLeft(100);
-                span.setTop(100);
-                span.invalidate();
-                background.compact();
-                background.inflate({span.getWidth(), span.getHeight()});
-                background.setLeft(100);
-                background.setTop(100);
-                background.invalidate();
+                block.compact();
+                block.inflate(wsize, nullptr);
+                block.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
-                span.compact();
-                span.inflate(cursor);
-                span.setLeft(100);
-                span.setTop(100);
-                span.invalidate();
-                background.compact();
-                background.inflate({span.getWidth(), span.getHeight()});
-                background.setLeft(100);
-                background.setTop(100);
-                background.invalidate();
+                block.compact();
+                block.inflate(cursor, nullptr);
+                block.invalidate();
                 break;
             }
         }
 
         window.clear();
-        window.draw(background);
-        window.draw(span);
+        window.draw(block);
         window.display();
     }
 

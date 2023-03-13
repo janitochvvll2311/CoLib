@@ -39,7 +39,7 @@ namespace co
 
     private:
         mutable bool m_isValid;
-        Layout m_parent;
+        Layout* m_parent;
     };
 
 }

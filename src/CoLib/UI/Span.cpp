@@ -79,20 +79,16 @@ namespace co
 
     void Span::compact()
     {
+        Widget::compact();
         auto bounds = m_text.getLocalBounds();
-        setLeft(0);
-        setTop(0);
         setWidth(bounds.width);
         setHeight(bounds.height);
     }
 
     void Span::inflate(const sf::Vector2f &size, const Aligner *const aligner)
     {
-        compact();
-        if (aligner)
-        {
-            aligner->align(*this);
-        }
+        auto bounds = m_text.getLocalBounds();
+        Widget::inflate({bounds.width, bounds.height}, aligner);
     }
 
     Span::Span()
