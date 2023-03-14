@@ -20,12 +20,7 @@ namespace co
     {
 
     public:
-        enum Alignment
-        {
-            Start,
-            Center,
-            End
-        };
+        using Alignment = Anchor;
 
         Alignment getHorizontalAlignment(const SharedWidget &widget) const;
         void setHorizontalAlignment(const SharedWidget &widget, Alignment value) const;
@@ -39,6 +34,8 @@ namespace co
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
 
+        const SharedWidget &getWidget() const;
+
         FrameLayout();
         virtual ~FrameLayout();
 
@@ -50,8 +47,6 @@ namespace co
 
         void onAttach(const SharedWidget &widget) override;
         void onDetach(const SharedWidget &widget) override;
-
-        const SharedWidget& getWidget() const;
 
     private:
         class WidgetHolder;

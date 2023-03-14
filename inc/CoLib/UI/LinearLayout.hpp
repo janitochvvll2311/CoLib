@@ -21,12 +21,7 @@ namespace co
             Vertical
         };
 
-        enum Alignment
-        {
-            Start,
-            Center,
-            End
-        };
+        using Alignment = Anchor;
 
         Alignment getAlignment(const SharedWidget &widget) const;
         void setAlignment(const SharedWidget &widget, Alignment value);

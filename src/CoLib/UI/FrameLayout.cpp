@@ -105,6 +105,15 @@ namespace co
         }
     }
 
+    const SharedWidget &FrameLayout::getWidget() const
+    {
+        if (m_holder)
+        {
+            return m_holder->getWidget();
+        }
+        return NoWidget;
+    }
+
     FrameLayout::FrameLayout()
         : m_holder(nullptr) {}
 
@@ -155,15 +164,6 @@ namespace co
     void FrameLayout::onDetach(const SharedWidget &widget)
     {
         m_holder.reset();
-    }
-
-    const SharedWidget &FrameLayout::getWidget() const
-    {
-        if (m_holder)
-        {
-            return m_holder->getWidget();
-        }
-        return NoWidget;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
