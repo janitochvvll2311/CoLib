@@ -50,6 +50,11 @@ namespace co
         void onDetach(const SharedWidget &widget) override;
 
     private:
+        class WidgetHolder;
+        using SharedHolder = std::shared_ptr<WidgetHolder>;
+
+        /////////////////////////////////////////////////////////////
+
         class WidgetHolder : public co::WidgetHolder
         {
         public:
@@ -67,7 +72,9 @@ namespace co
             Alignment m_vAlignment;
         };
 
-        std::shared_ptr<WidgetHolder> m_holder;
+        /////////////////////////////////////////////////////////////
+
+        SharedHolder m_holder;
     };
 
 }

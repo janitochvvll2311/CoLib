@@ -9,3 +9,4 @@
 #include <CoLib/UI/WidgetHolder.cpp>
 #include <CoLib/UI/FrameLayout.cpp>
 #include <CoLib/UI/LinearLayout.cpp>
+#include <CoLib/UI/VirtualLayout.cpp>
