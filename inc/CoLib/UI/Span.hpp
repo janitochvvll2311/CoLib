@@ -11,26 +11,8 @@ namespace co
     {
 
     public:
-        const sf::String &getString() const;
-        void setString(const sf::String &value);
-
-        const sf::Font *getFont() const;
-        void setFont(const sf::Font &font);
-
-        f32t getCharacterSize() const;
-        void setCharacterSize(f32t value);
-
-        const sf::Color &getFillColor() const;
-        void setFillColor(const sf::Color &value);
-
-        sf::Uint32 getStyle() const;
-        void setStyle(sf::Uint32 value);
-
-        f32t getOutlineThickness() const;
-        void setOutlineThickness(f32t value);
-
-        const sf::Color &getOutlineColor() const;
-        void setOutlineColor(const sf::Color &value);
+        sf::Text &getText();
+        const sf::Text &getText() const;
 
         void compact() override;
         void inflate(const sf::Vector2f &size) override;

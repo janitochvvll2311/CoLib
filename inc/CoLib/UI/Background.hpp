@@ -12,8 +12,8 @@ namespace co
     {
 
     public:
-        const sf::Color &getColor() const;
-        void setColor(const sf::Color &value);
+        Graph &getGraph();
+        const Graph &getGraph() const;
 
         Background();
         virtual ~Background();
@@ -23,7 +23,7 @@ namespace co
         void onUpdate() const override;
 
     private:
-        mutable Graph m_background;
+        mutable Graph m_graph;
     };
 
 }

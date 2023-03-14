@@ -5,22 +5,22 @@
 namespace co
 {
 
-    const sf::Color &Background::getColor() const
+    Graph &Background::getGraph()
     {
-        return m_background.getColor();
+        return m_graph;
     }
 
-    void Background::setColor(const sf::Color &value)
+    const Graph &Background::getGraph() const
     {
-        m_background.setColor(value);
+        return m_graph;
     }
 
     Background::Background()
-        : m_background()
+        : m_graph()
     {
         co::Rectangle rectangle(1, 1);
-        m_background.setPrimitiveType(sf::PrimitiveType::TriangleFan);
-        m_background.setPoints(rectangle);
+        m_graph.setPrimitiveType(sf::PrimitiveType::TriangleFan);
+        m_graph.setPoints(rectangle);
     }
 
     Background::~Background() {}
@@ -31,7 +31,7 @@ namespace co
     {
         if (getWidth() > 0 && getHeight() > 0)
         {
-            target.draw(m_background, states);
+            target.draw(m_graph, states);
         }
     }
 
@@ -39,7 +39,7 @@ namespace co
     {
         if (getWidth() > 0 && getHeight() > 0)
         {
-            m_background.fitPoints({{0, 0}, {getWidth(), getHeight()}});
+            m_graph.fitPoints({{0, 0}, {getWidth(), getHeight()}});
         }
     }
 

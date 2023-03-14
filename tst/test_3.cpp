@@ -17,13 +17,13 @@ int main()
     co::Rectangle rectangle(100, 100);
 
     co::Span span;
-    span.setString("It Works");
-    span.setFont(font);
-    span.setCharacterSize(50);
-    // span.setStyle(sf::Text::Bold | sf::Text::Italic | sf::Text::StrikeThrough | sf::Text::Underlined);
-    span.setFillColor(sf::Color::Green);
-    span.setOutlineThickness(10);
-    span.setOutlineColor(sf::Color::Blue);
+    span.getText().setString("It Works");
+    span.getText().setFont(font);
+    span.getText().setCharacterSize(50);
+    // span.getText().setStyle(sf::Text::Bold | sf::Text::Italic | sf::Text::StrikeThrough | sf::Text::Underlined);
+    span.getText().setFillColor(sf::Color::Green);
+    span.getText().setOutlineThickness(10);
+    span.getText().setOutlineColor(sf::Color::Blue);
     span.compact();
     span.inflate(wsize);
     span.setLeft(100);
@@ -31,7 +31,7 @@ int main()
     span.invalidate();
 
     co::Background background;
-    background.setColor(sf::Color::Red);
+    background.getGraph().setColor(sf::Color::Red);
     background.compact();
     background.inflate({span.getWidth(), span.getHeight()});
     background.setLeft(100);
