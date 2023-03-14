@@ -10,6 +10,9 @@ namespace co
     class Background;
     using SharedBackground = std::shared_ptr<Background>;
 
+    class Widget;
+    using SharedWidget = std::shared_ptr<Widget>;
+
     //////////////////////////////////////////////////
 
     class COLIB_UI_API Block : public Widget
@@ -53,6 +56,7 @@ namespace co
 
     protected:
         virtual sf::Vector2f getContentSize() const;
+        virtual bool handleInnerEvent(const SharedWidget& widget, const sf::Event& event) const;
 
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;

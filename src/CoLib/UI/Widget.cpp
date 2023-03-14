@@ -61,6 +61,13 @@ namespace co
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////
+
+    bool Widget::handleEvent(const sf::Event &event)
+    {
+        return false;
+    }
+
     Widget::Widget()
         : m_isValid(false), m_parent(nullptr) {}
 

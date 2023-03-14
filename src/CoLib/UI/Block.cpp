@@ -1,4 +1,5 @@
 #include <limits>
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <CoLib/UI/Block.hpp>
 
@@ -132,6 +133,25 @@ namespace co
     sf::Vector2f Block::getContentSize() const
     {
         return {0, 0};
+    }
+
+    bool Block::handleInnerEvent(const SharedWidget &widget, const sf::Event &event) const
+    {
+        switch (event.type)
+        {
+        case sf::Event::MouseButtonPressed:
+        case sf::Event::MouseButtonReleased:
+        {
+            auto &margin = getMargin();
+            auto &padding = getPadding();
+            auto _event = event;
+            _event.mouseButton.x -= margin.getHorizontal() + padding.getHorizontal();
+            _event.mouseButton.y -= margin.getVertical() + padding.getVertical();
+            return widget->handleEvent(event);
+        }
+        default:
+            return widget->handleEvent(event);
+        }
     }
 
     void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const

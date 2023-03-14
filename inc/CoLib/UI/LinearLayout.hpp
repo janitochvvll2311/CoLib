@@ -43,6 +43,10 @@ namespace co
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
 
+        ///////////////////////////////////////////////////////////
+
+        bool handleEvent(const sf::Event &event) override;
+        
         LinearLayout();
         virtual ~LinearLayout();
 

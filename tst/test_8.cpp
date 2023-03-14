@@ -42,6 +42,29 @@ auto makeLinear(const sf::Color &color)
     return linear;
 }
 
+class Label : public co::Label
+{
+
+public:
+    bool handleEvent(const sf::Event &event) override
+    {
+        if (event.type == sf::Event::MouseButtonPressed)
+        {
+            auto &block = getBlock();
+            if (
+                event.mouseButton.x >= block.getLeft() &&
+                event.mouseButton.x <= block.getRight() &&
+                event.mouseButton.y >= block.getTop() &&
+                event.mouseButton.y <= block.getBottom())
+            {
+                std::cout << "Clicked\n";
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
 int main()
 {
 
@@ -51,7 +74,7 @@ int main()
     sf::Font font;
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
-    co::Label label;
+    Label label;
     label.getBlock().setBackground(makeBackground(sf::Color::White));
     label.getBlock().setMargin(10);
     label.getBlock().setPadding(10);
@@ -74,6 +97,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            label.handleEvent(event);
             switch (event.type)
             {
             case sf::Event::Closed:

@@ -261,6 +261,21 @@ namespace co
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////
+
+    bool LinearLayout::handleEvent(const sf::Event &event)
+    {
+        bool handled = false;
+        for (auto &holder : m_holders)
+        {
+            if (handleInnerEvent(holder->getWidget(), event))
+            {
+                handled = true;
+            }
+        }
+        return (handled || Block::handleEvent(event));
+    }
+
     LinearLayout::LinearLayout()
         : m_orientation(Horizontal), m_cAlignment(Start), m_holders() {}
 

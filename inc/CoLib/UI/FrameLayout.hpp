@@ -36,6 +36,10 @@ namespace co
 
         const SharedWidget &getWidget() const;
 
+        ///////////////////////////////////////////////////////////
+
+        bool handleEvent(const sf::Event &event) override;
+
         FrameLayout();
         virtual ~FrameLayout();
 
@@ -70,8 +74,6 @@ namespace co
             Alignment m_hAlignment;
             Alignment m_vAlignment;
         };
-
-        /////////////////////////////////////////////////////////////
 
         SharedHolder m_holder;
     };

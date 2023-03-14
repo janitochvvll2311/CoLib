@@ -5,6 +5,11 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <CoLib/UI/Box.hpp>
 
+namespace sf
+{
+    class Event;
+}
+
 namespace co
 {
 
@@ -34,6 +39,10 @@ namespace co
         virtual void compact();
         virtual void inflate(const sf::Vector2f &size);
         void update(bool force = false) const;
+
+        ////////////////////////////////////////////////////////
+
+        virtual bool handleEvent(const sf::Event &event);
 
         Widget(const Widget &other) = delete;
 

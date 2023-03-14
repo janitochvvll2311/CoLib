@@ -1,3 +1,4 @@
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/System/Exception.hpp>
@@ -112,6 +113,13 @@ namespace co
             return m_holder->getWidget();
         }
         return NoWidget;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+
+    bool FrameLayout::handleEvent(const sf::Event &event)
+    {
+        return ((m_holder && handleInnerEvent(getWidget(), event)) || Block::handleEvent(event));
     }
 
     FrameLayout::FrameLayout()
