@@ -49,6 +49,8 @@ namespace co
         void onAttach(const SharedWidget &widget) override;
         void onDetach(const SharedWidget &widget) override;
 
+        SharedWidget getWidget() const;
+
     private:
         class WidgetHolder;
         using SharedHolder = std::shared_ptr<WidgetHolder>;

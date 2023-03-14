@@ -148,6 +148,15 @@ namespace co
         m_holder.reset();
     }
 
+    SharedWidget FrameLayout::getWidget() const
+    {
+        if (m_holder)
+        {
+            return m_holder->getWidget();
+        }
+        return nullptr;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
 
     FrameLayout::Alignment FrameLayout::WidgetHolder::getHorizontalAlignment() const

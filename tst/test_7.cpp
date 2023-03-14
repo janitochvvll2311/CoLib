@@ -53,8 +53,8 @@ int main()
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setMargin(10);
     layout.setPadding(10);
-    layout.setMinWidth(100);
-    layout.setMinHeight(100);
+    // layout.setMinWidth(100);
+    // layout.setMinHeight(100);
 
     auto linear = makeLinear(sf::Color::Yellow);
     layout.attach(linear);
