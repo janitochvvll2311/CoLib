@@ -1,4 +1,5 @@
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <CoLib/System/Exception.hpp>
 #include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/Label.hpp>
 
@@ -7,93 +8,51 @@ namespace co
 
     Label::Alignment Label::getHorizontalContentAlignment() const
     {
-        return m_root.getHorizontalAlignment(m_root.getWidget());
+        return getHorizontalAlignment(m_span);
     }
 
     void Label::setHorizontalContentAlignment(Alignment value)
     {
-        m_root.setHorizontalAlignment(m_root.getWidget(), value);
+        setHorizontalAlignment(std::static_pointer_cast<Widget>(m_span), value);
     }
 
     Label::Alignment Label::getVerticalContentAlignment() const
     {
-        return m_root.getVerticalAlignment(m_root.getWidget());
+        return getVerticalAlignment(m_span);
     }
 
     void Label::setVerticalContentAlignment(Alignment value)
     {
-        m_root.setVerticalAlignment(m_root.getWidget(), value);
+        setVerticalAlignment(m_span, value);
     }
 
-    Block &Label::getBlock()
+    const SharedSpan &Label::getSpan() const
     {
-        return m_root;
-    }
-
-    const Block &Label::getBlock() const
-    {
-        return m_root;
-    }
-
-    Span &Label::getSpan()
-    {
-        return *(Span *)(m_root.getWidget().get());
-    }
-
-    const Span &Label::getSpan() const
-    {
-        return *(Span *)(m_root.getWidget().get());
-    }
-
-    /////////////////////////////////////////////
-
-    bool Label::isValid() const
-    {
-        return Widget::isValid() && m_root.isValid();
-    }
-
-    void Label::invalidate()
-    {
-        Widget::invalidate();
-        m_root.invalidate();
-    }
-
-    void Label::compact()
-    {
-        m_root.compact();
-        setLeft(0);
-        setTop(0);
-        setWidth(m_root.getWidth());
-        setHeight(m_root.getHeight());
-    }
-
-    void Label::inflate(const sf::Vector2f &size)
-    {
-        m_root.inflate(size);
-        setLeft(m_root.getLeft());
-        setTop(m_root.getTop());
-        setWidth(m_root.getWidth());
-        setHeight(m_root.getHeight());
+        return m_span;
     }
 
     Label::Label()
-        : m_root()
+        : m_span(new Span())
     {
-        m_root.attach(std::make_shared<Span>());
+        attach(m_span);
     }
 
     Label::~Label() {}
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////
 
-    void Label::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
+    void Label::onAttach(const SharedWidget &widget)
     {
-        target.draw(m_root, states);
+        if (getWidget())
+        {
+            throw InvalidOperationException();
+        }
+        FrameLayout::onAttach(widget);
     }
 
-    void Label::onUpdate() const
+    void Label::onDetach(const SharedWidget &widget)
     {
-        m_root.update(true);
+        throw InvalidOperationException();
     }
 
 }

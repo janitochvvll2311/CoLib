@@ -7,44 +7,31 @@ namespace co
 {
 
     class Span;
+    using SharedSpan = std::shared_ptr<Span>;
 
     ///////////////////////////////////////////////////////
 
-    class COLIB_UI_API Label : public Widget
+    class COLIB_UI_API Label : public FrameLayout
     {
 
     public:
-        using Alignment = FrameLayout::Alignment;
-
         Alignment getHorizontalContentAlignment() const;
         void setHorizontalContentAlignment(Alignment value);
 
         Alignment getVerticalContentAlignment() const;
         void setVerticalContentAlignment(Alignment value);
 
-        Block &getBlock();
-        const Block &getBlock() const;
-
-        Span &getSpan();
-        const Span &getSpan() const;
-
-        /////////////////////////////////////////////
-
-        bool isValid() const override;
-        void invalidate() override;
-
-        void compact() override;
-        void inflate(const sf::Vector2f &size) override;
+        const SharedSpan &getSpan() const;
 
         Label();
         virtual ~Label();
 
     protected:
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        void onUpdate() const override;
+        void onAttach(const SharedWidget &widget) override;
+        void onDetach(const SharedWidget &widget) override;
 
     private:
-        FrameLayout m_root;
+        SharedSpan m_span;
     };
 
 }

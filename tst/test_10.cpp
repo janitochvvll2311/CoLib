@@ -55,9 +55,9 @@ auto makeFrame(const sf::Color &color)
 auto makeLabel(const sf::String &text, const sf::Font &font)
 {
     auto label = std::make_shared<co::Label>();
-    label->getBlock().setBackground(makeBackground(sf::Color::Red));
-    label->getSpan().getText().setFont(font);
-    label->getSpan().getText().setString(text);
+    label->setBackground(makeBackground(sf::Color::Red));
+    label->getSpan()->getText().setFont(font);
+    label->getSpan()->getText().setString(text);
     return label;
 }
 
@@ -85,10 +85,10 @@ int main()
     layout.setContentAlignment(co::LinearLayout::Center);
 
     auto label = std::make_shared<co::Label>();
-    label->getSpan().getText().setFont(font);
-    label->getSpan().getText().setString("My Title");
-    label->getSpan().getText().setFillColor(sf::Color::Black);
-    label->getSpan().getText().setStyle(sf::Text::Bold);
+    label->getSpan()->getText().setFont(font);
+    label->getSpan()->getText().setString("My Title");
+    label->getSpan()->getText().setFillColor(sf::Color::Black);
+    label->getSpan()->getText().setStyle(sf::Text::Bold);
     label->setHorizontalContentAlignment(co::Label::Center);
     layout.attach(label);
 
@@ -97,13 +97,13 @@ int main()
     layout.setAlignment(content, co::LinearLayout::Center);
 
     auto button = std::make_shared<co::Button>();
-    button->getBlock().setBackground(makeBackground(sf::Color(200, 200, 200, 255)));
-    button->getSpan().getText().setFont(font);
-    button->getSpan().getText().setString("Action");
-    button->getSpan().getText().setFillColor(sf::Color::Black);
+    button->setBackground(makeBackground(sf::Color(200, 200, 200, 255)));
+    button->getSpan()->getText().setFont(font);
+    button->getSpan()->getText().setString("Action");
+    button->getSpan()->getText().setFillColor(sf::Color::Black);
     button->setHorizontalContentAlignment(co::Label::Center);
-    button->getBlock().setMaxWidth(0);
-    button->getBlock().setPadding({20, 10});
+    button->setMaxWidth(0);
+    button->setPadding({20, 10});
     button->setOnClickListener([](auto &widget)
                                { std::cout << "Clicked\n"; });
     layout.attach(button);
