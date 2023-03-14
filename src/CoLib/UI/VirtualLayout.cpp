@@ -16,12 +16,6 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////////
 
-    void VirtualLayout::compact()
-    {
-        FrameLayout::compact();
-        Block::compact();
-    }
-
     VirtualLayout::VirtualLayout()
         : m_texture(), m_surface(), m_transform(sf::Transform::Identity)
     {
@@ -32,7 +26,12 @@ namespace co
 
     VirtualLayout::~VirtualLayout() {}
 
-    //////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+
+    sf::Vector2f VirtualLayout::getContentSize() const
+    {
+        return {0, 0};
+    }
 
     void VirtualLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {

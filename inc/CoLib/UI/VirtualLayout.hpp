@@ -19,12 +19,12 @@ namespace co
 
         ///////////////////////////////////
 
-        void compact() override;
-
         VirtualLayout();
         virtual ~VirtualLayout();
 
     protected:
+        sf::Vector2f getContentSize() const override;
+
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;
 
