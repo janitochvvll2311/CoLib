@@ -118,6 +118,11 @@ namespace co
         m_height += thickness.getVertical();
     }
 
+    bool Box::contains(const sf::Vector2f &point) const
+    {
+        return point.x >= m_left && point.x <= (m_left + m_width) && point.y >= m_top && point.y <= (m_top + m_height);
+    }
+
     Box::Box(f32t width, f32t height)
         : m_left(0), m_top(0), m_width(width), m_height(height) {}
 

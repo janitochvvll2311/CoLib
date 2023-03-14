@@ -1,6 +1,7 @@
 #ifndef COLIB_BOX_HPP
 #define COLIB_BOX_HPP
 
+#include <SFML/System/Vector2.hpp>
 #include <CoLib/UI/Export.hpp>
 
 namespace co
@@ -41,6 +42,8 @@ namespace co
 
         void shrink(const Thickness &thickness);
         void expand(const Thickness &thickness);
+
+        bool contains(const sf::Vector2f &point) const;
 
         Box(f32t width = 0, f32t height = 0);
         Box(f32t left, f32t top, f32t width, f32t height);
