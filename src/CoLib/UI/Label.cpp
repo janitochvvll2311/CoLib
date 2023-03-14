@@ -43,7 +43,7 @@ namespace co
 
     void Label::onAttach(const SharedWidget &widget)
     {
-        if (getWidget())
+        if (widget != m_span)
         {
             throw InvalidOperationException();
         }
