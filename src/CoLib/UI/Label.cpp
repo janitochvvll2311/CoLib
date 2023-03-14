@@ -13,7 +13,7 @@ namespace co
 
     void Label::setHorizontalContentAlignment(Alignment value)
     {
-        setHorizontalAlignment(std::static_pointer_cast<Widget>(m_span), value);
+        setHorizontalAlignment(m_span, value);
     }
 
     Label::Alignment Label::getVerticalContentAlignment() const
