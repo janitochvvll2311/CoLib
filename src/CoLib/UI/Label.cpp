@@ -1,4 +1,3 @@
-#include <SFML/Graphics/RenderTarget.hpp>
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/Label.hpp>
