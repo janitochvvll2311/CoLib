@@ -277,7 +277,7 @@ namespace co
     }
 
     LinearLayout::LinearLayout()
-        : m_orientation(Horizontal), m_cAlignment(Start), m_holders() {}
+        : m_orientation(Horizontal), m_isReverse(false), m_cAlignment(Start), m_holders() {}
 
     LinearLayout::~LinearLayout() {}
 

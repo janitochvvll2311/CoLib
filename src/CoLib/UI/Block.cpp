@@ -147,7 +147,7 @@ namespace co
             auto _event = event;
             _event.mouseButton.x -= margin.getHorizontal() + padding.getHorizontal();
             _event.mouseButton.y -= margin.getVertical() + padding.getVertical();
-            return widget->handleEvent(event);
+            return widget->handleEvent(_event);
         }
         default:
             return widget->handleEvent(event);

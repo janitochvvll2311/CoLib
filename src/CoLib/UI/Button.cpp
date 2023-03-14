@@ -18,9 +18,10 @@ namespace co
     {
         if (event.type == sf::Event::MouseButtonReleased)
         {
-            if (m_onClick && getBlock().contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
+            if (m_onClick && contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
             {
                 m_onClick(*this);
+                return true;
             }
         }
         return Label::handleEvent(event);

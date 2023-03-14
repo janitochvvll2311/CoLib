@@ -82,6 +82,7 @@ int main()
     co::LinearLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setOritentation(co::LinearLayout::Vertical);
+    layout.setContentAlignment(co::LinearLayout::Center);
 
     auto label = std::make_shared<co::Label>();
     label->getSpan().getText().setFont(font);
@@ -91,7 +92,9 @@ int main()
     label->setHorizontalContentAlignment(co::Label::Center);
     layout.attach(label);
 
-    layout.attach(makeLinear(sf::Color::Yellow));
+    auto content = makeLinear(sf::Color::Yellow);
+    layout.attach(content);
+    layout.setAlignment(content, co::LinearLayout::Center);
 
     auto button = std::make_shared<co::Button>();
     button->getBlock().setBackground(makeBackground(sf::Color(200, 200, 200, 255)));
@@ -101,6 +104,8 @@ int main()
     button->setHorizontalContentAlignment(co::Label::Center);
     button->getBlock().setMaxWidth(0);
     button->getBlock().setPadding({20, 10});
+    button->setOnClickListener([](auto &widget)
+                               { std::cout << "Clicked\n"; });
     layout.attach(button);
     layout.setAlignment(button, co::LinearLayout::Center);
 
@@ -116,7 +121,6 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            layout.handleEvent(event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -129,10 +133,8 @@ int main()
                 layout.inflate(wsize);
                 layout.invalidate();
                 break;
-            case sf::Event::MouseButtonPressed:
-                layout.compact();
-                layout.inflate(cursor);
-                layout.invalidate();
+            case sf::Event::MouseButtonReleased:
+                layout.handleEvent(event);
                 break;
             }
         }
