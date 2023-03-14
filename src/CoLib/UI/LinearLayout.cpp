@@ -47,6 +47,16 @@ namespace co
         m_isReverse = value;
     }
 
+    LinearLayout::Alignment LinearLayout::getContentAlignment() const
+    {
+        return m_cAlignment;
+    }
+
+    void LinearLayout::setContentAlignment(Alignment value)
+    {
+        m_cAlignment = value;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     bool LinearLayout::isValid() const
@@ -109,20 +119,51 @@ namespace co
     {
         Block::inflate(size);
         sf::Vector2f _size(getInnerWidth(), getInnerHeight());
-        f32t offset = 0;
+        f32t length = 0;
         switch (m_orientation)
         {
         case Horizontal:
         {
+            for (auto &holder : m_holders)
+            {
+                auto &widget = holder->getWidget();
+                widget->inflate({0, _size.y});
+                length += widget->getOuterWidth();
+            }
+            f32t offset = _size.x - length;
+            if (offset > 0)
+            {
+                switch (m_cAlignment)
+                {
+                case Start:
+                    offset = 0;
+                    break;
+                case End:
+                    break;
+                case Center:
+                    offset /= 2;
+                }
+            }
             if (m_isReverse)
             {
                 for (auto iterator = m_holders.rbegin(); iterator != m_holders.rend(); iterator++)
                 {
                     auto &holder = *iterator;
                     auto &widget = holder->getWidget();
-                    widget->inflate({widget->getHeight(), _size.y});
                     widget->setLeft(widget->getLeft() + offset);
                     offset += widget->getOuterWidth();
+                    f32t spacing = _size.y - widget->getOuterHeight();
+                    switch (holder->getAlignment())
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        widget->setTop(widget->getTop() + spacing);
+                        break;
+                    case Center:
+                        widget->setTop(widget->getTop() + spacing / 2);
+                        break;
+                    }
                 }
             }
             else
@@ -131,39 +172,66 @@ namespace co
                 {
                     auto &holder = *iterator;
                     auto &widget = holder->getWidget();
-                    widget->inflate({widget->getHeight(), _size.y});
                     widget->setLeft(widget->getLeft() + offset);
                     offset += widget->getOuterWidth();
-                }
-            }
-            for (auto &holder : m_holders)
-            {
-                auto &widget = holder->getWidget();
-                switch (holder->getAlignment())
-                {
-                case Start:
-                    break;
-                case End:
-                    widget->setTop(widget->getTop() + getInnerHeight() - widget->getOuterHeight());
-                    break;
-                case Center:
-                    widget->setTop(widget->getTop() + (getInnerHeight() - widget->getOuterHeight()) / 2);
-                    break;
+                    f32t spacing = _size.y - widget->getOuterHeight();
+                    switch (holder->getAlignment())
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        widget->setTop(widget->getTop() + spacing);
+                        break;
+                    case Center:
+                        widget->setTop(widget->getTop() + spacing / 2);
+                        break;
+                    }
                 }
             }
         }
         break;
         case Vertical:
         {
+            for (auto &holder : m_holders)
+            {
+                auto &widget = holder->getWidget();
+                widget->inflate({_size.x, 0});
+                length += widget->getOuterHeight();
+            }
+            f32t offset = _size.y - length;
+            if (offset > 0)
+            {
+                switch (m_cAlignment)
+                {
+                case Start:
+                    offset = 0;
+                    break;
+                case End:
+                    break;
+                case Center:
+                    offset /= 2;
+                }
+            }
             if (m_isReverse)
             {
                 for (auto iterator = m_holders.rbegin(); iterator != m_holders.rend(); iterator++)
                 {
                     auto &holder = *iterator;
                     auto &widget = holder->getWidget();
-                    widget->inflate({_size.x, widget->getWidth()});
                     widget->setTop(widget->getTop() + offset);
                     offset += widget->getOuterHeight();
+                    f32t spacing = _size.x - widget->getOuterWidth();
+                    switch (holder->getAlignment())
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        widget->setLeft(widget->getLeft() + spacing);
+                        break;
+                    case Center:
+                        widget->setLeft(widget->getLeft() + spacing / 2);
+                        break;
+                    }
                 }
             }
             else
@@ -172,24 +240,20 @@ namespace co
                 {
                     auto &holder = *iterator;
                     auto &widget = holder->getWidget();
-                    widget->inflate({_size.x, widget->getWidth()});
                     widget->setTop(widget->getTop() + offset);
                     offset += widget->getOuterHeight();
-                }
-            }
-            for (auto &holder : m_holders)
-            {
-                auto &widget = holder->getWidget();
-                switch (holder->getAlignment())
-                {
-                case Start:
-                    break;
-                case End:
-                    widget->setLeft(widget->getLeft() + getInnerWidth() - widget->getOuterWidth());
-                    break;
-                case Center:
-                    widget->setLeft(widget->getLeft() + (getInnerWidth() - widget->getOuterWidth()) / 2);
-                    break;
+                    f32t spacing = _size.x - widget->getOuterWidth();
+                    switch (holder->getAlignment())
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        widget->setLeft(widget->getLeft() + spacing);
+                        break;
+                    case Center:
+                        widget->setLeft(widget->getLeft() + spacing / 2);
+                        break;
+                    }
                 }
             }
         }
@@ -198,7 +262,7 @@ namespace co
     }
 
     LinearLayout::LinearLayout()
-        : m_orientation(Horizontal), m_holders() {}
+        : m_orientation(Horizontal), m_cAlignment(Start), m_holders() {}
 
     LinearLayout::~LinearLayout() {}
 

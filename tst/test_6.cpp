@@ -19,7 +19,9 @@ auto makeBlock(const sf::Color &color)
     block->setBackground(makeBackground(color));
     block->setMinWidth(100);
     block->setMinHeight(100);
-    block->setMaxHeight(100);
+    block->setMaxWidth(0);
+    block->setMaxHeight(0);
+    block->setMargin(10);
     return block;
 }
 
@@ -38,8 +40,9 @@ int main()
     linear.setBackground(makeBackground(sf::Color::White));
     linear.setPadding(10);
     linear.setMargin(10);
-    linear.setOritentation(co::LinearLayout::Vertical);
+    // linear.setOritentation(co::LinearLayout::Vertical);
     linear.setReverse();
+    linear.setContentAlignment(co::LinearLayout::Center);
     // linear.setMinWidth(200);
     // linear.setMinHeight(200);
 

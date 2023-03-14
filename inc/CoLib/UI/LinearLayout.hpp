@@ -37,6 +37,9 @@ namespace co
         bool isReverse() const;
         void setReverse(bool value = true);
 
+        Alignment getContentAlignment() const;
+        void setContentAlignment(Alignment value);
+
         //////////////////////////////////////////////////////////////
 
         bool isValid() const override;
@@ -80,6 +83,7 @@ namespace co
 
         Orientation m_orientation;
         bool m_isReverse;
+        Alignment m_cAlignment;
         std::list<SharedHolder> m_holders;
     };
 
