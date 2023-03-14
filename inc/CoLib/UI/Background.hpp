@@ -16,7 +16,7 @@ namespace co
         void setColor(const sf::Color &value);
 
         Background();
-        ~Background();
+        virtual ~Background();
 
     protected:
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;

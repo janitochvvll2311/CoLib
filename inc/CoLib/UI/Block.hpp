@@ -49,7 +49,7 @@ namespace co
         void inflate(const sf::Vector2f &size) override;
 
         Block();
-        ~Block();
+        virtual ~Block();
 
     protected:
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;

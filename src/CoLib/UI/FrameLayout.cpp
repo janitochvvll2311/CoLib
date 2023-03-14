@@ -139,7 +139,7 @@ namespace co
 
     void FrameLayout::onAttach(const SharedWidget &widget)
     {
-        m_holder.reset(new WidgetHolder());
+        m_holder.reset(new FrameWidgetHolder());
         m_holder->setWidget(widget);
     }
 
@@ -150,39 +150,29 @@ namespace co
 
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    FrameLayout::Alignment FrameLayout::WidgetHolder::getHorizontalAlignment() const
+    FrameLayout::Alignment FrameLayout::FrameWidgetHolder::getHorizontalAlignment() const
     {
         return m_hAlignment;
     }
 
-    void FrameLayout::WidgetHolder::setHorizontalAlignment(Alignment value)
+    void FrameLayout::FrameWidgetHolder::setHorizontalAlignment(Alignment value)
     {
         m_hAlignment = value;
     }
 
-    FrameLayout::Alignment FrameLayout::WidgetHolder::getVerticalAlignment() const
+    FrameLayout::Alignment FrameLayout::FrameWidgetHolder::getVerticalAlignment() const
     {
         return m_vAlignment;
     }
 
-    void FrameLayout::WidgetHolder::setVerticalAlignment(Alignment value)
+    void FrameLayout::FrameWidgetHolder::setVerticalAlignment(Alignment value)
     {
         m_vAlignment = value;
     }
 
-    const SharedWidget &FrameLayout::WidgetHolder::getWidget() const
-    {
-        return m_widget;
-    }
+    FrameLayout::FrameWidgetHolder::FrameWidgetHolder()
+        : m_hAlignment(Start), m_vAlignment(Start) {}
 
-    void FrameLayout::WidgetHolder::setWidget(const SharedWidget &value)
-    {
-        m_widget = value;
-    }
-
-    FrameLayout::WidgetHolder::WidgetHolder()
-        : m_hAlignment(Start), m_vAlignment(Start), m_widget(nullptr) {}
-
-    FrameLayout::WidgetHolder::~WidgetHolder() {}
+    FrameLayout::FrameWidgetHolder::~FrameWidgetHolder() {}
 
 }

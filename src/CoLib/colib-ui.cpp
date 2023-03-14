@@ -7,3 +7,4 @@
 #include <CoLib/UI/Block.cpp>
 #include <CoLib/UI/Layout.cpp>
 #include <CoLib/UI/FrameLayout.cpp>
+#include <CoLib/UI/LinearLayout.hpp>

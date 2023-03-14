@@ -4,6 +4,7 @@
 #include <CoLib/UI/Block.hpp>
 #include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/Thickness.hpp>
+#include <CoLib/UI/WidgetHolder.hpp>
 
 namespace co
 {
@@ -49,7 +50,7 @@ namespace co
         void onDetach(const SharedWidget &widget) override;
 
     private:
-        class WidgetHolder
+        class FrameWidgetHolder : public WidgetHolder
         {
         public:
             Alignment getHorizontalAlignment() const;
@@ -58,19 +59,15 @@ namespace co
             Alignment getVerticalAlignment() const;
             void setVerticalAlignment(Alignment value);
 
-            const SharedWidget &getWidget() const;
-            void setWidget(const SharedWidget &value);
-
-            WidgetHolder();
-            ~WidgetHolder();
+            FrameWidgetHolder();
+            virtual ~FrameWidgetHolder();
 
         private:
             Alignment m_hAlignment;
             Alignment m_vAlignment;
-            SharedWidget m_widget;
         };
 
-        std::shared_ptr<WidgetHolder> m_holder;
+        std::shared_ptr<FrameWidgetHolder> m_holder;
     };
 
 }
