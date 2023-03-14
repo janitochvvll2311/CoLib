@@ -10,7 +10,7 @@
 auto makeBackground(const sf::Color &color)
 {
     auto background = std::make_shared<co::Background>();
-    background->setColor(color);
+    background->getGraph().setColor(color);
     return background;
 }
 
