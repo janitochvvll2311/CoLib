@@ -4,6 +4,18 @@
 namespace co
 {
 
+    const sf::Transform &VirtualLayout::getInnerTransform() const
+    {
+        return m_transform;
+    }
+
+    void VirtualLayout::setInnterTransform(const sf::Transform &value)
+    {
+        m_transform = value;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
     void VirtualLayout::compact()
     {
         FrameLayout::compact();
@@ -11,7 +23,7 @@ namespace co
     }
 
     VirtualLayout::VirtualLayout()
-        : m_texture(), m_surface()
+        : m_texture(), m_surface(), m_transform(sf::Transform::Identity)
     {
         co::Rectangle rectangle(1, 1);
         m_surface.setPrimitiveType(sf::PrimitiveType::TriangleFan);
@@ -31,11 +43,14 @@ namespace co
             sf::Vector2f size(getInnerWidth(), getInnerHeight());
             if (size.x > 0 && size.y > 0)
             {
-                m_texture.clear(sf::Color::Magenta);
-                m_texture.draw(*widget);
-                m_texture.display();
-                auto &padding = getPadding();
                 auto _states = states;
+                _states.transform = m_transform;
+                m_texture.clear(sf::Color::Transparent);
+                m_texture.draw(*widget, _states);
+                m_texture.display();
+                //
+                auto &padding = getPadding();
+                _states = states;
                 _states.transform.translate({padding.left, padding.top});
                 target.draw(m_surface, _states);
             }

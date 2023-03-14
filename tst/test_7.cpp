@@ -65,8 +65,11 @@ int main()
     layout.inflate(wsize);
     layout.invalidate();
 
+    sf::Transformable transformable;
+
     while (window.isOpen())
     {
+        auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -83,11 +86,17 @@ int main()
                 layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
-                auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
                 layout.compact();
                 layout.inflate(cursor);
                 layout.invalidate();
                 break;
+            case sf::Event::MouseWheelScrolled:
+            {
+                transformable.move({event.mouseWheelScroll.delta * 10, 0});
+                layout.setInnterTransform(transformable.getTransform());
+                layout.invalidate();
+            }
+            break;
             }
         }
 

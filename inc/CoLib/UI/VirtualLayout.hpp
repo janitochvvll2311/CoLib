@@ -2,6 +2,7 @@
 #define COLIB_VIRTUAL_LAYOUT_HPP
 
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Transform.hpp>
 #include <CoLib/Graphics/Graph.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
 
@@ -13,6 +14,11 @@ namespace co
     {
 
     public:
+        const sf::Transform &getInnerTransform() const;
+        void setInnterTransform(const sf::Transform &value);
+
+        ///////////////////////////////////
+
         void compact() override;
 
         VirtualLayout();
@@ -25,6 +31,7 @@ namespace co
     private:
         mutable sf::RenderTexture m_texture;
         mutable Graph m_surface;
+        sf::Transform m_transform;
     };
 
 }
