@@ -15,6 +15,12 @@ namespace co
     {
 
     public:
+        enum Orientation
+        {
+            Horizontal,
+            Vertical
+        };
+
         enum Alignment
         {
             Start,
@@ -24,6 +30,12 @@ namespace co
 
         Alignment getAlignment(const SharedWidget &widget) const;
         void setAlignment(const SharedWidget &widget, Alignment value);
+
+        Orientation getOrientation() const;
+        void setOritentation(Orientation value);
+
+        bool isReverse() const;
+        void setReverse(bool value = true);
 
         //////////////////////////////////////////////////////////////
 
@@ -66,6 +78,8 @@ namespace co
 
         SharedHolder getHolder(const SharedWidget &widget) const;
 
+        Orientation m_orientation;
+        bool m_isReverse;
         std::list<SharedHolder> m_holders;
     };
 

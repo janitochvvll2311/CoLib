@@ -27,6 +27,26 @@ namespace co
         holder->setAlignment(value);
     }
 
+    LinearLayout::Orientation LinearLayout::getOrientation() const
+    {
+        return m_orientation;
+    }
+
+    void LinearLayout::setOritentation(Orientation value)
+    {
+        m_orientation = value;
+    }
+
+    bool LinearLayout::isReverse() const
+    {
+        return m_isReverse;
+    }
+
+    void LinearLayout::setReverse(bool value)
+    {
+        m_isReverse = value;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////
 
     bool LinearLayout::isValid() const
@@ -57,12 +77,26 @@ namespace co
     void LinearLayout::compact()
     {
         sf::Vector2f size(0, 0);
-        for (auto &holder : m_holders)
+        switch (m_orientation)
         {
-            auto &widget = holder->getWidget();
-            widget->compact();
-            size.x += widget->getWidth();
-            size.y = std::max(size.y, widget->getHeight());
+        case Horizontal:
+            for (auto &holder : m_holders)
+            {
+                auto &widget = holder->getWidget();
+                widget->compact();
+                size.x += widget->getWidth();
+                size.y = std::max(size.y, widget->getHeight());
+            }
+            break;
+        case Vertical:
+            for (auto &holder : m_holders)
+            {
+                auto &widget = holder->getWidget();
+                widget->compact();
+                size.y += widget->getHeight();
+                size.x = std::max(size.x, widget->getWidth());
+            }
+            break;
         }
         Block::compact();
         auto &margin = getMargin();
@@ -76,28 +110,95 @@ namespace co
         Block::inflate(size);
         sf::Vector2f _size(getInnerWidth(), getInnerHeight());
         f32t offset = 0;
-        for (auto &holder : m_holders)
+        switch (m_orientation)
         {
-            auto &widget = holder->getWidget();
-            widget->inflate({widget->getHeight(), _size.y});
-            widget->setLeft(widget->getLeft() + offset);
-            offset += widget->getOuterWidth();
-            switch (holder->getAlignment())
+        case Horizontal:
+        {
+            if (m_isReverse)
             {
-            case Start:
-                break;
-            case End:
-                widget->setTop(widget->getTop() + getInnerHeight() - widget->getOuterHeight());
-                break;
-            case Center:
-                widget->setTop(widget->getTop() + (getInnerHeight() - widget->getOuterHeight()) / 2);
-                break;
+                for (auto iterator = m_holders.rbegin(); iterator != m_holders.rend(); iterator++)
+                {
+                    auto &holder = *iterator;
+                    auto &widget = holder->getWidget();
+                    widget->inflate({widget->getHeight(), _size.y});
+                    widget->setLeft(widget->getLeft() + offset);
+                    offset += widget->getOuterWidth();
+                }
             }
+            else
+            {
+                for (auto iterator = m_holders.begin(); iterator != m_holders.end(); iterator++)
+                {
+                    auto &holder = *iterator;
+                    auto &widget = holder->getWidget();
+                    widget->inflate({widget->getHeight(), _size.y});
+                    widget->setLeft(widget->getLeft() + offset);
+                    offset += widget->getOuterWidth();
+                }
+            }
+            for (auto &holder : m_holders)
+            {
+                auto &widget = holder->getWidget();
+                switch (holder->getAlignment())
+                {
+                case Start:
+                    break;
+                case End:
+                    widget->setTop(widget->getTop() + getInnerHeight() - widget->getOuterHeight());
+                    break;
+                case Center:
+                    widget->setTop(widget->getTop() + (getInnerHeight() - widget->getOuterHeight()) / 2);
+                    break;
+                }
+            }
+        }
+        break;
+        case Vertical:
+        {
+            if (m_isReverse)
+            {
+                for (auto iterator = m_holders.rbegin(); iterator != m_holders.rend(); iterator++)
+                {
+                    auto &holder = *iterator;
+                    auto &widget = holder->getWidget();
+                    widget->inflate({_size.x, widget->getWidth()});
+                    widget->setTop(widget->getTop() + offset);
+                    offset += widget->getOuterHeight();
+                }
+            }
+            else
+            {
+                for (auto iterator = m_holders.begin(); iterator != m_holders.end(); iterator++)
+                {
+                    auto &holder = *iterator;
+                    auto &widget = holder->getWidget();
+                    widget->inflate({_size.x, widget->getWidth()});
+                    widget->setTop(widget->getTop() + offset);
+                    offset += widget->getOuterHeight();
+                }
+            }
+            for (auto &holder : m_holders)
+            {
+                auto &widget = holder->getWidget();
+                switch (holder->getAlignment())
+                {
+                case Start:
+                    break;
+                case End:
+                    widget->setLeft(widget->getLeft() + getInnerWidth() - widget->getOuterWidth());
+                    break;
+                case Center:
+                    widget->setLeft(widget->getLeft() + (getInnerWidth() - widget->getOuterWidth()) / 2);
+                    break;
+                }
+            }
+        }
+        break;
         }
     }
 
     LinearLayout::LinearLayout()
-        : m_holders() {}
+        : m_orientation(Horizontal), m_holders() {}
 
     LinearLayout::~LinearLayout() {}
 

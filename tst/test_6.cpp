@@ -38,6 +38,8 @@ int main()
     linear.setBackground(makeBackground(sf::Color::White));
     linear.setPadding(10);
     linear.setMargin(10);
+    linear.setOritentation(co::LinearLayout::Vertical);
+    linear.setReverse();
     // linear.setMinWidth(200);
     // linear.setMinHeight(200);
 
