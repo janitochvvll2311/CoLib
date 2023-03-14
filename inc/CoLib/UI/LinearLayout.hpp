@@ -15,6 +15,18 @@ namespace co
     {
 
     public:
+        enum Alignment
+        {
+            Start,
+            Center,
+            End
+        };
+
+        Alignment getAlignment(const SharedWidget &widget) const;
+        void setAlignment(const SharedWidget &widget, Alignment value);
+
+        //////////////////////////////////////////////////////////////
+
         bool isValid() const override;
         void invalidate() override;
 
@@ -32,14 +44,29 @@ namespace co
         void onDetach(const SharedWidget &widget) override;
 
     private:
-        class LinearWidgetHolder : public WidgetHolder
+        class WidgetHolder;
+        using SharedHolder = std::shared_ptr<WidgetHolder>;
+
+        ////////////////////////////////////////////////////////////
+
+        class WidgetHolder : public co::WidgetHolder
         {
         public:
-            LinearWidgetHolder();
-            virtual ~LinearWidgetHolder();
+            Alignment getAlignment() const;
+            void setAlignment(Alignment value);
+
+            WidgetHolder();
+            virtual ~WidgetHolder();
+
+        private:
+            Alignment m_alignment;
         };
 
-        std::list<std::shared_ptr<LinearWidgetHolder>> m_holders;
+        //////////////////////////////////////////////////////////////
+
+        SharedHolder getHolder(const SharedWidget &widget) const;
+
+        std::list<SharedHolder> m_holders;
     };
 
 }

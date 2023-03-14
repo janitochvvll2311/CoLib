@@ -50,7 +50,7 @@ namespace co
         void onDetach(const SharedWidget &widget) override;
 
     private:
-        class FrameWidgetHolder : public WidgetHolder
+        class WidgetHolder : public co::WidgetHolder
         {
         public:
             Alignment getHorizontalAlignment() const;
@@ -59,15 +59,15 @@ namespace co
             Alignment getVerticalAlignment() const;
             void setVerticalAlignment(Alignment value);
 
-            FrameWidgetHolder();
-            virtual ~FrameWidgetHolder();
+            WidgetHolder();
+            virtual ~WidgetHolder();
 
         private:
             Alignment m_hAlignment;
             Alignment m_vAlignment;
         };
 
-        std::shared_ptr<FrameWidgetHolder> m_holder;
+        std::shared_ptr<WidgetHolder> m_holder;
     };
 
 }

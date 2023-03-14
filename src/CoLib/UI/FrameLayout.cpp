@@ -100,7 +100,7 @@ namespace co
             case Start:
                 break;
             case End:
-                widget->setTop(widget->getTop() + getInnerWidth() - widget->getOuterWidth());
+                widget->setTop(widget->getTop() + getInnerHeight() - widget->getOuterHeight());
                 break;
             case Center:
                 widget->setTop(widget->getTop() + (getInnerHeight() - widget->getOuterHeight()) / 2);
@@ -139,7 +139,7 @@ namespace co
 
     void FrameLayout::onAttach(const SharedWidget &widget)
     {
-        m_holder.reset(new FrameWidgetHolder());
+        m_holder.reset(new WidgetHolder());
         m_holder->setWidget(widget);
     }
 
@@ -150,29 +150,29 @@ namespace co
 
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    FrameLayout::Alignment FrameLayout::FrameWidgetHolder::getHorizontalAlignment() const
+    FrameLayout::Alignment FrameLayout::WidgetHolder::getHorizontalAlignment() const
     {
         return m_hAlignment;
     }
 
-    void FrameLayout::FrameWidgetHolder::setHorizontalAlignment(Alignment value)
+    void FrameLayout::WidgetHolder::setHorizontalAlignment(Alignment value)
     {
         m_hAlignment = value;
     }
 
-    FrameLayout::Alignment FrameLayout::FrameWidgetHolder::getVerticalAlignment() const
+    FrameLayout::Alignment FrameLayout::WidgetHolder::getVerticalAlignment() const
     {
         return m_vAlignment;
     }
 
-    void FrameLayout::FrameWidgetHolder::setVerticalAlignment(Alignment value)
+    void FrameLayout::WidgetHolder::setVerticalAlignment(Alignment value)
     {
         m_vAlignment = value;
     }
 
-    FrameLayout::FrameWidgetHolder::FrameWidgetHolder()
+    FrameLayout::WidgetHolder::WidgetHolder()
         : m_hAlignment(Start), m_vAlignment(Start) {}
 
-    FrameLayout::FrameWidgetHolder::~FrameWidgetHolder() {}
+    FrameLayout::WidgetHolder::~WidgetHolder() {}
 
 }

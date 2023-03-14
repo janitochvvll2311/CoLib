@@ -6,5 +6,6 @@
 #include <CoLib/UI/Span.cpp>
 #include <CoLib/UI/Block.cpp>
 #include <CoLib/UI/Layout.cpp>
+#include <CoLib/UI/WidgetHolder.cpp>
 #include <CoLib/UI/FrameLayout.cpp>
-#include <CoLib/UI/LinearLayout.hpp>
+#include <CoLib/UI/LinearLayout.cpp>

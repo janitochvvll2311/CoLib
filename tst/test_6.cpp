@@ -4,13 +4,23 @@
 #include <CoLib/UI/Thickness.hpp>
 #include <CoLib/UI/Background.hpp>
 #include <CoLib/UI/Block.hpp>
-#include <CoLib/UI/FrameLayout.hpp>
+#include <CoLib/UI/LinearLayout.hpp>
 
 auto makeBackground(const sf::Color &color)
 {
     auto background = std::make_shared<co::Background>();
     background->setColor(color);
     return background;
+}
+
+auto makeBlock(const sf::Color &color)
+{
+    auto block = std::make_shared<co::Block>();
+    block->setBackground(makeBackground(color));
+    block->setMinWidth(100);
+    block->setMinHeight(100);
+    block->setMaxHeight(100);
+    return block;
 }
 
 int main()
@@ -24,28 +34,28 @@ int main()
 
     co::Rectangle rectangle(100, 100);
 
-    co::FrameLayout frame;
-    frame.setBackground(makeBackground(sf::Color::White));
-    frame.setPadding(10);
-    frame.setMargin(10);
-    frame.setMinWidth(200);
-    frame.setMinHeight(200);
+    co::LinearLayout linear;
+    linear.setBackground(makeBackground(sf::Color::White));
+    linear.setPadding(10);
+    linear.setMargin(10);
+    // linear.setMinWidth(200);
+    // linear.setMinHeight(200);
 
-    auto block = std::make_shared<co::Block>();
-    block->setBackground(makeBackground(sf::Color::Red));
-    // block->setMargin(10);
-    block->setMinWidth(100);
-    block->setMinHeight(100);
-    block->setMaxWidth(0);
-    block->setMaxHeight(0);
+    auto b1 = makeBlock(sf::Color::Red);
+    linear.attach(b1);
+    linear.setAlignment(b1, co::LinearLayout::Start);
 
-    frame.attach(block);
-    frame.setHorizontalAlignment(block, co::FrameLayout::Center);
-    frame.setVerticalAlignment(block, co::FrameLayout::Center);
+    auto b2 = makeBlock(sf::Color::Green);
+    linear.attach(b2);
+    linear.setAlignment(b2, co::LinearLayout::Center);
 
-    frame.compact();
-    frame.inflate(wsize);
-    frame.invalidate();
+    auto b3 = makeBlock(sf::Color::Blue);
+    linear.attach(b3);
+    linear.setAlignment(b3, co::LinearLayout::End);
+
+    linear.compact();
+    linear.inflate(wsize);
+    linear.invalidate();
 
     while (window.isOpen())
     {
@@ -60,21 +70,21 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                frame.compact();
-                frame.inflate(wsize);
-                frame.invalidate();
+                linear.compact();
+                linear.inflate(wsize);
+                linear.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
-                frame.compact();
-                frame.inflate(cursor);
-                frame.invalidate();
+                linear.compact();
+                linear.inflate(cursor);
+                linear.invalidate();
                 break;
             }
         }
 
         window.clear();
-        window.draw(frame);
+        window.draw(linear);
         window.display();
     }
 

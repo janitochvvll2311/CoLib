@@ -1,9 +1,33 @@
+#include <algorithm>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <CoLib/System/Exception.hpp>
 #include <CoLib/UI/LinearLayout.hpp>
 
 namespace co
 {
+
+    LinearLayout::Alignment LinearLayout::getAlignment(const SharedWidget &widget) const
+    {
+        auto holder = getHolder(widget);
+        if (!holder)
+        {
+            throw InvalidOperationException();
+        }
+        return holder->getAlignment();
+    }
+
+    void LinearLayout::setAlignment(const SharedWidget &widget, Alignment value)
+    {
+        auto holder = getHolder(widget);
+        if (!holder)
+        {
+            throw InvalidOperationException();
+        }
+        holder->setAlignment(value);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
     bool LinearLayout::isValid() const
     {
@@ -32,10 +56,44 @@ namespace co
 
     void LinearLayout::compact()
     {
+        sf::Vector2f size(0, 0);
+        for (auto &holder : m_holders)
+        {
+            auto &widget = holder->getWidget();
+            widget->compact();
+            size.x += widget->getWidth();
+            size.y = std::max(size.y, widget->getHeight());
+        }
+        Block::compact();
+        auto &margin = getMargin();
+        auto &padding = getPadding();
+        setWidth(std::max(size.x, getMinWidth()) + margin.getHorizontal() + padding.getHorizontal());
+        setHeight(std::max(size.y, getMinHeight()) + margin.getVertical() + padding.getVertical());
     }
 
     void LinearLayout::inflate(const sf::Vector2f &size)
     {
+        Block::inflate(size);
+        sf::Vector2f _size(getInnerWidth(), getInnerHeight());
+        f32t offset = 0;
+        for (auto &holder : m_holders)
+        {
+            auto &widget = holder->getWidget();
+            widget->inflate({widget->getHeight(), _size.y});
+            widget->setLeft(widget->getLeft() + offset);
+            offset += widget->getOuterWidth();
+            switch (holder->getAlignment())
+            {
+            case Start:
+                break;
+            case End:
+                widget->setTop(widget->getTop() + getInnerHeight() - widget->getOuterHeight());
+                break;
+            case Center:
+                widget->setTop(widget->getTop() + (getInnerHeight() - widget->getOuterHeight()) / 2);
+                break;
+            }
+        }
     }
 
     LinearLayout::LinearLayout()
@@ -71,7 +129,7 @@ namespace co
 
     void LinearLayout::onAttach(const SharedWidget &widget)
     {
-        auto holder = std::make_shared<LinearWidgetHolder>();
+        auto holder = std::make_shared<WidgetHolder>();
         holder->setWidget(widget);
         m_holders.push_back(holder);
     }
@@ -82,4 +140,33 @@ namespace co
                             { return holder->getWidget() == widget; });
     }
 
+    //////////////////////////////////////////////////////////////////////////
+
+    LinearLayout::SharedHolder LinearLayout::getHolder(const SharedWidget &widget) const
+    {
+        auto iterator = std::find_if(m_holders.begin(), m_holders.end(), [&](auto &holder)
+                                     { return holder->getWidget() == widget; });
+        if (iterator != m_holders.end())
+        {
+            return *iterator;
+        }
+        return nullptr;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    LinearLayout::Alignment LinearLayout::WidgetHolder::getAlignment() const
+    {
+        return m_alignment;
+    }
+
+    void LinearLayout::WidgetHolder::setAlignment(Alignment value)
+    {
+        m_alignment = value;
+    }
+
+    LinearLayout::WidgetHolder::WidgetHolder()
+        : m_alignment(Start) {}
+
+    LinearLayout::WidgetHolder::~WidgetHolder() {}
 }
