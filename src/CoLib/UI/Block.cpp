@@ -102,8 +102,9 @@ namespace co
     void Block::compact()
     {
         Widget::compact();
-        setWidth(m_minWidth + m_margin.getHorizontal() + m_padding.getHorizontal());
-        setHeight(m_minHeight + m_margin.getVertical() + m_padding.getVertical());
+        auto size = getContentSize();
+        setWidth(std::max(m_minWidth, size.x) + m_margin.getHorizontal() + m_padding.getHorizontal());
+        setHeight(std::max(m_minHeight, size.y) + m_margin.getVertical() + m_padding.getVertical());
     }
 
     void Block::inflate(const sf::Vector2f &size)
@@ -127,6 +128,11 @@ namespace co
     Block::~Block() {}
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    sf::Vector2f Block::getContentSize() const
+    {
+        return {0, 0};
+    }
 
     void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {

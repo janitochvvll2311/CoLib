@@ -43,13 +43,15 @@ namespace co
         virtual ~FrameLayout();
 
     protected:
+        sf::Vector2f getContentSize() const override;
+
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;
 
         void onAttach(const SharedWidget &widget) override;
         void onDetach(const SharedWidget &widget) override;
 
-        SharedWidget getWidget() const;
+        const SharedWidget& getWidget() const;
 
     private:
         class WidgetHolder;

@@ -27,6 +27,8 @@ namespace co
     Layout::Layout() {}
     Layout::Layout::~Layout() {}
 
+    const SharedWidget Layout::NoWidget(nullptr);
+
     ////////////////////////////////////////////////////
 
     void Layout::onAttach(const SharedWidget &widget) {}

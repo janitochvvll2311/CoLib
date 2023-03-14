@@ -52,6 +52,8 @@ namespace co
         virtual ~Block();
 
     protected:
+        virtual sf::Vector2f getContentSize() const;
+
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;
 

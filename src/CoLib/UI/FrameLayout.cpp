@@ -9,7 +9,7 @@ namespace co
 
     FrameLayout::Alignment FrameLayout::getHorizontalAlignment(const SharedWidget &widget) const
     {
-        if (!m_holder || m_holder->getWidget() != widget)
+        if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
@@ -18,7 +18,7 @@ namespace co
 
     void FrameLayout::setHorizontalAlignment(const SharedWidget &widget, Alignment value) const
     {
-        if (!m_holder || m_holder->getWidget() != widget)
+        if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
@@ -27,7 +27,7 @@ namespace co
 
     FrameLayout::Alignment FrameLayout::getVerticalAlignment(const SharedWidget &widget) const
     {
-        if (!m_holder || m_holder->getWidget() != widget)
+        if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
@@ -36,7 +36,7 @@ namespace co
 
     void FrameLayout::setVerticalAlignment(const SharedWidget &widget, Alignment value) const
     {
-        if (!m_holder || m_holder->getWidget() != widget)
+        if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
@@ -47,7 +47,7 @@ namespace co
 
     bool FrameLayout::isValid() const
     {
-        return (Block::isValid() && (!m_holder || m_holder->getWidget()->isValid()));
+        return (Block::isValid() && (!m_holder || getWidget()->isValid()));
     }
 
     void FrameLayout::invalidate()
@@ -55,7 +55,7 @@ namespace co
         Block::invalidate();
         if (m_holder)
         {
-            m_holder->getWidget()->invalidate();
+            getWidget()->invalidate();
         }
     }
 
@@ -64,16 +64,12 @@ namespace co
         sf::Vector2f size(0, 0);
         if (m_holder)
         {
-            auto &widget = m_holder->getWidget();
+            auto &widget = getWidget();
             widget->compact();
             size.x = widget->getWidth();
             size.y = widget->getHeight();
         }
         Block::compact();
-        auto &margin = getMargin();
-        auto &padding = getPadding();
-        setWidth(std::max(size.x, getMinWidth()) + margin.getHorizontal() + padding.getHorizontal());
-        setHeight(std::max(size.y, getMinHeight()) + margin.getVertical() + padding.getVertical());
     }
 
     void FrameLayout::inflate(const sf::Vector2f &size)
@@ -81,18 +77,18 @@ namespace co
         Block::inflate(size);
         if (m_holder)
         {
-            auto &padding = getPadding();
-            auto &widget = m_holder->getWidget();
-            widget->inflate({getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical()});
+            sf::Vector2f _size(getInnerWidth(), getInnerHeight());
+            auto &widget = getWidget();
+            widget->inflate(_size);
             switch (m_holder->getHorizontalAlignment())
             {
             case Start:
                 break;
             case End:
-                widget->setLeft(widget->getLeft() + getInnerWidth() - widget->getOuterWidth());
+                widget->setLeft(widget->getLeft() + _size.x - widget->getOuterWidth());
                 break;
             case Center:
-                widget->setLeft(widget->getLeft() + (getInnerWidth() - widget->getOuterWidth()) / 2);
+                widget->setLeft(widget->getLeft() + (_size.x - widget->getOuterWidth()) / 2);
                 break;
             }
             switch (m_holder->getVerticalAlignment())
@@ -100,10 +96,10 @@ namespace co
             case Start:
                 break;
             case End:
-                widget->setTop(widget->getTop() + getInnerHeight() - widget->getOuterHeight());
+                widget->setTop(widget->getTop() + _size.y - widget->getOuterHeight());
                 break;
             case Center:
-                widget->setTop(widget->getTop() + (getInnerHeight() - widget->getOuterHeight()) / 2);
+                widget->setTop(widget->getTop() + (_size.y - widget->getOuterHeight()) / 2);
                 break;
             }
         }
@@ -116,6 +112,19 @@ namespace co
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    sf::Vector2f FrameLayout::getContentSize() const
+    {
+        if (m_holder)
+        {
+            auto &widget = getWidget();
+            return {widget->getOuterWidth(), widget->getOuterHeight()};
+        }
+        else
+        {
+            return {0, 0};
+        }
+    }
+
     void FrameLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
         Block::onDraw(target, states);
@@ -124,7 +133,7 @@ namespace co
             auto &padding = getPadding();
             auto _states = states;
             _states.transform.translate({padding.left, padding.top});
-            target.draw(*m_holder->getWidget(), _states);
+            target.draw(*getWidget(), _states);
         }
     }
 
@@ -133,7 +142,7 @@ namespace co
         Block::onUpdate();
         if (m_holder)
         {
-            m_holder->getWidget()->update(true);
+            getWidget()->update(true);
         }
     }
 
@@ -148,13 +157,13 @@ namespace co
         m_holder.reset();
     }
 
-    SharedWidget FrameLayout::getWidget() const
+    const SharedWidget &FrameLayout::getWidget() const
     {
         if (m_holder)
         {
             return m_holder->getWidget();
         }
-        return nullptr;
+        return NoWidget;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

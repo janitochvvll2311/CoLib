@@ -9,7 +9,7 @@
 auto makeBackground(const sf::Color &color)
 {
     auto background = std::make_shared<co::Background>();
-    background->setColor(color);
+    background->getGraph().setColor(color);
     return background;
 }
 
@@ -24,12 +24,12 @@ int main()
 
     co::Rectangle rectangle(100, 100);
 
-    co::FrameLayout frame;
-    frame.setBackground(makeBackground(sf::Color::White));
-    frame.setPadding(10);
-    frame.setMargin(10);
-    frame.setMinWidth(200);
-    frame.setMinHeight(200);
+    co::FrameLayout layout;
+    layout.setBackground(makeBackground(sf::Color::White));
+    layout.setPadding(10);
+    layout.setMargin(10);
+    layout.setMinWidth(200);
+    layout.setMinHeight(200);
 
     auto block = std::make_shared<co::Block>();
     block->setBackground(makeBackground(sf::Color::Red));
@@ -39,13 +39,13 @@ int main()
     block->setMaxWidth(0);
     block->setMaxHeight(0);
 
-    frame.attach(block);
-    frame.setHorizontalAlignment(block, co::FrameLayout::Center);
-    frame.setVerticalAlignment(block, co::FrameLayout::Center);
+    layout.attach(block);
+    layout.setHorizontalAlignment(block, co::FrameLayout::Center);
+    layout.setVerticalAlignment(block, co::FrameLayout::Center);
 
-    frame.compact();
-    frame.inflate(wsize);
-    frame.invalidate();
+    layout.compact();
+    layout.inflate(wsize);
+    layout.invalidate();
 
     while (window.isOpen())
     {
@@ -60,21 +60,21 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                frame.compact();
-                frame.inflate(wsize);
-                frame.invalidate();
+                layout.compact();
+                layout.inflate(wsize);
+                layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
-                frame.compact();
-                frame.inflate(cursor);
-                frame.invalidate();
+                layout.compact();
+                layout.inflate(cursor);
+                layout.invalidate();
                 break;
             }
         }
 
         window.clear();
-        window.draw(frame);
+        window.draw(layout);
         window.display();
     }
 

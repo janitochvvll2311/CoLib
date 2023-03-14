@@ -21,6 +21,8 @@ namespace co
         Layout();
         virtual ~Layout();
 
+        static const SharedWidget NoWidget;
+
     protected:
         virtual void onAttach(const SharedWidget &widget);
         virtual void onDetach(const SharedWidget &widget);
