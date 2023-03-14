@@ -62,13 +62,10 @@ namespace co
 
     void FrameLayout::compact()
     {
-        sf::Vector2f size(0, 0);
         if (m_holder)
         {
             auto &widget = getWidget();
             widget->compact();
-            size.x = widget->getWidth();
-            size.y = widget->getHeight();
         }
         Block::compact();
     }
@@ -134,7 +131,7 @@ namespace co
         if (m_holder)
         {
             auto &widget = getWidget();
-            return {widget->getOuterWidth(), widget->getOuterHeight()};
+            return {widget->getWidth(), widget->getHeight()};
         }
         else
         {

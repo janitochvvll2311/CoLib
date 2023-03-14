@@ -49,22 +49,31 @@ namespace co
 
     bool Label::isValid() const
     {
-        return m_root.isValid();
+        return Widget::isValid() && m_root.isValid();
     }
 
     void Label::invalidate()
     {
+        Widget::invalidate();
         m_root.invalidate();
     }
 
     void Label::compact()
     {
         m_root.compact();
+        setLeft(0);
+        setTop(0);
+        setWidth(m_root.getWidth());
+        setHeight(m_root.getHeight());
     }
 
     void Label::inflate(const sf::Vector2f &size)
     {
         m_root.inflate(size);
+        setLeft(m_root.getLeft());
+        setTop(m_root.getTop());
+        setWidth(m_root.getWidth());
+        setHeight(m_root.getHeight());
     }
 
     Label::Label()

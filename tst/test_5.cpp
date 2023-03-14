@@ -13,6 +13,28 @@ auto makeBackground(const sf::Color &color)
     return background;
 }
 
+auto makeBlock(const sf::Color &color)
+{
+    auto block = std::make_shared<co::Block>();
+    block->setBackground(makeBackground(color));
+    block->setMinWidth(100);
+    block->setMinHeight(100);
+    block->setMaxWidth(0);
+    block->setMaxHeight(0);
+    block->setMargin(10);
+    return block;
+}
+
+auto makeFrame(const sf::Color &color)
+{
+    auto frame = std::make_shared<co::FrameLayout>();
+    frame->setBackground(makeBackground(color));
+    frame->setMargin(10);
+    frame->setPadding(10);
+    frame->attach(makeBlock(sf::Color::Red));
+    return frame;
+}
+
 int main()
 {
 
@@ -28,20 +50,8 @@ int main()
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setPadding(10);
     layout.setMargin(10);
-    layout.setMinWidth(200);
-    layout.setMinHeight(200);
 
-    auto block = std::make_shared<co::Block>();
-    block->setBackground(makeBackground(sf::Color::Red));
-    // block->setMargin(10);
-    block->setMinWidth(100);
-    block->setMinHeight(100);
-    block->setMaxWidth(0);
-    block->setMaxHeight(0);
-
-    layout.attach(block);
-    layout.setHorizontalAlignment(block, co::FrameLayout::Center);
-    layout.setVerticalAlignment(block, co::FrameLayout::Center);
+    layout.attach(makeFrame(sf::Color::Magenta));
 
     layout.compact();
     layout.inflate(wsize);
