@@ -1,4 +1,3 @@
-#include <SFML/Window/Event.hpp>
 #include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/UI/VirtualLayout.hpp>
 
@@ -17,6 +16,12 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////////
 
+    sf::Vector2f VirtualLayout::getInnerPoint(const sf::Vector2f &point) const
+    {
+        auto _point = FrameLayout::getInnerPoint(point);
+        return m_transform.getInverse().transformPoint(point);
+    }
+
     VirtualLayout::VirtualLayout()
         : m_texture(), m_surface(), m_transform(sf::Transform::Identity)
     {
@@ -32,28 +37,6 @@ namespace co
     sf::Vector2f VirtualLayout::getContentSize() const
     {
         return {0, 0};
-    }
-
-    bool VirtualLayout::dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const
-    {
-        switch (event.type)
-        {
-        case sf::Event::MouseButtonPressed:
-        case sf::Event::MouseButtonReleased:
-        {
-            auto &margin = getMargin();
-            auto &padding = getPadding();
-            auto _event = event;
-            sf::Vector2f point(event.mouseButton.x - (margin.getHorizontal() + padding.getHorizontal()),
-                               event.mouseButton.y - (margin.getVertical() + padding.getVertical()));
-            point = m_transform.getInverse().transformPoint(point);
-            _event.mouseButton.x = point.x;
-            _event.mouseButton.y = point.y;
-            return widget->dispatchEvent(target, _event);
-        }
-        default:
-            return widget->dispatchEvent(target, event);
-        }
     }
 
     void VirtualLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const

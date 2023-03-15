@@ -17,14 +17,15 @@ namespace co
         const sf::Transform &getInnerTransform() const;
         void setInnterTransform(const sf::Transform &value);
 
-        ///////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
+
+        sf::Vector2f getInnerPoint(const sf::Vector2f &point) const override;
 
         VirtualLayout();
         virtual ~VirtualLayout();
 
     protected:
         sf::Vector2f getContentSize() const override;
-        bool dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const override;
 
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;

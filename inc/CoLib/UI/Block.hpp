@@ -1,7 +1,6 @@
 #ifndef COLIB_BLOCK_HPP
 #define COLIB_BLOCK_HPP
 
-#include <memory>
 #include <CoLib/UI/Thickness.hpp>
 #include <CoLib/UI/Widget.hpp>
 
@@ -52,12 +51,15 @@ namespace co
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
 
+        //////////////////////////////////////////////////////////////////
+
+        sf::Vector2f getInnerPoint(const sf::Vector2f &point) const override;
+
         Block();
         virtual ~Block();
 
     protected:
         virtual sf::Vector2f getContentSize() const;
-        virtual bool dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const;
 
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;

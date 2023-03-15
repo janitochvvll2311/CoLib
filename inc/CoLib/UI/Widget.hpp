@@ -2,6 +2,7 @@
 #define COLIB_WIDGET_HPP
 
 #include <functional>
+#include <memory>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <CoLib/UI/Box.hpp>
@@ -15,6 +16,9 @@ namespace co
 {
 
     class Layout;
+
+    class Widget;
+    using SharedWidget = std::shared_ptr<Widget>;
 
     ///////////////////////////////////////
 
@@ -43,7 +47,9 @@ namespace co
         virtual void inflate(const sf::Vector2f &size);
         void update(bool force = false) const;
 
-        ////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////
+
+        virtual sf::Vector2f getInnerPoint(const sf::Vector2f &point) const;
 
         virtual bool dispatchEvent(Widget *target, const sf::Event &event);
         virtual bool bubbleEvent(Widget *target, const sf::Event &event);
@@ -55,6 +61,7 @@ namespace co
         virtual ~Widget();
 
     protected:
+        bool dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const;
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
 
         virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;

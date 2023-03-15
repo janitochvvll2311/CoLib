@@ -1,3 +1,4 @@
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/Widget.hpp>
@@ -72,6 +73,11 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////
 
+    sf::Vector2f Widget::getInnerPoint(const sf::Vector2f &point) const
+    {
+        return point;
+    }
+
     bool Widget::dispatchEvent(Widget *target, const sf::Event &event)
     {
         return handleEvent(target, event);
@@ -94,6 +100,24 @@ namespace co
     Widget::~Widget() {}
 
     /////////////////////////////////////////////////////////////////////////////////////////
+
+    bool Widget::dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const
+    {
+        switch (event.type)
+        {
+        case sf::Event::MouseButtonPressed:
+        case sf::Event::MouseButtonReleased:
+        {
+            auto _event = event;
+            sf::Vector2f point(getInnerPoint({f32t(_event.mouseButton.x), f32t(_event.mouseButton.y)}));
+            _event.mouseButton.x = point.x;
+            _event.mouseButton.y = point.y;
+            return widget->dispatchEvent(target, _event);
+        }
+        default:
+            return widget->dispatchEvent(target, event);
+        }
+    }
 
     void Widget::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
