@@ -42,21 +42,21 @@ int main()
     linear.setMargin(10);
     // linear.setOritentation(co::LinearLayout::Vertical);
     linear.setReverse();
-    linear.setContentAlignment(co::LinearLayout::Center);
+    linear.setContentAnchor(co::LinearLayout::Center);
     // linear.setMinWidth(200);
     // linear.setMinHeight(200);
 
     auto b1 = makeBlock(sf::Color::Red);
-    linear.attach(b1);
-    linear.setAlignment(b1, co::LinearLayout::Start);
+    linear.append(b1);
+    linear.setAnchor(b1, co::LinearLayout::Start);
 
     auto b2 = makeBlock(sf::Color::Green);
-    linear.attach(b2);
-    linear.setAlignment(b2, co::LinearLayout::Center);
+    linear.append(b2);
+    linear.setAnchor(b2, co::LinearLayout::Center);
 
     auto b3 = makeBlock(sf::Color::Blue);
-    linear.attach(b3);
-    linear.setAlignment(b3, co::LinearLayout::End);
+    linear.append(b3);
+    linear.setAnchor(b3, co::LinearLayout::End);
 
     linear.compact();
     linear.inflate(wsize);

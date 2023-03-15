@@ -237,7 +237,23 @@ namespace co
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    bool LinearLayout::dispatchEvent(Widget *target, const sf::Event &event)
+    szt LinearLayout::getChildCount() const
+    {
+        return m_holders.size();
+    }
+
+    SharedNode LinearLayout::getChild(szt index) const
+    {
+        if (index < m_holders.size())
+        {
+            auto iterator = m_holders.begin();
+            std::advance(iterator, index);
+            return (*iterator)->getWidget();
+        }
+        return NoNode;
+    }
+
+    bool LinearLayout::dispatchEvent(Node *target, const sf::Event &event)
     {
         bool handled = false;
         for (auto &holder : m_holders)
@@ -250,7 +266,7 @@ namespace co
         return (handled || handleEvent(target, event));
     }
 
-    bool LinearLayout::bubbleEvent(Widget *target, const sf::Event &event)
+    bool LinearLayout::bubbleEvent(Node *target, const sf::Event &event)
     {
         if (event.type == sf::Event::GainedFocus)
         {
@@ -297,17 +313,26 @@ namespace co
         }
     }
 
-    void LinearLayout::onAttach(const SharedWidget &widget)
+    void LinearLayout::onAppend(const SharedNode &node)
     {
-        auto holder = std::make_shared<WidgetHolder>();
-        holder->setWidget(widget);
-        m_holders.push_back(holder);
+        SharedWidget widget = std::dynamic_pointer_cast<Widget>(node);
+        if (widget)
+        {
+            auto holder = std::make_shared<WidgetHolder>();
+            holder.reset(new WidgetHolder());
+            holder->setWidget(widget);
+            m_holders.push_back(holder);
+        }
+        else
+        {
+            throw InvalidOperationException("This node is not a widget");
+        }
     }
 
-    void LinearLayout::onDetach(const SharedWidget &widget)
+    void LinearLayout::onRemove(const SharedNode &node)
     {
         m_holders.remove_if([&](auto &holder)
-                            { return holder->getWidget() == widget; });
+                            { return holder->getWidget() == node; });
     }
 
     //////////////////////////////////////////////////////////////////////////

@@ -3,15 +3,13 @@
 
 #include <list>
 #include <CoLib/UI/Block.hpp>
-#include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/WidgetHolder.hpp>
 
 namespace co
 {
 
     class COLIB_UI_API LinearLayout
-        : public Block,
-          public virtual Layout
+        : public Block
     {
 
     public:
@@ -42,9 +40,12 @@ namespace co
 
         ///////////////////////////////////////////////////////////
 
-        bool dispatchEvent(Widget *target, const sf::Event &event) override;
-        bool bubbleEvent(Widget *target, const sf::Event &event) override;
-        
+        szt getChildCount() const override;
+        SharedNode getChild(szt index) const override;
+
+        bool dispatchEvent(Node *target, const sf::Event &event) override;
+        bool bubbleEvent(Node *target, const sf::Event &event) override;
+
         LinearLayout();
         virtual ~LinearLayout();
 
@@ -52,8 +53,8 @@ namespace co
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;
 
-        void onAttach(const SharedWidget &widget) override;
-        void onDetach(const SharedWidget &widget) override;
+        void onAppend(const SharedNode &widget) override;
+        void onRemove(const SharedNode &widget) override;
 
     private:
         class WidgetHolder;
