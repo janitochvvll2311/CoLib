@@ -4,12 +4,12 @@
 namespace co
 {
 
-    const Button::OnClickListener &Button::getOnClickListener() const
+    const Button::EventListener &Button::getOnClickListener() const
     {
         return m_onClick;
     }
 
-    void Button::setOnClickListener(const OnClickListener &value)
+    void Button::setOnClickListener(const EventListener &value)
     {
         m_onClick = value;
     }
@@ -20,14 +20,7 @@ namespace co
         {
             if (contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
             {
-                if (m_onClick)
-                {
-                    m_onClick(*this);
-                }
-                else
-                {
-                    bubbleEvent(this, event);
-                }
+                onClick(event);
                 return true;
             }
         }
@@ -38,5 +31,19 @@ namespace co
         : m_onClick() {}
 
     Button::~Button() {}
+
+    ///////////////////////////////////////////////////////////////////////
+
+    void Button::onClick(const sf::Event &event)
+    {
+        if (m_onClick)
+        {
+            m_onClick(*this, event);
+        }
+        else
+        {
+            bubbleEvent(this, event);
+        }
+    }
 
 }

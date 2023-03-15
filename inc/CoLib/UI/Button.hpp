@@ -1,7 +1,6 @@
 #ifndef COLIB_BUTTON_HPP
 #define COLIB_BUTTON_HPP
 
-#include <functional>
 #include <CoLib/UI/Label.hpp>
 
 namespace co
@@ -11,18 +10,19 @@ namespace co
     {
 
     public:
-        using OnClickListener = std::function<void(Widget &)>;
-
-        const OnClickListener &getOnClickListener() const;
-        void setOnClickListener(const OnClickListener &value);
+        const EventListener &getOnClickListener() const;
+        void setOnClickListener(const EventListener &value);
 
         bool handleEvent(Widget *target, const sf::Event &event) override;
 
         Button();
         virtual ~Button();
 
+    protected:
+        void onClick(const sf::Event &event);
+
     private:
-        OnClickListener m_onClick;
+        EventListener m_onClick;
     };
 
 }

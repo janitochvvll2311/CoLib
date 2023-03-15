@@ -1,3 +1,4 @@
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/Widget.hpp>
@@ -94,12 +95,27 @@ namespace co
         return false;
     }
 
+    void Widget::click(sf::Mouse::Button button, f32t x, f32t y)
+    {
+        sf::Event event;
+        event.type = sf::Event::MouseButtonReleased;
+        event.mouseButton.button = button;
+        event.mouseButton.x = x;
+        event.mouseButton.y = y;
+        onClick(event);
+    }
+
     Widget::Widget()
         : m_isValid(false), m_parent(nullptr) {}
 
     Widget::~Widget() {}
 
     /////////////////////////////////////////////////////////////////////////////////////////
+
+    void Widget::onClick(const sf::Event &event)
+    {
+        bubbleEvent(this, event);
+    }
 
     void Widget::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {

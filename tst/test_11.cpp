@@ -129,7 +129,12 @@ int main()
     layout.setAlignment(input, co::LinearLayout::Center);
 
     auto button = makeButton("Change", font);
-
+    button->setOnClickListener(
+        [&](auto &widget, auto &event)
+        {
+            image->setMinWidth(image->getMinWidth() + 10);
+            image->invalidate();
+        });
     layout.attach(button);
     layout.setAlignment(button, co::LinearLayout::Center);
 
@@ -151,6 +156,9 @@ int main()
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 layout.invalidate();
+                break;
+            case sf::Event::MouseWheelScrolled:
+                button->click();
                 break;
             }
         }
