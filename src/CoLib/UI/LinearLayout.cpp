@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/System/Exception.hpp>
