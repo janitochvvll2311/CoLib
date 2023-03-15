@@ -2,14 +2,14 @@
 #define COLIB_ANCHOR_LAYOUT_HPP
 
 #include <list>
-#include <CoLib/UI/Block.hpp>
+#include <CoLib/UI/GroupLayout.hpp>
 #include <CoLib/UI/WidgetHolder.hpp>
 
 namespace co
 {
 
     class COLIB_UI_API AnchorLayout
-        : public Block
+        : public GroupLayout
     {
 
     public:
@@ -24,22 +24,11 @@ namespace co
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
 
-        ///////////////////////////////////////////////////////////////////////////
-
-        bool dispatchEvent(Widget *target, const sf::Event &event) override;
-        bool bubbleEvent(Widget *target, const sf::Event &event) override;
-
         AnchorLayout();
         virtual ~AnchorLayout();
 
     protected:
         sf::Vector2f getContentSize() const override;
-
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        void onUpdate() const override;
-
-        void onAttach(const SharedWidget &widget) override;
-        void onDetach(const SharedWidget &widget) override;
 
     private:
         class WidgetHolder;

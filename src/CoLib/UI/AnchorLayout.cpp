@@ -55,93 +55,11 @@ namespace co
     {
         }
 
-    //////////////////////////////////////////////////////////////////////////////////
-
-    bool AnchorLayout::dispatchEvent(Widget *target, const sf::Event &event)
-    {
-        bool handled = false;
-        for (auto &holder : m_holders)
-        {
-            if (dispatchInnerEvent(holder->getWidget(), target, event))
-            {
-                handled = true;
-            }
-        }
-        return (handled || handleEvent(target, event));
-    }
-
-    bool AnchorLayout::bubbleEvent(Widget *target, const sf::Event &event)
-    {
-        if (event.type == sf::Event::GainedFocus)
-        {
-            for (auto &holder : m_holders)
-            {
-                auto &widget = holder->getWidget();
-                if (widget.get() != target)
-                {
-                    dispatchInnerEvent(widget, target, event);
-                }
-            }
-        }
-        return Block::bubbleEvent(target, event);
-    }
 
     AnchorLayout::AnchorLayout()
         : m_holders() {}
 
     AnchorLayout::~AnchorLayout() {}
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    void AnchorLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
-    {
-        Block::onDraw(target, states);
-        if (m_holders.size() > 0)
-        {
-            auto &padding = getPadding();
-            auto _states = states;
-            _states.transform.translate({padding.left, padding.top});
-            for (auto &holder : m_holders)
-            {
-                target.draw(*holder->getWidget(), _states);
-            }
-        }
-    }
-
-    void AnchorLayout::onUpdate() const
-    {
-        Block::onUpdate();
-        for (auto &holder : m_holders)
-        {
-            holder->getWidget()->update(true);
-        }
-    }
-
-    void AnchorLayout::onAttach(const SharedWidget &widget)
-    {
-        auto holder = std::make_shared<WidgetHolder>();
-        holder->setWidget(widget);
-        m_holders.push_back(holder);
-    }
-
-    void AnchorLayout::onDetach(const SharedWidget &widget)
-    {
-        m_holders.remove_if([&](auto &holder)
-                            { return holder->getWidget() == widget; });
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    AnchorLayout::SharedHolder AnchorLayout::getHolder(const SharedWidget &widget) const
-    {
-        auto iterator = std::find_if(m_holders.begin(), m_holders.end(), [&](auto &holder)
-                                     { return holder->getWidget() == widget; });
-        if (iterator != m_holders.end())
-        {
-            return *iterator;
-        }
-        return nullptr;
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 

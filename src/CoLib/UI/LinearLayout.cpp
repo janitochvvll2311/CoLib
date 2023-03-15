@@ -83,11 +83,9 @@ namespace co
             }
             break;
         }
+        setWidth(size.x);
+        setHeight(size.y);
         Block::compact();
-        auto &margin = getMargin();
-        auto &padding = getPadding();
-        setWidth(std::max(size.x, getMinWidth()) + margin.getHorizontal() + padding.getHorizontal());
-        setHeight(std::max(size.y, getMinHeight()) + margin.getVertical() + padding.getVertical());
     }
 
     void LinearLayout::inflate(const sf::Vector2f &size)
@@ -243,6 +241,11 @@ namespace co
     LinearLayout::~LinearLayout() {}
 
     //////////////////////////////////////////////////////////////////////
+
+    sf::Vector2f LinearLayout::getContentSize() const
+    {
+        return {getWidth(), getHeight()};
+    }
 
     SharedHolder LinearLayout::createHolder() const
     {
