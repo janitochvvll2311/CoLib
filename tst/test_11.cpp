@@ -9,6 +9,7 @@
 #include <CoLib/UI/VirtualLayout.hpp>
 #include <CoLib/UI/Button.hpp>
 #include <CoLib/UI/Image.hpp>
+#include <CoLib/UI/Input.hpp>
 
 auto makeBackground(const sf::Color &color)
 {
@@ -71,6 +72,19 @@ auto makeSpan(const sf::String &text, const sf::Font &font)
     return span;
 }
 
+auto makeImage(const sf::Texture &texture)
+{
+    auto image = std::make_shared<co::Image>();
+    image->setBackground(makeBackground(sf::Color::Red));
+    image->setPadding(10);
+    image->setMinWidth(100);
+    image->setMinHeight(100);
+    image->setMaxWidth(0);
+    image->setMaxHeight(0);
+    image->getImage()->getGraph().setTexture(&texture);
+    return image;
+}
+
 int main()
 {
 
@@ -88,20 +102,22 @@ int main()
     layout.setOritentation(co::LinearLayout::Vertical);
     layout.setContentAlignment(co::LinearLayout::Center);
 
-    auto image = std::make_shared<co::Image>();
-    image->setBackground(makeBackground(sf::Color::Red));
-    image->setPadding(10);
-    image->setMinWidth(100);
-    image->setMinHeight(100);
-    image->setMaxWidth(0);
-    image->setMaxHeight(0);
-    image->getImage()->getGraph().setTexture(&texture);
+    auto image = makeImage(texture);
     layout.attach(image);
     layout.setAlignment(image, co::LinearLayout::Center);
 
-    layout.compact();
-    layout.inflate(wsize);
-    layout.invalidate();
+    auto input = std::make_shared<co::Input>();
+    input->setBackground(makeBackground(sf::Color::Yellow));
+    input->getSpan()->getText().setFont(font);
+    input->getSpan()->getText().setFillColor(sf::Color::Black);
+    input->getSpan()->getText().setString("Prevent space");
+    input->setMaxWidth(0);
+    layout.attach(input);
+    layout.setAlignment(input, co::LinearLayout::Center);
+
+    input->compact();
+    input->inflate(wsize);
+    input->invalidate();
 
     sf::Transformable transformable;
 
@@ -111,6 +127,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            input->handleEvent(event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -119,18 +136,15 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact();
-                layout.inflate(wsize);
-                layout.invalidate();
-                break;
-            case sf::Event::MouseButtonReleased:
-                layout.handleEvent(event);
+                input->compact();
+                input->inflate(wsize);
+                input->invalidate();
                 break;
             }
         }
 
         window.clear();
-        window.draw(layout);
+        window.draw(*input);
         window.display();
     }
 
