@@ -77,16 +77,10 @@ namespace co
         return handleEvent(target, event);
     }
 
-    void Widget::bubbleEvent(Widget *target, const sf::Event &event)
+    bool Widget::bubbleEvent(Widget *target, const sf::Event &event)
     {
-        if (!handleEvent(target, event))
-        {
-            auto *widget = dynamic_cast<Widget *>(m_parent);
-            if (widget)
-            {
-                widget->bubbleEvent(target, event);
-            }
-        }
+        auto *widget = dynamic_cast<Widget *>(m_parent);
+        return (handleEvent(target, event) || (widget && widget->bubbleEvent(target, event)));
     }
 
     bool Widget::handleEvent(Widget *target, const sf::Event &event)

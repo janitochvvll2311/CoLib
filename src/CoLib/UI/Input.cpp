@@ -7,41 +7,44 @@ namespace co
 
     bool Input::handleEvent(Widget *target, const sf::Event &event)
     {
-        if (!target)
+
+        switch (event.type)
         {
-            switch (event.type)
+        case sf::Event::MouseButtonReleased:
+            if (!target && contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
             {
-            case sf::Event::MouseButtonReleased:
-                if (contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
-                {
-                    focus();
-                    return true;
-                }
-                break;
-            case sf::Event::TextEntered:
-                if (false)
-                {
-                    auto &text = getSpan()->getText();
-                    auto &string = text.getString();
-                    switch (event.text.unicode)
-                    {
-                    case '\b':
-                        text.setString(string.substring(0, string.getSize() - 1));
-                        break;
-                    default:
-                        text.setString(string + event.text.unicode);
-                        break;
-                    }
-                    invalidate();
-                    return true;
-                }
-                break;
+                focus();
+                return true;
             }
+            break;
+        case sf::Event::GainedFocus:
+            m_focused = target == this;
+            break;
+        case sf::Event::TextEntered:
+            if (m_focused)
+            {
+                auto &text = getSpan()->getText();
+                auto &string = text.getString();
+                switch (event.text.unicode)
+                {
+                case '\b':
+                    text.setString(string.substring(0, string.getSize() - 1));
+                    break;
+                default:
+                    text.setString(string + event.text.unicode);
+                    break;
+                }
+                invalidate();
+                return true;
+            }
+            break;
         }
         return false;
     }
 
-    Input::Input() {}
+    Input::Input()
+        : m_focused(false) {}
+
     Input::~Input() {}
 
     ///////////////////////////////////////////////////////////////////////

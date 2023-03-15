@@ -20,6 +20,9 @@ namespace co
 
     protected:
         void onFocus(const sf::Event &event) override;
+
+    private:
+        bool m_focused;
     };
 
 }

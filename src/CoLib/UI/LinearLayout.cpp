@@ -249,6 +249,22 @@ namespace co
         return (handled || handleEvent(target, event));
     }
 
+    bool LinearLayout::bubbleEvent(Widget *target, const sf::Event &event)
+    {
+        if (event.type == sf::Event::GainedFocus)
+        {
+            for (auto &holder : m_holders)
+            {
+                auto &widget = holder->getWidget();
+                if (widget.get() != target)
+                {
+                    dispatchInnerEvent(widget, target, event);
+                }
+            }
+        }
+        return Block::bubbleEvent(target, event);
+    }
+
     LinearLayout::LinearLayout()
         : m_orientation(Horizontal), m_isReverse(false), m_cAlignment(Start), m_holders() {}
 

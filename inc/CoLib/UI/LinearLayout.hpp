@@ -43,6 +43,7 @@ namespace co
         ///////////////////////////////////////////////////////////
 
         bool dispatchEvent(Widget *target, const sf::Event &event) override;
+        bool bubbleEvent(Widget *target, const sf::Event &event) override;
         
         LinearLayout();
         virtual ~LinearLayout();

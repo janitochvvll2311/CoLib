@@ -46,7 +46,7 @@ namespace co
         ////////////////////////////////////////////////////////
 
         virtual bool dispatchEvent(Widget *target, const sf::Event &event);
-        virtual void bubbleEvent(Widget *target, const sf::Event &event);
+        virtual bool bubbleEvent(Widget *target, const sf::Event &event);
         virtual bool handleEvent(Widget *target, const sf::Event &event);
 
         Widget(const Widget &other) = delete;

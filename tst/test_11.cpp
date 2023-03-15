@@ -97,6 +97,17 @@ auto makeImage(const sf::Texture &texture)
     return image;
 }
 
+auto makeInput(const sf::Font &font)
+{
+    auto input = std::make_shared<co::Input>();
+    input->setBackground(makeBackground(sf::Color::Yellow));
+    input->getSpan()->getText().setFont(font);
+    input->getSpan()->getText().setFillColor(sf::Color::Black);
+    input->getSpan()->getText().setString("Prevent space");
+    input->setMaxWidth(0);
+    return input;
+}
+
 int main()
 {
 
@@ -119,14 +130,13 @@ int main()
     layout.attach(image);
     layout.setAlignment(image, co::LinearLayout::Center);
 
-    auto input = std::make_shared<co::Input>();
-    input->setBackground(makeBackground(sf::Color::Yellow));
-    input->getSpan()->getText().setFont(font);
-    input->getSpan()->getText().setFillColor(sf::Color::Black);
-    input->getSpan()->getText().setString("Prevent space");
-    input->setMaxWidth(0);
-    layout.attach(input);
-    layout.setAlignment(input, co::LinearLayout::Center);
+    auto input1 = makeInput(font);
+    layout.attach(input1);
+    layout.setAlignment(input1, co::LinearLayout::Center);
+
+    auto input2 = makeInput(font);
+    layout.attach(input2);
+    layout.setAlignment(input2, co::LinearLayout::Center);
 
     auto button = makeButton("Change", font);
     button->setOnClickListener(

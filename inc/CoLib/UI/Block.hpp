@@ -1,6 +1,7 @@
 #ifndef COLIB_BLOCK_HPP
 #define COLIB_BLOCK_HPP
 
+#include <memory>
 #include <CoLib/UI/Thickness.hpp>
 #include <CoLib/UI/Widget.hpp>
 
