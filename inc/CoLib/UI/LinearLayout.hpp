@@ -21,10 +21,10 @@ namespace co
             Vertical
         };
 
-        using Alignment = Anchor;
+        using Anchor = Anchor;
 
-        Alignment getAlignment(const SharedWidget &widget) const;
-        void setAlignment(const SharedWidget &widget, Alignment value);
+        Anchor getAnchor(const SharedWidget &widget) const;
+        void setAnchor(const SharedWidget &widget, Anchor value);
 
         Orientation getOrientation() const;
         void setOritentation(Orientation value);
@@ -32,8 +32,8 @@ namespace co
         bool isReverse() const;
         void setReverse(bool value = true);
 
-        Alignment getContentAlignment() const;
-        void setContentAlignment(Alignment value);
+        Anchor getContentAnchor() const;
+        void setContentAnchor(Anchor value);
 
         //////////////////////////////////////////////////////////////
 
@@ -64,14 +64,14 @@ namespace co
         class WidgetHolder : public co::WidgetHolder
         {
         public:
-            Alignment getAlignment() const;
-            void setAlignment(Alignment value);
+            Anchor getAnchor() const;
+            void setAnchor(Anchor value);
 
             WidgetHolder();
             virtual ~WidgetHolder();
 
         private:
-            Alignment m_alignment;
+            Anchor m_anchor;
         };
 
         //////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ namespace co
 
         Orientation m_orientation;
         bool m_isReverse;
-        Alignment m_cAlignment;
+        Anchor m_cAnchor;
         std::list<SharedHolder> m_holders;
     };
 

@@ -8,40 +8,40 @@
 namespace co
 {
 
-    FrameLayout::Alignment FrameLayout::getHorizontalAlignment(const SharedWidget &widget) const
+    FrameLayout::Anchor FrameLayout::getHorizontalAnchor(const SharedWidget &widget) const
     {
         if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
-        return m_holder->getHorizontalAlignment();
+        return m_holder->getHorizontalAnchor();
     }
 
-    void FrameLayout::setHorizontalAlignment(const SharedWidget &widget, Alignment value) const
+    void FrameLayout::setHorizontalAnchor(const SharedWidget &widget, Anchor value) const
     {
         if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
-        m_holder->setHorizontalAlignment(value);
+        m_holder->setHorizontalAnchor(value);
     }
 
-    FrameLayout::Alignment FrameLayout::getVerticalAlignment(const SharedWidget &widget) const
+    FrameLayout::Anchor FrameLayout::getVerticalAnchor(const SharedWidget &widget) const
     {
         if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
-        return m_holder->getVerticalAlignment();
+        return m_holder->getVerticalAnchor();
     }
 
-    void FrameLayout::setVerticalAlignment(const SharedWidget &widget, Alignment value) const
+    void FrameLayout::setVerticalAnchor(const SharedWidget &widget, Anchor value) const
     {
         if (!m_holder || getWidget() != widget)
         {
             throw InvalidOperationException();
         }
-        m_holder->setVerticalAlignment(value);
+        m_holder->setVerticalAnchor(value);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ namespace co
             sf::Vector2f _size(getInnerWidth(), getInnerHeight());
             auto &widget = getWidget();
             widget->inflate(_size);
-            switch (m_holder->getHorizontalAlignment())
+            switch (m_holder->getHorizontalAnchor())
             {
             case Start:
                 break;
@@ -75,7 +75,7 @@ namespace co
                 widget->setLeft(widget->getLeft() + (_size.x - widget->getOuterWidth()) / 2);
                 break;
             }
-            switch (m_holder->getVerticalAlignment())
+            switch (m_holder->getVerticalAnchor())
             {
             case Start:
                 break;
@@ -159,28 +159,28 @@ namespace co
 
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    FrameLayout::Alignment FrameLayout::WidgetHolder::getHorizontalAlignment() const
+    FrameLayout::Anchor FrameLayout::WidgetHolder::getHorizontalAnchor() const
     {
-        return m_hAlignment;
+        return m_hAnchor;
     }
 
-    void FrameLayout::WidgetHolder::setHorizontalAlignment(Alignment value)
+    void FrameLayout::WidgetHolder::setHorizontalAnchor(Anchor value)
     {
-        m_hAlignment = value;
+        m_hAnchor = value;
     }
 
-    FrameLayout::Alignment FrameLayout::WidgetHolder::getVerticalAlignment() const
+    FrameLayout::Anchor FrameLayout::WidgetHolder::getVerticalAnchor() const
     {
-        return m_vAlignment;
+        return m_vAnchor;
     }
 
-    void FrameLayout::WidgetHolder::setVerticalAlignment(Alignment value)
+    void FrameLayout::WidgetHolder::setVerticalAnchor(Anchor value)
     {
-        m_vAlignment = value;
+        m_vAnchor = value;
     }
 
     FrameLayout::WidgetHolder::WidgetHolder()
-        : m_hAlignment(Start), m_vAlignment(Start) {}
+        : m_hAnchor(Start), m_vAnchor(Start) {}
 
     FrameLayout::WidgetHolder::~WidgetHolder() {}
 

@@ -5,24 +5,24 @@
 namespace co
 {
 
-    Label::Alignment Label::getHorizontalContentAlignment() const
+    Label::Anchor Label::getHorizontalContentAnchor() const
     {
-        return getHorizontalAlignment(m_span);
+        return getHorizontalAnchor(m_span);
     }
 
-    void Label::setHorizontalContentAlignment(Alignment value)
+    void Label::setHorizontalContentAlignment(Anchor value)
     {
-        setHorizontalAlignment(m_span, value);
+        setHorizontalAnchor(m_span, value);
     }
 
-    Label::Alignment Label::getVerticalContentAlignment() const
+    Label::Anchor Label::getVerticalContentAlignment() const
     {
-        return getVerticalAlignment(m_span);
+        return getVerticalAnchor(m_span);
     }
 
-    void Label::setVerticalContentAlignment(Alignment value)
+    void Label::setVerticalContentAnchor(Anchor value)
     {
-        setVerticalAlignment(m_span, value);
+        setVerticalAnchor(m_span, value);
     }
 
     const SharedSpan &Label::getSpan() const

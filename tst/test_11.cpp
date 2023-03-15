@@ -124,19 +124,19 @@ int main()
     co::LinearLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setOritentation(co::LinearLayout::Vertical);
-    layout.setContentAlignment(co::LinearLayout::Center);
+    layout.setContentAnchor(co::LinearLayout::Center);
 
     auto image = makeImage(texture);
     layout.attach(image);
-    layout.setAlignment(image, co::LinearLayout::Center);
+    layout.setAnchor(image, co::LinearLayout::Center);
 
     auto input1 = makeInput(font);
     layout.attach(input1);
-    layout.setAlignment(input1, co::LinearLayout::Center);
+    layout.setAnchor(input1, co::LinearLayout::Center);
 
     auto input2 = makeInput(font);
     layout.attach(input2);
-    layout.setAlignment(input2, co::LinearLayout::Center);
+    layout.setAnchor(input2, co::LinearLayout::Center);
 
     auto button = makeButton("Change", font);
     button->setOnClickListener(
@@ -146,7 +146,7 @@ int main()
             image->invalidate();
         });
     layout.attach(button);
-    layout.setAlignment(button, co::LinearLayout::Center);
+    layout.setAnchor(button, co::LinearLayout::Center);
 
     sf::Transformable transformable;
 

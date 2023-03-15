@@ -5,24 +5,24 @@
 namespace co
 {
 
-    Image::Alignment Image::getHorizontalContentAlignment() const
+    Image::Anchor Image::getHorizontalContentAnchor() const
     {
-        return getHorizontalAlignment(m_image);
+        return getHorizontalAnchor(m_image);
     }
 
-    void Image::setHorizontalContentAlignment(Alignment value)
+    void Image::setHorizontalContentAlignment(Anchor value)
     {
-        setHorizontalAlignment(m_image, value);
+        setHorizontalAnchor(m_image, value);
     }
 
-    Image::Alignment Image::getVerticalContentAlignment() const
+    Image::Anchor Image::getVerticalContentAlignment() const
     {
-        return getVerticalAlignment(m_image);
+        return getVerticalAnchor(m_image);
     }
 
-    void Image::setVerticalContentAlignment(Alignment value)
+    void Image::setVerticalContentAnchor(Anchor value)
     {
-        setVerticalAlignment(m_image, value);
+        setVerticalAnchor(m_image, value);
     }
 
     const SharedBackground &Image::getImage() const

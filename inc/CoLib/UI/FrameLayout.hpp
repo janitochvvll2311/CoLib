@@ -20,13 +20,11 @@ namespace co
     {
 
     public:
-        using Alignment = Anchor;
+        Anchor getHorizontalAnchor(const SharedWidget &widget) const;
+        void setHorizontalAnchor(const SharedWidget &widget, Anchor value) const;
 
-        Alignment getHorizontalAlignment(const SharedWidget &widget) const;
-        void setHorizontalAlignment(const SharedWidget &widget, Alignment value) const;
-
-        Alignment getVerticalAlignment(const SharedWidget &widget) const;
-        void setVerticalAlignment(const SharedWidget &widget, Alignment value) const;
+        Anchor getVerticalAnchor(const SharedWidget &widget) const;
+        void setVerticalAnchor(const SharedWidget &widget, Anchor value) const;
 
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
@@ -58,18 +56,18 @@ namespace co
         class WidgetHolder : public co::WidgetHolder
         {
         public:
-            Alignment getHorizontalAlignment() const;
-            void setHorizontalAlignment(Alignment value);
+            Anchor getHorizontalAnchor() const;
+            void setHorizontalAnchor(Anchor value);
 
-            Alignment getVerticalAlignment() const;
-            void setVerticalAlignment(Alignment value);
+            Anchor getVerticalAnchor() const;
+            void setVerticalAnchor(Anchor value);
 
             WidgetHolder();
             virtual ~WidgetHolder();
 
         private:
-            Alignment m_hAlignment;
-            Alignment m_vAlignment;
+            Anchor m_hAnchor;
+            Anchor m_vAnchor;
         };
 
         SharedHolder m_holder;

@@ -10,11 +10,11 @@ namespace co
     {
 
     public:
-        Alignment getHorizontalContentAlignment() const;
-        void setHorizontalContentAlignment(Alignment value);
+        Anchor getHorizontalContentAnchor() const;
+        void setHorizontalContentAlignment(Anchor value);
 
-        Alignment getVerticalContentAlignment() const;
-        void setVerticalContentAlignment(Alignment value);
+        Anchor getVerticalContentAlignment() const;
+        void setVerticalContentAnchor(Anchor value);
 
         const SharedBackground &getImage() const;
 

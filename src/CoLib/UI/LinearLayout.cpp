@@ -7,24 +7,24 @@
 namespace co
 {
 
-    LinearLayout::Alignment LinearLayout::getAlignment(const SharedWidget &widget) const
+    LinearLayout::Anchor LinearLayout::getAnchor(const SharedWidget &widget) const
     {
         auto holder = getHolder(widget);
         if (!holder)
         {
             throw InvalidOperationException();
         }
-        return holder->getAlignment();
+        return holder->getAnchor();
     }
 
-    void LinearLayout::setAlignment(const SharedWidget &widget, Alignment value)
+    void LinearLayout::setAnchor(const SharedWidget &widget, Anchor value)
     {
         auto holder = getHolder(widget);
         if (!holder)
         {
             throw InvalidOperationException();
         }
-        holder->setAlignment(value);
+        holder->setAnchor(value);
     }
 
     LinearLayout::Orientation LinearLayout::getOrientation() const
@@ -47,14 +47,14 @@ namespace co
         m_isReverse = value;
     }
 
-    LinearLayout::Alignment LinearLayout::getContentAlignment() const
+    LinearLayout::Anchor LinearLayout::getContentAnchor() const
     {
-        return m_cAlignment;
+        return m_cAnchor;
     }
 
-    void LinearLayout::setContentAlignment(Alignment value)
+    void LinearLayout::setContentAnchor(Anchor value)
     {
-        m_cAlignment = value;
+        m_cAnchor = value;
     }
 
     void LinearLayout::compact()
@@ -106,7 +106,7 @@ namespace co
             f32t offset = _size.x - length;
             if (offset > 0)
             {
-                switch (m_cAlignment)
+                switch (m_cAnchor)
                 {
                 case Start:
                     offset = 0;
@@ -126,7 +126,7 @@ namespace co
                     widget->setLeft(widget->getLeft() + offset);
                     offset += widget->getOuterWidth();
                     f32t spacing = _size.y - widget->getOuterHeight();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -148,7 +148,7 @@ namespace co
                     widget->setLeft(widget->getLeft() + offset);
                     offset += widget->getOuterWidth();
                     f32t spacing = _size.y - widget->getOuterHeight();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -174,7 +174,7 @@ namespace co
             f32t offset = _size.y - length;
             if (offset > 0)
             {
-                switch (m_cAlignment)
+                switch (m_cAnchor)
                 {
                 case Start:
                     offset = 0;
@@ -194,7 +194,7 @@ namespace co
                     widget->setTop(widget->getTop() + offset);
                     offset += widget->getOuterHeight();
                     f32t spacing = _size.x - widget->getOuterWidth();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -216,7 +216,7 @@ namespace co
                     widget->setTop(widget->getTop() + offset);
                     offset += widget->getOuterHeight();
                     f32t spacing = _size.x - widget->getOuterWidth();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -266,7 +266,7 @@ namespace co
     }
 
     LinearLayout::LinearLayout()
-        : m_orientation(Horizontal), m_isReverse(false), m_cAlignment(Start), m_holders() {}
+        : m_orientation(Horizontal), m_isReverse(false), m_cAnchor(Start), m_holders() {}
 
     LinearLayout::~LinearLayout() {}
 
@@ -324,18 +324,18 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    LinearLayout::Alignment LinearLayout::WidgetHolder::getAlignment() const
+    LinearLayout::Anchor LinearLayout::WidgetHolder::getAnchor() const
     {
-        return m_alignment;
+        return m_anchor;
     }
 
-    void LinearLayout::WidgetHolder::setAlignment(Alignment value)
+    void LinearLayout::WidgetHolder::setAnchor(Anchor value)
     {
-        m_alignment = value;
+        m_anchor = value;
     }
 
     LinearLayout::WidgetHolder::WidgetHolder()
-        : m_alignment(Start) {}
+        : m_anchor(Start) {}
 
     LinearLayout::WidgetHolder::~WidgetHolder() {}
 }
