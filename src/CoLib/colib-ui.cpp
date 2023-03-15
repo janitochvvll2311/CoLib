@@ -14,4 +14,5 @@
 #include <CoLib/UI/Clickable.cpp>
 #include <CoLib/UI/Button.cpp>
 #include <CoLib/UI/Image.cpp>
+#include <CoLib/UI/Focusable.cpp>
 #include <CoLib/UI/input.cpp>

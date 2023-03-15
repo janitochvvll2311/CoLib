@@ -24,7 +24,7 @@ namespace co
                 return true;
             }
         }
-        return Label::handleEvent(target, event);
+        return false;
     }
 
     Button::Button()
