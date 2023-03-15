@@ -16,7 +16,7 @@ namespace co
 
     public:
         Anchor getHorizontalContentAnchor() const;
-        void setHorizontalContentAlignment(Anchor value);
+        void setHorizontalContentAnchor(Anchor value);
 
         Anchor getVerticalContentAlignment() const;
         void setVerticalContentAnchor(Anchor value);
@@ -27,8 +27,8 @@ namespace co
         virtual ~Label();
 
     protected:
-        void onAttach(const SharedWidget &widget) override;
-        void onDetach(const SharedWidget &widget) override;
+        void onAppend(const SharedNode &node) override;
+        void onRemove(const SharedNode &node) override;
 
     private:
         SharedSpan m_span;

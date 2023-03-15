@@ -10,7 +10,7 @@ namespace co
         return getHorizontalAnchor(m_image);
     }
 
-    void Image::setHorizontalContentAlignment(Anchor value)
+    void Image::setHorizontalContentAnchor(Anchor value)
     {
         setHorizontalAnchor(m_image, value);
     }

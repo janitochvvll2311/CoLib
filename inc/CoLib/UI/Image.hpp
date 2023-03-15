@@ -11,7 +11,7 @@ namespace co
 
     public:
         Anchor getHorizontalContentAnchor() const;
-        void setHorizontalContentAlignment(Anchor value);
+        void setHorizontalContentAnchor(Anchor value);
 
         Anchor getVerticalContentAlignment() const;
         void setVerticalContentAnchor(Anchor value);

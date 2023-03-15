@@ -10,7 +10,7 @@ namespace co
         return getHorizontalAnchor(m_span);
     }
 
-    void Label::setHorizontalContentAlignment(Anchor value)
+    void Label::setHorizontalContentAnchor(Anchor value)
     {
         setHorizontalAnchor(m_span, value);
     }
@@ -33,25 +33,25 @@ namespace co
     Label::Label()
         : m_span(new Span())
     {
-        attach(m_span);
+        append(m_span);
     }
 
     Label::~Label() {}
 
     //////////////////////////////////////////////////////////////////
 
-    void Label::onAttach(const SharedWidget &widget)
+    void Label::onAppend(const SharedNode &node)
     {
-        if (widget != m_span)
+        if (node != m_span)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("Label not support child changes");
         }
-        FrameLayout::onAttach(widget);
+        FrameLayout::onAppend(node);
     }
 
-    void Label::onDetach(const SharedWidget &widget)
+    void Label::onRemove(const SharedNode &node)
     {
-        throw InvalidOperationException();
+        throw InvalidOperationException("Label not support child changes");
     }
 
 }

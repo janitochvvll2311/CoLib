@@ -34,9 +34,9 @@ auto makeLinear(const sf::Color &color)
     linear->setBackground(makeBackground(color));
     linear->setMargin(10);
     linear->setPadding(10);
-    linear->attach(makeBlock(sf::Color::Red));
-    linear->attach(makeBlock(sf::Color::Green));
-    linear->attach(makeBlock(sf::Color::Blue));
+    linear->append(makeBlock(sf::Color::Red));
+    linear->append(makeBlock(sf::Color::Green));
+    linear->append(makeBlock(sf::Color::Blue));
     linear->setMaxWidth(0);
     linear->setMaxHeight(0);
     return linear;
@@ -46,16 +46,11 @@ class Label : public co::Label
 {
 
 public:
-    bool handleEvent(const sf::Event &event) override
+    bool handleEvent(Node *target, const sf::Event &event) override
     {
-        if (event.type == sf::Event::MouseButtonPressed)
+        if (!target && event.type == sf::Event::MouseButtonPressed)
         {
-            auto &block = getBlock();
-            if (
-                event.mouseButton.x >= block.getLeft() &&
-                event.mouseButton.x <= block.getRight() &&
-                event.mouseButton.y >= block.getTop() &&
-                event.mouseButton.y <= block.getBottom())
+            if (contains({float(event.mouseButton.x), float(event.mouseButton.y)}))
             {
                 std::cout << "Clicked\n";
                 return true;
@@ -75,15 +70,15 @@ int main()
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
     Label label;
-    label.getBlock().setBackground(makeBackground(sf::Color::White));
-    label.getBlock().setMargin(10);
-    label.getBlock().setPadding(10);
+    label.setBackground(makeBackground(sf::Color::White));
+    label.setMargin(10);
+    label.setPadding(10);
 
-    label.getSpan().getText().setFont(font);
-    label.getSpan().getText().setString("It Works");
-    label.getSpan().getText().setFillColor(sf::Color::Red);
-    label.setHorizontalContentAlignment(co::Label::Center);
-    label.setVerticalContentAlignment(co::Label::Center);
+    label.getSpan()->getText().setFont(font);
+    label.getSpan()->getText().setString("It Works");
+    label.getSpan()->getText().setFillColor(sf::Color::Red);
+    label.setHorizontalContentAnchor(co::Label::Center);
+    label.setVerticalContentAnchor(co::Label::Center);
 
     label.compact();
     label.inflate(wsize);
@@ -97,7 +92,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            label.handleEvent(event);
+            label.handleEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
