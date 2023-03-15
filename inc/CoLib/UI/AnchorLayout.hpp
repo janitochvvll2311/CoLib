@@ -3,15 +3,13 @@
 
 #include <list>
 #include <CoLib/UI/Block.hpp>
-#include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/WidgetHolder.hpp>
 
 namespace co
 {
 
     class COLIB_UI_API AnchorLayout
-        : public Block,
-          public virtual Layout
+        : public Block
     {
 
     public:

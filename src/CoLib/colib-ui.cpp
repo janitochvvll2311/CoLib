@@ -8,6 +8,7 @@
 #include <CoLib/UI/Block.cpp>
 #include <CoLib/UI/WidgetHolder.cpp>
 #include <CoLib/UI/FrameLayout.cpp>
+#include <CoLib/UI/GroupLayout.cpp>
 #include <CoLib/UI/LinearLayout.cpp>
 #include <CoLib/UI/VirtualLayout.cpp>
 #include <CoLib/UI/Label.cpp>
