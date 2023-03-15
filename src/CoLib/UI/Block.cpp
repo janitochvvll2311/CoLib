@@ -135,7 +135,7 @@ namespace co
         return {0, 0};
     }
 
-    bool Block::handleInnerEvent(const SharedWidget &widget, const sf::Event &event) const
+    bool Block::dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const
     {
         switch (event.type)
         {
@@ -147,10 +147,10 @@ namespace co
             auto _event = event;
             _event.mouseButton.x -= margin.getHorizontal() + padding.getHorizontal();
             _event.mouseButton.y -= margin.getVertical() + padding.getVertical();
-            return widget->handleEvent(_event);
+            return widget->dispatchEvent(target, _event);
         }
         default:
-            return widget->handleEvent(event);
+            return widget->dispatchEvent(target, event);
         }
     }
 

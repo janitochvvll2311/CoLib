@@ -10,7 +10,7 @@ namespace co
     {
 
     public:
-        bool handleEvent(const sf::Event &event) override;
+        bool handleEvent(Widget *target, const sf::Event &event) override;
 
         Input();
         virtual ~Input();

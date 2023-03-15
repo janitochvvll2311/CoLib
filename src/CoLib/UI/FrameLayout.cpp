@@ -100,9 +100,9 @@ namespace co
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    bool FrameLayout::handleEvent(const sf::Event &event)
+    bool FrameLayout::dispatchEvent(Widget *target, const sf::Event &event)
     {
-        return ((m_holder && handleInnerEvent(getWidget(), event)) || Block::handleEvent(event));
+        return ((m_holder && dispatchInnerEvent(getWidget(), target, event)) || handleEvent(target, event));
     }
 
     FrameLayout::FrameLayout()

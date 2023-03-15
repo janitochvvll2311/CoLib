@@ -56,7 +56,7 @@ namespace co
 
     protected:
         virtual sf::Vector2f getContentSize() const;
-        virtual bool handleInnerEvent(const SharedWidget& widget, const sf::Event& event) const;
+        virtual bool dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const;
 
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;

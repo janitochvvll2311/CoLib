@@ -35,7 +35,7 @@ namespace co
 
         ///////////////////////////////////////////////////////////
 
-        bool handleEvent(const sf::Event &event) override;
+        bool dispatchEvent(Widget *target, const sf::Event &event) override;
 
         FrameLayout();
         virtual ~FrameLayout();

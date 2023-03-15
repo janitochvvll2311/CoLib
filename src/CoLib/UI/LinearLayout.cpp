@@ -236,17 +236,17 @@ namespace co
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    bool LinearLayout::handleEvent(const sf::Event &event)
+    bool LinearLayout::dispatchEvent(Widget *target, const sf::Event &event)
     {
         bool handled = false;
         for (auto &holder : m_holders)
         {
-            if (handleInnerEvent(holder->getWidget(), event))
+            if (dispatchInnerEvent(holder->getWidget(), target, event))
             {
                 handled = true;
             }
         }
-        return (handled || Block::handleEvent(event));
+        return (handled || handleEvent(target, event));
     }
 
     LinearLayout::LinearLayout()

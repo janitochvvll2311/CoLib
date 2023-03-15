@@ -63,6 +63,18 @@ auto makeLabel(const sf::String &text, const sf::Font &font)
     return label;
 }
 
+auto makeButton(const sf::String &text, const sf::Font &font)
+{
+    auto button = std::make_shared<co::Button>();
+    button->setBackground(makeBackground(sf::Color(200, 200, 200, 255)));
+    button->getSpan()->getText().setFont(font);
+    button->getSpan()->getText().setString(text);
+    button->setMaxWidth(0);
+    button->setMaxHeight(0);
+    button->setPadding({20, 10});
+    return button;
+}
+
 auto makeSpan(const sf::String &text, const sf::Font &font)
 {
     auto span = std::make_shared<co::Span>();
@@ -89,6 +101,7 @@ int main()
 {
 
     sf::RenderWindow window({640, 480}, "My Window");
+    window.setFramerateLimit(60);
     auto wsize = sf::Vector2f(window.getSize());
 
     sf::Font font;
@@ -115,6 +128,11 @@ int main()
     layout.attach(input);
     layout.setAlignment(input, co::LinearLayout::Center);
 
+    auto button = makeButton("Change", font);
+
+    layout.attach(button);
+    layout.setAlignment(button, co::LinearLayout::Center);
+
     sf::Transformable transformable;
 
     while (window.isOpen())
@@ -123,7 +141,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            layout.handleEvent(event);
+            layout.dispatchEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:

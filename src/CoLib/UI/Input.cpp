@@ -5,9 +5,9 @@
 namespace co
 {
 
-    bool Input::handleEvent(const sf::Event &event)
+    bool Input::handleEvent(Widget *target, const sf::Event &event)
     {
-        if (event.type == sf::Event::TextEntered)
+        if (!target && event.type == sf::Event::TextEntered)
         {
             auto &text = getSpan()->getText();
             auto &string = text.getString();
@@ -23,7 +23,7 @@ namespace co
             invalidate();
             return true;
         }
-        return Label::handleEvent(event);
+        return Label::handleEvent(target, event);
     }
 
     Input::Input() {}

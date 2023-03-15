@@ -14,17 +14,24 @@ namespace co
         m_onClick = value;
     }
 
-    bool Button::handleEvent(const sf::Event &event)
+    bool Button::handleEvent(Widget *target, const sf::Event &event)
     {
-        if (event.type == sf::Event::MouseButtonReleased)
+        if (!target && event.type == sf::Event::MouseButtonReleased)
         {
-            if (m_onClick && contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
+            if (contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
             {
-                m_onClick(*this);
+                if (m_onClick)
+                {
+                    m_onClick(*this);
+                }
+                else
+                {
+                    bubbleEvent(this, event);
+                }
                 return true;
             }
         }
-        return Label::handleEvent(event);
+        return Label::handleEvent(target, event);
     }
 
     Button::Button()
