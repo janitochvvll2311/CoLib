@@ -1,6 +1,5 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-#include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/Widget.hpp>
 
 namespace co
@@ -36,9 +35,10 @@ namespace co
     void Widget::invalidate()
     {
         m_isValid = false;
-        if (m_parent)
+        auto *parent = getParent();
+        if (parent)
         {
-            auto *widget = dynamic_cast<Widget *>(m_parent);
+            auto *widget = dynamic_cast<Widget *>(parent);
             if (widget)
             {
                 widget->invalidate();
@@ -78,20 +78,9 @@ namespace co
         return point;
     }
 
-    bool Widget::dispatchEvent(Widget *target, const sf::Event &event)
+    Node *Widget::getParent() const
     {
-        return handleEvent(target, event);
-    }
-
-    bool Widget::bubbleEvent(Widget *target, const sf::Event &event)
-    {
-        auto *widget = dynamic_cast<Widget *>(m_parent);
-        return (handleEvent(target, event) || (widget && widget->bubbleEvent(target, event)));
-    }
-
-    bool Widget::handleEvent(Widget *target, const sf::Event &event)
-    {
-        return false;
+        return m_parent;
     }
 
     Widget::Widget()
@@ -99,9 +88,14 @@ namespace co
 
     Widget::~Widget() {}
 
-    /////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    bool Widget::dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const
+    void Widget::onAttach(Node *node)
+    {
+        m_parent = node;
+    }
+
+    bool Widget::dispatchInnerEvent(const SharedWidget &widget, Node *target, const sf::Event &event) const
     {
         switch (event.type)
         {

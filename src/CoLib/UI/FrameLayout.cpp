@@ -50,7 +50,7 @@ namespace co
     {
         if (m_holder)
         {
-            auto &widget = getWidget();
+            auto widget = getWidget();
             widget->compact();
         }
         Block::compact();
@@ -62,7 +62,7 @@ namespace co
         if (m_holder)
         {
             sf::Vector2f _size(getInnerWidth(), getInnerHeight());
-            auto &widget = getWidget();
+            auto widget = getWidget();
             widget->inflate(_size);
             switch (m_holder->getHorizontalAnchor())
             {
@@ -89,18 +89,32 @@ namespace co
         }
     }
 
-    const SharedWidget &FrameLayout::getWidget() const
+    SharedWidget FrameLayout::getWidget() const
     {
         if (m_holder)
         {
             return m_holder->getWidget();
         }
-        return NoWidget;
+        return nullptr;
     }
 
     //////////////////////////////////////////////////////////////////////////////////
 
-    bool FrameLayout::dispatchEvent(Widget *target, const sf::Event &event)
+    szt FrameLayout::getChildCount() const
+    {
+        return m_holder ? 1 : 0;
+    }
+
+    SharedNode FrameLayout::getChild(szt index) const
+    {
+        if (m_holder && index == 0)
+        {
+            return m_holder->getWidget();
+        }
+        return NoNode;
+    }
+
+    bool FrameLayout::dispatchEvent(Node *target, const sf::Event &event)
     {
         return ((m_holder && dispatchInnerEvent(getWidget(), target, event)) || handleEvent(target, event));
     }
@@ -116,7 +130,7 @@ namespace co
     {
         if (m_holder)
         {
-            auto &widget = getWidget();
+            auto widget = getWidget();
             return {widget->getWidth(), widget->getHeight()};
         }
         else
@@ -146,14 +160,26 @@ namespace co
         }
     }
 
-    void FrameLayout::onAttach(const SharedWidget &widget)
+    void FrameLayout::onAppend(const SharedNode &node)
     {
-        m_holder.reset(new WidgetHolder());
-        m_holder->setWidget(widget);
+        SharedWidget widget = std::dynamic_pointer_cast<Widget>(node);
+        if (widget)
+        {
+            m_holder.reset(new WidgetHolder());
+            m_holder->setWidget(widget);
+        }
+        else
+        {
+            throw InvalidOperationException("This node is not a widget");
+        }
     }
 
-    void FrameLayout::onDetach(const SharedWidget &widget)
+    void FrameLayout::onRemove(const SharedNode &node)
     {
+        if (getWidget() != node)
+        {
+            throw InvalidOperationException("This node is not a child of the parent node");
+        }
         m_holder.reset();
     }
 
