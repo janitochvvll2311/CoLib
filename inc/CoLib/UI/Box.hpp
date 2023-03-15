@@ -1,6 +1,7 @@
 #ifndef COLIB_BOX_HPP
 #define COLIB_BOX_HPP
 
+#include <SFML/System/Vector2.hpp>
 #include <CoLib/UI/Export.hpp>
 
 namespace co
@@ -14,7 +15,7 @@ namespace co
     {
 
     public:
-        enum Alignment
+        enum Anchor
         {
             Start,
             End,
@@ -22,32 +23,31 @@ namespace co
         };
 
         f32t getLeft() const;
-        void setLeft(f32t value, bool expand = false);
+        void setLeft(f32t value, bool resize = false);
 
         f32t getRight() const;
-        void setRight(f32t value, bool expand = false);
+        void setRight(f32t value, bool resize = false);
 
         f32t getTop() const;
-        void setTop(f32t value, bool expand = false);
+        void setTop(f32t value, bool resize = false);
 
         f32t getBottom() const;
-        void setBottom(f32t value, bool expand = false);
+        void setBottom(f32t value, bool resize = false);
 
         f32t getWidth() const;
-        void setWidth(f32t value, Alignment alignment = Start);
+        void setWidth(f32t value, Anchor anchor = Start);
 
         f32t getHeight() const;
-        void setHeight(f32t value, Alignment alignment = Start);
+        void setHeight(f32t value, Anchor anchor = Start);
 
-        void shrink(const Thickness& thickness);
-        void expand(const Thickness& thickness);
+        void shrink(const Thickness &thickness);
+        void expand(const Thickness &thickness);
 
-        void alignHorizontal(const Box& box, Alignment alignment);
-        void alignVertical(const Box& box, Alignment alignment);
+        bool contains(const sf::Vector2f &point) const;
 
         Box(f32t width = 0, f32t height = 0);
         Box(f32t left, f32t top, f32t width, f32t height);
-        ~Box();
+        virtual ~Box();
 
     private:
         f32t m_left;

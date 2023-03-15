@@ -1,6 +1,7 @@
 #ifndef COLIB_LAYOUT_HPP
 #define COLIB_LAYOUT_HPP
 
+#include <memory>
 #include <CoLib/UI/Widget.hpp>
 
 namespace co
@@ -10,28 +11,21 @@ namespace co
 
     //////////////////////////////////////////////
 
-    class COLIB_UI_API Layout : public Widget
+    class COLIB_UI_API Layout
     {
 
     public:
-        const Thickness &getPadding() const;
-        void setPadding(const Thickness &value);
-
-        f32t getHorizontalSpacing() const override;
-        f32t getVerticalSpacing() const override;
-
         void attach(const SharedWidget &widget);
         void detach(const SharedWidget &widget);
 
         Layout();
-        ~Layout();
+        virtual ~Layout();
+
+        static const SharedWidget NoWidget;
 
     protected:
         virtual void onAttach(const SharedWidget &widget);
         virtual void onDetach(const SharedWidget &widget);
-
-    private:
-        Thickness m_padding;
     };
 
 }

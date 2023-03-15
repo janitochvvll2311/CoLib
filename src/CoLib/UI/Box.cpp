@@ -9,9 +9,9 @@ namespace co
         return m_left;
     }
 
-    void Box::setLeft(f32t value, bool expand)
+    void Box::setLeft(f32t value, bool resize)
     {
-        if (expand)
+        if (resize)
         {
             m_width += m_left - value;
         }
@@ -23,9 +23,9 @@ namespace co
         return m_left + m_width;
     }
 
-    void Box::setRight(f32t value, bool expand)
+    void Box::setRight(f32t value, bool resize)
     {
-        if (expand)
+        if (resize)
         {
             m_width = value - m_left;
         }
@@ -37,9 +37,9 @@ namespace co
         return m_top;
     }
 
-    void Box::setTop(f32t value, bool expand)
+    void Box::setTop(f32t value, bool resize)
     {
-        if (expand)
+        if (resize)
         {
             m_height += m_top - value;
         }
@@ -51,9 +51,9 @@ namespace co
         return m_top + m_height;
     }
 
-    void Box::setBottom(f32t value, bool expand)
+    void Box::setBottom(f32t value, bool resize)
     {
-        if (expand)
+        if (resize)
         {
             m_height = value - m_top;
         }
@@ -65,9 +65,9 @@ namespace co
         return m_width;
     }
 
-    void Box::setWidth(f32t value, Alignment alignment)
+    void Box::setWidth(f32t value, Anchor anchor)
     {
-        switch (alignment)
+        switch (anchor)
         {
         case Start:
             break;
@@ -86,9 +86,9 @@ namespace co
         return m_height;
     }
 
-    void Box::setHeight(f32t value, Alignment alignment)
+    void Box::setHeight(f32t value, Anchor anchor)
     {
-        switch (alignment)
+        switch (anchor)
         {
         case Start:
             break;
@@ -118,36 +118,9 @@ namespace co
         m_height += thickness.getVertical();
     }
 
-    void Box::alignHorizontal(const Box &box, Alignment alignment)
+    bool Box::contains(const sf::Vector2f &point) const
     {
-        switch (alignment)
-        {
-        case Start:
-            m_left = box.m_left;
-            break;
-        case End:
-            m_left = box.m_left + box.m_width - m_width;
-            break;
-        case Center:
-            m_left = box.m_left + (box.m_width - m_width) / 2;
-            break;
-        }
-    }
-
-    void Box::alignVertical(const Box &box, Alignment alignment)
-    {
-        switch (alignment)
-        {
-        case Start:
-            m_top = box.m_top;
-            break;
-        case End:
-            m_top = box.m_top + box.m_height - m_height;
-            break;
-        case Center:
-            m_top = box.m_top + (box.m_height - m_height) / 2;
-            break;
-        }
+        return point.x >= m_left && point.x <= (m_left + m_width) && point.y >= m_top && point.y <= (m_top + m_height);
     }
 
     Box::Box(f32t width, f32t height)

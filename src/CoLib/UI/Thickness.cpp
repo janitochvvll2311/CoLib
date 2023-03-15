@@ -62,4 +62,6 @@ namespace co
     Thickness::Thickness(f32t _left, f32t _top, f32t _right, f32t _bottom)
         : left(_left), top(_top), right(_right), bottom(_bottom) {}
 
+    const Thickness Thickness::Default(0);
+
 }

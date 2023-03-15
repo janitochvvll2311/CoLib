@@ -1,6 +1,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <CoLib/Graphics/PointSource.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 #include <CoLib/Graphics/Graph.hpp>
@@ -58,12 +59,12 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////
 
-    const SharedTexture &Graph::getTexture() const
+    const sf::Texture *const Graph::getTexture() const
     {
         return m_texture;
     }
 
-    void Graph::setTexture(const SharedTexture &texture, bool reset)
+    void Graph::setTexture(const sf::Texture *const texture, bool reset)
     {
         m_texture = texture;
         if (m_texture && reset)
@@ -79,6 +80,19 @@ namespace co
         co::fitPoints(m_array, bounds);
     }
 
+    ///////////////////////////////////////////////////////////////////////
+
+    void Graph::setGlyphs(const sf::Glyph *const glyphs, szt count)
+    {
+        co::setGlyphs(m_array, glyphs, count);
+    }
+
+    void Graph::setText(const sf::String &text, const sf::Font &font, f32t size)
+    {
+        co::setText(m_array, text, font, size);
+        m_texture = &font.getTexture(size);
+    }
+
     Graph::Graph()
         : m_array(), m_color(sf::Color::White), m_texRect(), m_texture(nullptr) {}
 
@@ -90,7 +104,7 @@ namespace co
     {
         auto _states = states;
         _states.transform.combine(getTransform());
-        _states.texture = m_texture.get();
+        _states.texture = m_texture;
         target.draw(m_array, _states);
     }
 

@@ -1,110 +1,31 @@
-#include <math.h>
-#include <limits>
-#include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <CoLib/Graphics/Graph.hpp>
-#include <CoLib/Graphics/Utils.hpp>
+#include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/Widget.hpp>
 
 namespace co
 {
 
-    const Graph *const Widget::getBackground() const
+    f32t Widget::getOuterWidth() const
     {
-        return m_background.get();
+        return getWidth();
     }
 
-    void Widget::setBackground(const Graph &value)
+    f32t Widget::getInnerWidth() const
     {
-        m_background.reset(new Graph(value));
+        return getWidth();
     }
 
-    /////////////////////////////////////////////////////////////
-
-    f32t Widget::getMinWidth() const
+    f32t Widget::getOuterHeight() const
     {
-        return m_minWidth;
+        return getHeight();
     }
 
-    void Widget::setMinWidth(f32t value)
+    f32t Widget::getInnerHeight() const
     {
-        m_minWidth = value;
+        return getHeight();
     }
 
-    f32t Widget::getMaxWidth() const
-    {
-        return m_maxWidth;
-    }
-
-    void Widget::setMaxWidth(f32t value)
-    {
-        m_maxWidth = value;
-    }
-
-    f32t Widget::getMinHeight() const
-    {
-        return m_minHeight;
-    }
-
-    void Widget::setMinHeight(f32t value)
-    {
-        m_minHeight = value;
-    }
-
-    f32t Widget::getMaxHeight() const
-    {
-        return m_maxHeight;
-    }
-
-    void Widget::setMaxHeight(f32t value)
-    {
-        m_maxHeight = value;
-    }
-
-    ////////////////////////////////////////////////////////////////
-
-    const Thickness &Widget::getMargin() const
-    {
-        return m_margin;
-    }
-
-    void Widget::setMargin(const Thickness &value)
-    {
-        m_margin = value;
-    }
-
-    f32t Widget::getHorizontalSpacing() const
-    {
-        return m_margin.getHorizontal();
-    }
-
-    f32t Widget::getVerticalSpacing() const
-    {
-        return m_margin.getVertical();
-    }
-
-    Widget::Alignment Widget::getHorizontalAlignment() const
-    {
-        return m_hAlignment;
-    }
-
-    void Widget::setHorizontalAlignment(Alignment value)
-    {
-        m_hAlignment = value;
-    }
-
-    Widget::Alignment Widget::getVerticalAlignment() const
-    {
-        return m_vAlignment;
-    }
-
-    void Widget::setVerticalAlignment(Alignment value)
-    {
-        m_vAlignment = value;
-    }
-
-    ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////
 
     bool Widget::isValid() const
     {
@@ -114,63 +35,75 @@ namespace co
     void Widget::invalidate()
     {
         m_isValid = false;
+        if (m_parent)
+        {
+            auto *widget = dynamic_cast<Widget *>(m_parent);
+            if (widget)
+            {
+                widget->invalidate();
+            }
+        }
     }
 
-    void Widget::compact(const sf::Vector2f &size)
+    void Widget::compact()
     {
-        setWidth(std::min(std::max(m_minWidth + getHorizontalSpacing(), size.x), m_maxWidth));
-        setHeight(std::min(std::max(m_minHeight + getVerticalSpacing(), size.y), m_maxHeight));
+        setLeft(0);
+        setTop(0);
+        setWidth(0);
+        setHeight(0);
     }
 
-    void Widget::inflate(const Box &box)
+    void Widget::inflate(const sf::Vector2f &size)
     {
-        compact({std::max(getWidth(), box.getWidth()), std::max(getHeight(), box.getHeight())});
-        alignHorizontal(box, m_hAlignment);
-        alignVertical(box, m_vAlignment);
-        shrink(m_margin);
+        setLeft(0);
+        setTop(0);
+        setWidth(size.x);
+        setHeight(size.y);
+    }
+
+    void Widget::update(bool force) const
+    {
+        if (!m_isValid || force)
+        {
+            onUpdate();
+            m_isValid = true;
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    bool Widget::dispatchEvent(Widget *target, const sf::Event &event)
+    {
+        return handleEvent(target, event);
+    }
+
+    bool Widget::bubbleEvent(Widget *target, const sf::Event &event)
+    {
+        auto *widget = dynamic_cast<Widget *>(m_parent);
+        return (handleEvent(target, event) || (widget && widget->bubbleEvent(target, event)));
+    }
+
+    bool Widget::handleEvent(Widget *target, const sf::Event &event)
+    {
+        return false;
     }
 
     Widget::Widget()
-        : Box(),
-          m_isValid(false), m_background(nullptr),
-          m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
-          m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
-          m_margin(0), m_hAlignment(Start), m_vAlignment(Start),
-          m_parent(nullptr)
-    {
-    }
+        : m_isValid(false), m_parent(nullptr) {}
 
     Widget::~Widget() {}
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
 
     void Widget::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
-        if (!m_isValid)
-        {
-            onUpdate(m_background);
-            m_isValid = true;
-        }
+        update(false);
         auto _states = states;
         _states.transform.translate({getLeft(), getTop()});
-        _states.transform.combine(getTransform());
         onDraw(target, _states);
     }
 
-    void Widget::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
-    {
-        if (m_background && getWidth() > 0 && getHeight() > 0)
-        {
-            target.draw(*m_background, states);
-        }
-    }
-
-    void Widget::onUpdate(const UniqueGraph &background) const
-    {
-        if (background && getWidth() > 0 && getHeight() > 0)
-        {
-            background->fitPoints({{0, 0}, {getWidth(), getHeight()}});
-        }
-    }
+    void Widget::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const {}
+    void Widget::onUpdate() const {}
 
 }
