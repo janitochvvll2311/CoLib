@@ -33,25 +33,25 @@ namespace co
     Image::Image()
         : m_image(new Background())
     {
-        attach(m_image);
+        append(m_image);
     }
 
     Image::~Image() {}
 
     //////////////////////////////////////////////////////////////////
 
-    void Image::onAttach(const SharedWidget &widget)
+    void Image::onAppend(const SharedNode &node)
     {
-        if (widget != m_image)
+        if (node != m_image)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("Image not support child changes");
         }
-        FrameLayout::onAttach(widget);
+        FrameLayout::onAppend(node);
     }
 
-    void Image::onDetach(const SharedWidget &widget)
+    void Image::onRemove(const SharedNode &node)
     {
-        throw InvalidOperationException();
+        throw InvalidOperationException("Image not support child changes");
     }
 
 }

@@ -13,7 +13,7 @@ namespace co
     {
 
     public:
-        bool handleEvent(Widget *target, const sf::Event &event) override;
+        bool handleEvent(Node *target, const sf::Event &event) override;
 
         Input();
         virtual ~Input();

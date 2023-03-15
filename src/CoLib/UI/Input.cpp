@@ -5,7 +5,7 @@
 namespace co
 {
 
-    bool Input::handleEvent(Widget *target, const sf::Event &event)
+    bool Input::handleEvent(Node *target, const sf::Event &event)
     {
 
         switch (event.type)

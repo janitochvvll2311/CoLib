@@ -36,9 +36,9 @@ auto makeLinear(const sf::Color &color)
     linear->setBackground(makeBackground(color));
     linear->setMargin(10);
     linear->setPadding(10);
-    linear->attach(makeBlock(sf::Color::Red));
-    linear->attach(makeBlock(sf::Color::Green));
-    linear->attach(makeBlock(sf::Color::Blue));
+    linear->append(makeBlock(sf::Color::Red));
+    linear->append(makeBlock(sf::Color::Green));
+    linear->append(makeBlock(sf::Color::Blue));
     linear->setMaxWidth(0);
     linear->setMaxHeight(0);
     return linear;
@@ -50,7 +50,7 @@ auto makeFrame(const sf::Color &color)
     frame->setBackground(makeBackground(color));
     frame->setMargin(10);
     frame->setPadding(10);
-    frame->attach(makeBlock(sf::Color::Red));
+    frame->append(makeBlock(sf::Color::Red));
     return frame;
 }
 
@@ -127,15 +127,15 @@ int main()
     layout.setContentAnchor(co::LinearLayout::Center);
 
     auto image = makeImage(texture);
-    layout.attach(image);
+    layout.append(image);
     layout.setAnchor(image, co::LinearLayout::Center);
 
     auto input1 = makeInput(font);
-    layout.attach(input1);
+    layout.append(input1);
     layout.setAnchor(input1, co::LinearLayout::Center);
 
     auto input2 = makeInput(font);
-    layout.attach(input2);
+    layout.append(input2);
     layout.setAnchor(input2, co::LinearLayout::Center);
 
     auto button = makeButton("Change", font);
@@ -145,7 +145,7 @@ int main()
             image->setMinWidth(image->getMinWidth() + 10);
             image->invalidate();
         });
-    layout.attach(button);
+    layout.append(button);
     layout.setAnchor(button, co::LinearLayout::Center);
 
     sf::Transformable transformable;

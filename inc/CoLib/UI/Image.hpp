@@ -22,8 +22,8 @@ namespace co
         virtual ~Image();
 
     protected:
-        void onAttach(const SharedWidget &widget) override;
-        void onDetach(const SharedWidget &widget) override;
+        void onAppend(const SharedNode &node) override;
+        void onRemove(const SharedNode &node) override;
 
     private:
         SharedBackground m_image;

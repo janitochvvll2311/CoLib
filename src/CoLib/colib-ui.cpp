@@ -11,8 +11,8 @@
 #include <CoLib/UI/LinearLayout.cpp>
 #include <CoLib/UI/VirtualLayout.cpp>
 #include <CoLib/UI/Label.cpp>
-// #include <CoLib/UI/Clickable.cpp>
-// #include <CoLib/UI/Button.cpp>
-// #include <CoLib/UI/Image.cpp>
-// #include <CoLib/UI/Focusable.cpp>
-// #include <CoLib/UI/input.cpp>
+#include <CoLib/UI/Clickable.cpp>
+#include <CoLib/UI/Button.cpp>
+#include <CoLib/UI/Image.cpp>
+#include <CoLib/UI/Focusable.cpp>
+#include <CoLib/UI/input.cpp>

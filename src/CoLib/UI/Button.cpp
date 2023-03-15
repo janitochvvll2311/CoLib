@@ -14,11 +14,8 @@ namespace co
         m_onClick = value;
     }
 
-    bool Button::handleEvent(Widget *target, const sf::Event &event)
+    bool Button::handleEvent(Node *target, const sf::Event &event)
     {
-        if (!target && event.type == sf::Event::MouseButtonReleased)
-        {
-        }
         switch (event.type)
         {
         case sf::Event::MouseButtonReleased:

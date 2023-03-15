@@ -18,7 +18,7 @@ namespace co
         const EventListener &getOnClickListener() const;
         void setOnClickListener(const EventListener &value);
 
-        bool handleEvent(Widget *target, const sf::Event &event) override;
+        bool handleEvent(Node *target, const sf::Event &event) override;
 
         Button();
         virtual ~Button();
