@@ -14,12 +14,13 @@ namespace co
         void setOnClickListener(const EventListener &value);
 
         bool handleEvent(Widget *target, const sf::Event &event) override;
+        void click(sf::Mouse::Button button = sf::Mouse::Left, f32t x = 0, f32t y = 0);
 
         Button();
         virtual ~Button();
 
     protected:
-        void onClick(const sf::Event &event);
+        virtual void onClick(const sf::Event &event);
 
     private:
         EventListener m_onClick;

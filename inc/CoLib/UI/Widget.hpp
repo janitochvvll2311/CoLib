@@ -50,16 +50,12 @@ namespace co
         virtual void bubbleEvent(Widget *target, const sf::Event &event);
         virtual bool handleEvent(Widget *target, const sf::Event &event);
 
-        void click(sf::Mouse::Button button = sf::Mouse::Left, f32t x = 0, f32t y = 0);
-
         Widget(const Widget &other) = delete;
 
         Widget();
         virtual ~Widget();
 
     protected:
-        virtual void onClick(const sf::Event &event);
-
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
 
         virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
