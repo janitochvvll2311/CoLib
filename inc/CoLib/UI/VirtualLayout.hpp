@@ -15,7 +15,7 @@ namespace co
 
     public:
         const sf::Transform &getInnerTransform() const;
-        void setInnterTransform(const sf::Transform &value);
+        void setInnerTransform(const sf::Transform &value);
 
         ///////////////////////////////////////////////////////////////////////////
 

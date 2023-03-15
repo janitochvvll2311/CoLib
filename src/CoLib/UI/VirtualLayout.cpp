@@ -9,7 +9,7 @@ namespace co
         return m_transform;
     }
 
-    void VirtualLayout::setInnterTransform(const sf::Transform &value)
+    void VirtualLayout::setInnerTransform(const sf::Transform &value)
     {
         m_transform = value;
     }

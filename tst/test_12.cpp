@@ -177,7 +177,7 @@ int main()
                 break;
             case sf::Event::MouseWheelScrolled:
                 transformable.move({0, event.mouseWheelScroll.delta});
-                layout.setInnterTransform(transformable.getTransform());
+                layout.setInnerTransform(transformable.getTransform());
                 break;
             }
         }
