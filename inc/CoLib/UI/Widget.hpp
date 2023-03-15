@@ -3,7 +3,6 @@
 
 #include <functional>
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Mouse.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <CoLib/UI/Box.hpp>
 

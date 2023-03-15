@@ -1,4 +1,3 @@
-#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/Widget.hpp>

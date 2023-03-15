@@ -27,16 +27,6 @@ namespace co
         return Label::handleEvent(target, event);
     }
 
-    void Button::click(sf::Mouse::Button button, f32t x, f32t y)
-    {
-        sf::Event event;
-        event.type = sf::Event::MouseButtonReleased;
-        event.mouseButton.button = button;
-        event.mouseButton.x = x;
-        event.mouseButton.y = y;
-        onClick(event);
-    }
-
     Button::Button()
         : m_onClick() {}
 
