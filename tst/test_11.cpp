@@ -115,9 +115,9 @@ int main()
     layout.attach(input);
     layout.setAlignment(input, co::LinearLayout::Center);
 
-    input->compact();
-    input->inflate(wsize);
-    input->invalidate();
+    layout.compact();
+    layout.inflate(wsize);
+    layout.invalidate();
 
     sf::Transformable transformable;
 
@@ -127,7 +127,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            input->handleEvent(event);
+            layout.handleEvent(event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -136,15 +136,15 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                input->compact();
-                input->inflate(wsize);
-                input->invalidate();
+                layout.compact();
+                layout.inflate(wsize);
+                layout.invalidate();
                 break;
             }
         }
 
         window.clear();
-        window.draw(*input);
+        window.draw(layout);
         window.display();
     }
 
