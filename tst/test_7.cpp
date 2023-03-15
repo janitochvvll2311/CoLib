@@ -32,9 +32,9 @@ auto makeLinear(const sf::Color &color)
     linear->setBackground(makeBackground(color));
     linear->setMargin(10);
     linear->setPadding(10);
-    linear->attach(makeBlock(sf::Color::Red));
-    linear->attach(makeBlock(sf::Color::Green));
-    linear->attach(makeBlock(sf::Color::Blue));
+    linear->append(makeBlock(sf::Color::Red));
+    linear->append(makeBlock(sf::Color::Green));
+    linear->append(makeBlock(sf::Color::Blue));
     linear->setMaxWidth(0);
     linear->setMaxHeight(0);
     return linear;
@@ -57,9 +57,9 @@ int main()
     // layout.setMinHeight(100);
 
     auto linear = makeLinear(sf::Color::Yellow);
-    layout.attach(linear);
-    layout.setHorizontalAlignment(linear, co::FrameLayout::Center);
-    layout.setVerticalAlignment(linear, co::FrameLayout::Center);
+    layout.append(linear);
+    layout.setHorizontalAnchor(linear, co::FrameLayout::Center);
+    layout.setVerticalAnchor(linear, co::FrameLayout::Center);
 
     layout.compact();
     layout.inflate(wsize);
@@ -93,7 +93,7 @@ int main()
             case sf::Event::MouseWheelScrolled:
             {
                 transformable.move({event.mouseWheelScroll.delta * 10, 0});
-                layout.setInnterTransform(transformable.getTransform());
+                layout.setInnerTransform(transformable.getTransform());
                 layout.invalidate();
             }
             break;
