@@ -24,6 +24,7 @@ namespace co
 
     protected:
         sf::Vector2f getContentSize() const override;
+        bool dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const override;
 
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;

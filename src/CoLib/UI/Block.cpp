@@ -1,6 +1,7 @@
 #include <limits>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <CoLib/UI/Background.hpp>
 #include <CoLib/UI/Block.hpp>
 
 namespace co
