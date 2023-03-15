@@ -46,20 +46,6 @@ namespace co
 
     ////////////////////////////////////////////////////////////////
 
-    bool FrameLayout::isValid() const
-    {
-        return (Block::isValid() && (!m_holder || getWidget()->isValid()));
-    }
-
-    void FrameLayout::invalidate()
-    {
-        Block::invalidate();
-        if (m_holder)
-        {
-            getWidget()->invalidate();
-        }
-    }
-
     void FrameLayout::compact()
     {
         if (m_holder)

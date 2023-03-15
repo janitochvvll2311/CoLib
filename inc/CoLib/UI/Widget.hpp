@@ -33,8 +33,8 @@ namespace co
 
         ///////////////////////////////////////////////
 
-        virtual bool isValid() const;
-        virtual void invalidate();
+        bool isValid() const;
+        void invalidate();
 
         virtual void compact();
         virtual void inflate(const sf::Vector2f &size);

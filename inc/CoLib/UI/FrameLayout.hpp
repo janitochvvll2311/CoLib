@@ -28,9 +28,6 @@ namespace co
         Alignment getVerticalAlignment(const SharedWidget &widget) const;
         void setVerticalAlignment(const SharedWidget &widget, Alignment value) const;
 
-        bool isValid() const override;
-        void invalidate() override;
-
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
 

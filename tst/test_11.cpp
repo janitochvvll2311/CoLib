@@ -115,10 +115,6 @@ int main()
     layout.attach(input);
     layout.setAlignment(input, co::LinearLayout::Center);
 
-    layout.compact();
-    layout.inflate(wsize);
-    layout.invalidate();
-
     sf::Transformable transformable;
 
     while (window.isOpen())
@@ -136,11 +132,15 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact();
-                layout.inflate(wsize);
                 layout.invalidate();
                 break;
             }
+        }
+
+        if (!layout.isValid())
+        {
+            layout.compact();
+            layout.inflate(wsize);
         }
 
         window.clear();

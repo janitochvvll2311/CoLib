@@ -1,4 +1,5 @@
 #include <SFML/Graphics/RenderStates.hpp>
+#include <CoLib/UI/Layout.hpp>
 #include <CoLib/UI/Widget.hpp>
 
 namespace co
@@ -34,6 +35,14 @@ namespace co
     void Widget::invalidate()
     {
         m_isValid = false;
+        if (m_parent)
+        {
+            auto *widget = dynamic_cast<Widget *>(m_parent);
+            if (widget)
+            {
+                widget->invalidate();
+            }
+        }
     }
 
     void Widget::compact()

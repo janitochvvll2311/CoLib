@@ -57,33 +57,6 @@ namespace co
         m_cAlignment = value;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-    bool LinearLayout::isValid() const
-    {
-        if (!Block::isValid())
-        {
-            return false;
-        }
-        for (auto &holder : m_holders)
-        {
-            if (!holder->getWidget()->isValid())
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    void LinearLayout::invalidate()
-    {
-        Block::invalidate();
-        for (auto &holder : m_holders)
-        {
-            holder->getWidget()->invalidate();
-        }
-    }
-
     void LinearLayout::compact()
     {
         sf::Vector2f size(0, 0);

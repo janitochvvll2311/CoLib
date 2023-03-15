@@ -37,9 +37,6 @@ namespace co
 
         //////////////////////////////////////////////////////////////
 
-        bool isValid() const override;
-        void invalidate() override;
-
         void compact() override;
         void inflate(const sf::Vector2f &size) override;
 
