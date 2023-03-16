@@ -2,29 +2,29 @@
 #define COLIB_OBJECT_HPP
 
 #include <memory>
-#include <CoLib/Config.hpp>
+#include <CoLib/System/Export.hpp>
 
 namespace co
 {
 
-    template <typename T>
-    class Object : public T
+    class COLIB_SYSTEM_API Object
     {
 
     public:
-        template <typename... Args>
-        static std::shared_ptr<Object<T>> create(Args &&...args);
+        template <typename T>
+        std::shared_ptr<T> cast();
 
-        std::shared_ptr<Object<T>> getSelf();
-        std::shared_ptr<Object<const T>> getSelf() const;
+        template <typename T>
+        std::shared_ptr<const T> cast() const;
+
+        Object();
+        virtual ~Object();
+
+        template <typename T, typename...As>
+        static std::shared_ptr<T> create(As&&... args);
 
     private:
-        template <typename... Args>
-        Object(Args &&...args);
-
-        ~Object();
-
-        std::weak_ptr<Object<T>> m_self;
+        std::weak_ptr<Object> m_self;
     };
 
 }

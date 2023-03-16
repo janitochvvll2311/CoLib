@@ -4,38 +4,23 @@ namespace co
 {
 
     template <typename T>
-    template <typename... Args>
-    inline std::shared_ptr<Object<T>> Object<T>::create(Args &&...args)
+    inline std::shared_ptr<T> Object::cast()
     {
-        std::shared_ptr<Object<T>> object(
-            new Object(args...),
-            [](auto *object)
-            {
-                delete object;
-            });
+        return std::dynamic_pointer_cast<T>(m_self.lock());
+    }
+
+    template <typename T>
+    inline std::shared_ptr<const T> Object::cast() const
+    {
+        return std::dynamic_pointer_cast<const T>(m_self.lock());
+    }
+
+    template <typename T, typename... As>
+    inline std::shared_ptr<T> Object::create(As &&...args)
+    {
+        auto object = std::make_shared<T>(args...);
         object->m_self = object;
         return object;
     }
-
-    template <typename T>
-    inline std::shared_ptr<Object<T>> Object<T>::getSelf()
-    {
-        return m_self.lock();
-    }
-
-    template <typename T>
-    inline std::shared_ptr<Object<const T>> Object<T>::getSelf() const
-    {
-        return m_self.lock();
-    }
-
-    //////////////////////////////////////////////////////////////////////
-
-    template <typename T>
-    template <typename... Args>
-    inline Object<T>::Object(Args &&...args) : T(args...), m_self() {}
-
-    template <typename T>
-    inline Object<T>::~Object() {}
 
 }
