@@ -83,7 +83,7 @@ int main()
     layout.setMargin(10);
     layout.setPadding(10);
     layout.setBackground(makeBackground(sf::Color::White));
-    layout.setOritentation(co::LinearLayout::Vertical);
+    layout.setOrientation(co::LinearLayout::Vertical);
     layout.setContentAnchor(co::LinearLayout::Center);
 
     auto label = std::make_shared<co::Label>();

@@ -82,7 +82,7 @@ auto makeSideMenu()
 {
     auto layout = std::make_shared<co::LinearLayout>();
     layout->setBackground(makeBackground(sf::Color::Yellow));
-    layout->setOritentation(co::LinearLayout::Vertical);
+    layout->setOrientation(co::LinearLayout::Vertical);
     auto image = makeImage();
     layout->append(image);
     layout->setAnchor(image, co::LinearLayout::Center);

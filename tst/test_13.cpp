@@ -74,7 +74,11 @@ auto makeInput()
     input->getSpan()->getText().setFont(font);
     input->getSpan()->getText().setFillColor(sf::Color::Black);
     input->getSpan()->getText().setString("Prevent space");
+    input->setMinWidth(100);
+    input->setPadding({20, 10});
+    input->setMinHeight(10);
     input->setMaxWidth(0);
+    input->setMaxHeight(0);
     return input;
 }
 
@@ -82,7 +86,7 @@ auto makeSideMenu()
 {
     auto layout = std::make_shared<co::LinearLayout>();
     layout->setBackground(makeBackground(sf::Color::Yellow));
-    layout->setOritentation(co::LinearLayout::Vertical);
+    layout->setOrientation(co::LinearLayout::Vertical);
     auto image = makeImage();
     layout->append(image);
     layout->setAnchor(image, co::LinearLayout::Center);
@@ -104,6 +108,25 @@ auto makeSideMenu()
     return layout;
 }
 
+auto makeBody()
+{
+    auto layout = std::make_shared<co::LinearLayout>();
+    layout->setBackground(makeBackground(sf::Color::Magenta));
+    auto side = makeSideMenu();
+    layout->append(side);
+    layout->setWeight(side, 0.2);
+
+    auto content = std::make_shared<co::FrameLayout>();
+    auto input = makeInput();
+    content->append(input);
+    content->setHorizontalAnchor(input, co::LinearLayout::Center);
+    content->setVerticalAnchor(input, co::LinearLayout::Center);
+
+    layout->append(content);
+    layout->setWeight(content, 0.8);
+    return layout;
+}
+
 int main()
 {
 
@@ -116,12 +139,17 @@ int main()
 
     co::LinearLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
+    layout.setOrientation(co::LinearLayout::Vertical);
 
-    layout.append(makeSideMenu());
-    layout.append(makeSideMenu());
-    layout.append(makeSideMenu());
-    layout.append(makeSideMenu());
-    layout.append(makeSideMenu());
+    auto header = makeLabel("My Title");
+    header->setHorizontalContentAnchor(co::Label::Center);
+    header->setVerticalContentAnchor(co::Label::Center);
+    layout.append(header);
+    layout.setWeight(header, 0.2);
+
+    auto body = makeBody();
+    layout.append(body);
+    layout.setWeight(body, 0.8);
 
     while (window.isOpen())
     {
