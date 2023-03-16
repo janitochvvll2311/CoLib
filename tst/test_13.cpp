@@ -1,15 +1,17 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <CoLib/Graphics/Rectangle.hpp>
-#include <CoLib/UI/Thickness.hpp>
+#include <CoLib/UI/AnchorLayout.hpp>
 #include <CoLib/UI/Background.hpp>
 #include <CoLib/UI/Block.hpp>
-#include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/LinearLayout.hpp>
-#include <CoLib/UI/VirtualLayout.hpp>
+#include <CoLib/UI/Label.hpp>
+#include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/Button.hpp>
-#include <CoLib/UI/Image.hpp>
 #include <CoLib/UI/Input.hpp>
+#include <CoLib/UI/Image.hpp>
+
+sf::Font font;
+sf::Texture texture;
 
 auto makeBackground(const sf::Color &color)
 {
@@ -30,31 +32,7 @@ auto makeBlock(const sf::Color &color)
     return block;
 }
 
-auto makeLinear(const sf::Color &color)
-{
-    auto linear = std::make_shared<co::LinearLayout>();
-    linear->setBackground(makeBackground(color));
-    linear->setMargin(10);
-    linear->setPadding(10);
-    linear->append(makeBlock(sf::Color::Red));
-    linear->append(makeBlock(sf::Color::Green));
-    linear->append(makeBlock(sf::Color::Blue));
-    linear->setMaxWidth(0);
-    linear->setMaxHeight(0);
-    return linear;
-}
-
-auto makeFrame(const sf::Color &color)
-{
-    auto frame = std::make_shared<co::FrameLayout>();
-    frame->setBackground(makeBackground(color));
-    frame->setMargin(10);
-    frame->setPadding(10);
-    frame->append(makeBlock(sf::Color::Red));
-    return frame;
-}
-
-auto makeLabel(const sf::String &text, const sf::Font &font)
+auto makeLabel(const sf::String &text)
 {
     auto label = std::make_shared<co::Label>();
     label->setBackground(makeBackground(sf::Color::Red));
@@ -63,7 +41,7 @@ auto makeLabel(const sf::String &text, const sf::Font &font)
     return label;
 }
 
-auto makeButton(const sf::String &text, const sf::Font &font)
+auto makeButton(const sf::String &text)
 {
     auto button = std::make_shared<co::Button>();
     button->setBackground(makeBackground(sf::Color(200, 200, 200, 255)));
@@ -71,20 +49,12 @@ auto makeButton(const sf::String &text, const sf::Font &font)
     button->getSpan()->getText().setString(text);
     button->setMaxWidth(0);
     button->setMaxHeight(0);
+    button->setMargin(5);
     button->setPadding({20, 10});
     return button;
 }
 
-auto makeSpan(const sf::String &text, const sf::Font &font)
-{
-    auto span = std::make_shared<co::Span>();
-    span->getText().setFont(font);
-    span->getText().setString(text);
-    span->getText().setFillColor(sf::Color::Red);
-    return span;
-}
-
-auto makeImage(const sf::Texture &texture)
+auto makeImage()
 {
     auto image = std::make_shared<co::Image>();
     image->setBackground(makeBackground(sf::Color::Red));
@@ -97,7 +67,7 @@ auto makeImage(const sf::Texture &texture)
     return image;
 }
 
-auto makeInput(const sf::Font &font)
+auto makeInput()
 {
     auto input = std::make_shared<co::Input>();
     input->setBackground(makeBackground(sf::Color::Yellow));
@@ -108,6 +78,32 @@ auto makeInput(const sf::Font &font)
     return input;
 }
 
+auto makeSideMenu()
+{
+    auto layout = std::make_shared<co::LinearLayout>();
+    layout->setBackground(makeBackground(sf::Color::Yellow));
+    layout->setOritentation(co::LinearLayout::Vertical);
+    auto image = makeImage();
+    layout->append(image);
+    layout->setAnchor(image, co::LinearLayout::Center);
+    auto b1 = makeButton("Action A");
+    b1->setOnClickListener([](auto &node, auto &event)
+                           { std::cout << "Clicked A\n"; });
+    layout->append(b1);
+    layout->setAnchor(b1, co::LinearLayout::Center);
+    auto b2 = makeButton("Action B");
+    b2->setOnClickListener([](auto &node, auto &event)
+                           { std::cout << "Clicked B\n"; });
+    layout->append(b2);
+    layout->setAnchor(b2, co::LinearLayout::Center);
+    auto b3 = makeButton("Action C");
+    b3->setOnClickListener([](auto &node, auto &event)
+                           { std::cout << "Clicked C\n"; });
+    layout->append(b3);
+    layout->setAnchor(b3, co::LinearLayout::Center);
+    return layout;
+}
+
 int main()
 {
 
@@ -115,40 +111,17 @@ int main()
     window.setFramerateLimit(60);
     auto wsize = sf::Vector2f(window.getSize());
 
-    sf::Font font;
     auto _ = font.loadFromFile("./res/grandview.ttf");
-
-    sf::Texture texture;
     _ = texture.loadFromFile("./res/avatar.jpg");
 
     co::LinearLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
-    layout.setOritentation(co::LinearLayout::Vertical);
-    layout.setContentAnchor(co::LinearLayout::Center);
 
-    auto image = makeImage(texture);
-    layout.append(image);
-    layout.setAnchor(image, co::LinearLayout::Center);
-
-    auto input1 = makeInput(font);
-    layout.append(input1);
-    layout.setAnchor(input1, co::LinearLayout::Center);
-
-    auto input2 = makeInput(font);
-    layout.append(input2);
-    layout.setAnchor(input2, co::LinearLayout::Center);
-
-    auto button = makeButton("Change", font);
-    button->setOnClickListener(
-        [&](auto &widget, auto &event)
-        {
-            image->setMinWidth(image->getMinWidth() + 10);
-            image->invalidate();
-        });
-    layout.append(button);
-    layout.setAnchor(button, co::LinearLayout::Center);
-
-    sf::Transformable transformable;
+    layout.append(makeSideMenu());
+    layout.append(makeSideMenu());
+    layout.append(makeSideMenu());
+    layout.append(makeSideMenu());
+    layout.append(makeSideMenu());
 
     while (window.isOpen())
     {
@@ -167,8 +140,8 @@ int main()
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 layout.invalidate();
                 break;
-            case sf::Event::MouseWheelScrolled:
-                button->click();
+            case sf::Event::MouseButtonPressed:
+                auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
                 break;
             }
         }

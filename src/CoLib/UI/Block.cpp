@@ -1,6 +1,6 @@
 #include <limits>
-#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <CoLib/UI/Background.hpp>
 #include <CoLib/UI/Block.hpp>
 
 namespace co
@@ -102,10 +102,7 @@ namespace co
 
     void Block::compact()
     {
-        Widget::compact();
-        auto size = getContentSize();
-        setWidth(std::max(m_minWidth, size.x) + m_margin.getHorizontal() + m_padding.getHorizontal());
-        setHeight(std::max(m_minHeight, size.y) + m_margin.getVertical() + m_padding.getVertical());
+        compact({0, 0});
     }
 
     void Block::inflate(const sf::Vector2f &size)
@@ -120,6 +117,15 @@ namespace co
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    sf::Vector2f Block::getInnerPoint(const sf::Vector2f &point) const
+    {
+        auto &margin = getMargin();
+        auto &padding = getPadding();
+        return {point.x - (getLeft() + margin.left + padding.left), point.y - (getTop() + margin.top + padding.top)};
+    }
+
     Block::Block()
         : m_background(),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
@@ -130,28 +136,11 @@ namespace co
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    sf::Vector2f Block::getContentSize() const
+    void Block::compact(const sf::Vector2f &cSize)
     {
-        return {0, 0};
-    }
-
-    bool Block::dispatchInnerEvent(const SharedWidget &widget, Widget *target, const sf::Event &event) const
-    {
-        switch (event.type)
-        {
-        case sf::Event::MouseButtonPressed:
-        case sf::Event::MouseButtonReleased:
-        {
-            auto &margin = getMargin();
-            auto &padding = getPadding();
-            auto _event = event;
-            _event.mouseButton.x -= margin.getHorizontal() + padding.getHorizontal();
-            _event.mouseButton.y -= margin.getVertical() + padding.getVertical();
-            return widget->dispatchEvent(target, _event);
-        }
-        default:
-            return widget->dispatchEvent(target, event);
-        }
+        Widget::compact();
+        setWidth(std::max(m_minWidth, cSize.x) + m_margin.getHorizontal() + m_padding.getHorizontal());
+        setHeight(std::max(m_minHeight, cSize.y) + m_margin.getVertical() + m_padding.getVertical());
     }
 
     void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const

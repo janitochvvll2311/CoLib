@@ -5,24 +5,24 @@
 namespace co
 {
 
-    Label::Alignment Label::getHorizontalContentAlignment() const
+    Label::Anchor Label::getHorizontalContentAnchor() const
     {
-        return getHorizontalAlignment(m_span);
+        return getHorizontalAnchor(m_span);
     }
 
-    void Label::setHorizontalContentAlignment(Alignment value)
+    void Label::setHorizontalContentAnchor(Anchor value)
     {
-        setHorizontalAlignment(m_span, value);
+        setHorizontalAnchor(m_span, value);
     }
 
-    Label::Alignment Label::getVerticalContentAlignment() const
+    Label::Anchor Label::getVerticalContentAlignment() const
     {
-        return getVerticalAlignment(m_span);
+        return getVerticalAnchor(m_span);
     }
 
-    void Label::setVerticalContentAlignment(Alignment value)
+    void Label::setVerticalContentAnchor(Anchor value)
     {
-        setVerticalAlignment(m_span, value);
+        setVerticalAnchor(m_span, value);
     }
 
     const SharedSpan &Label::getSpan() const
@@ -33,25 +33,25 @@ namespace co
     Label::Label()
         : m_span(new Span())
     {
-        attach(m_span);
+        append(m_span);
     }
 
     Label::~Label() {}
 
     //////////////////////////////////////////////////////////////////
 
-    void Label::onAttach(const SharedWidget &widget)
+    void Label::onAppend(const SharedNode &node)
     {
-        if (widget != m_span)
+        if (node != m_span)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("Label not support child changes");
         }
-        FrameLayout::onAttach(widget);
+        FrameLayout::onAppend(node);
     }
 
-    void Label::onDetach(const SharedWidget &widget)
+    void Label::onRemove(const SharedNode &node)
     {
-        throw InvalidOperationException();
+        throw InvalidOperationException("Label not support child changes");
     }
 
 }

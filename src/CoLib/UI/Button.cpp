@@ -14,21 +14,27 @@ namespace co
         m_onClick = value;
     }
 
-    bool Button::handleEvent(Widget *target, const sf::Event &event)
+    bool Button::handleEvent(Node *target, const sf::Event &event)
     {
-        if (!target && event.type == sf::Event::MouseButtonReleased)
+        switch (event.type)
         {
-            if (contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
+        case sf::Event::MouseButtonReleased:
+            if (!target && contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
             {
+                focus();
                 onClick(event);
                 return true;
             }
+            break;
+        case sf::Event::GainedFocus:
+            m_focused = target == this;
+            break;
         }
         return false;
     }
 
     Button::Button()
-        : m_onClick() {}
+        : m_onClick(), m_focused(false) {}
 
     Button::~Button() {}
 
@@ -44,6 +50,11 @@ namespace co
         {
             bubbleEvent(this, event);
         }
+    }
+
+    void Button::onFocus(const sf::Event &event)
+    {
+        bubbleEvent(this, event);
     }
 
 }

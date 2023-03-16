@@ -15,16 +15,18 @@ namespace co
 
     public:
         const sf::Transform &getInnerTransform() const;
-        void setInnterTransform(const sf::Transform &value);
+        void setInnerTransform(const sf::Transform &value);
 
-        ///////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////
+
+        void compact() override;
+
+        sf::Vector2f getInnerPoint(const sf::Vector2f &point) const override;
 
         VirtualLayout();
         virtual ~VirtualLayout();
 
     protected:
-        sf::Vector2f getContentSize() const override;
-
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;
 

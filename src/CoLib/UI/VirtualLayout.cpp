@@ -9,12 +9,28 @@ namespace co
         return m_transform;
     }
 
-    void VirtualLayout::setInnterTransform(const sf::Transform &value)
+    void VirtualLayout::setInnerTransform(const sf::Transform &value)
     {
         m_transform = value;
     }
 
     ///////////////////////////////////////////////////////////////////////////
+
+    void VirtualLayout::compact()
+    {
+        auto widget = getWidget();
+        if (widget)
+        {
+            widget->compact();
+        }
+        FrameLayout::compact({0, 0});
+    }
+
+    sf::Vector2f VirtualLayout::getInnerPoint(const sf::Vector2f &point) const
+    {
+        auto _point = FrameLayout::getInnerPoint(point);
+        return m_transform.getInverse().transformPoint(point);
+    }
 
     VirtualLayout::VirtualLayout()
         : m_texture(), m_surface(), m_transform(sf::Transform::Identity)
@@ -27,11 +43,6 @@ namespace co
     VirtualLayout::~VirtualLayout() {}
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
-
-    sf::Vector2f VirtualLayout::getContentSize() const
-    {
-        return {0, 0};
-    }
 
     void VirtualLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {

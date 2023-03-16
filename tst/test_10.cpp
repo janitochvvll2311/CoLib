@@ -34,9 +34,9 @@ auto makeLinear(const sf::Color &color)
     linear->setBackground(makeBackground(color));
     linear->setMargin(10);
     linear->setPadding(10);
-    linear->attach(makeBlock(sf::Color::Red));
-    linear->attach(makeBlock(sf::Color::Green));
-    linear->attach(makeBlock(sf::Color::Blue));
+    linear->append(makeBlock(sf::Color::Red));
+    linear->append(makeBlock(sf::Color::Green));
+    linear->append(makeBlock(sf::Color::Blue));
     linear->setMaxWidth(0);
     linear->setMaxHeight(0);
     return linear;
@@ -48,7 +48,7 @@ auto makeFrame(const sf::Color &color)
     frame->setBackground(makeBackground(color));
     frame->setMargin(10);
     frame->setPadding(10);
-    frame->attach(makeBlock(sf::Color::Red));
+    frame->append(makeBlock(sf::Color::Red));
     return frame;
 }
 
@@ -80,34 +80,36 @@ int main()
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
     co::LinearLayout layout;
+    layout.setMargin(10);
+    layout.setPadding(10);
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setOritentation(co::LinearLayout::Vertical);
-    layout.setContentAlignment(co::LinearLayout::Center);
+    layout.setContentAnchor(co::LinearLayout::Center);
 
     auto label = std::make_shared<co::Label>();
     label->getSpan()->getText().setFont(font);
     label->getSpan()->getText().setString("My Title");
     label->getSpan()->getText().setFillColor(sf::Color::Black);
     label->getSpan()->getText().setStyle(sf::Text::Bold);
-    label->setHorizontalContentAlignment(co::Label::Center);
-    layout.attach(label);
+    label->setHorizontalContentAnchor(co::Label::Center);
+    layout.append(label);
 
     auto content = makeLinear(sf::Color::Yellow);
-    layout.attach(content);
-    layout.setAlignment(content, co::LinearLayout::Center);
+    layout.append(content);
+    layout.setAnchor(content, co::LinearLayout::Center);
 
     auto button = std::make_shared<co::Button>();
     button->setBackground(makeBackground(sf::Color(200, 200, 200, 255)));
     button->getSpan()->getText().setFont(font);
     button->getSpan()->getText().setString("Action");
     button->getSpan()->getText().setFillColor(sf::Color::Black);
-    button->setHorizontalContentAlignment(co::Label::Center);
+    button->setHorizontalContentAnchor(co::Label::Center);
     button->setMaxWidth(0);
     button->setPadding({20, 10});
-    button->setOnClickListener([](auto &widget)
+    button->setOnClickListener([](auto &node, auto &event)
                                { std::cout << "Clicked\n"; });
-    layout.attach(button);
-    layout.setAlignment(button, co::LinearLayout::Center);
+    layout.append(button);
+    layout.setAnchor(button, co::LinearLayout::Center);
 
     layout.compact();
     layout.inflate(wsize);
@@ -121,6 +123,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            layout.dispatchEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -132,9 +135,6 @@ int main()
                 layout.compact();
                 layout.inflate(wsize);
                 layout.invalidate();
-                break;
-            case sf::Event::MouseButtonReleased:
-                layout.handleEvent(event);
                 break;
             }
         }

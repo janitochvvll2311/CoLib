@@ -31,7 +31,7 @@ auto makeFrame(const sf::Color &color)
     frame->setBackground(makeBackground(color));
     frame->setMargin(10);
     frame->setPadding(10);
-    frame->attach(makeBlock(sf::Color::Red));
+    frame->append(makeBlock(sf::Color::Red));
     return frame;
 }
 
@@ -51,7 +51,8 @@ int main()
     layout.setPadding(10);
     layout.setMargin(10);
 
-    layout.attach(makeFrame(sf::Color::Magenta));
+    // layout.append(makeBlock(sf::Color::Red));
+    layout.append(makeFrame(sf::Color::Magenta));
 
     layout.compact();
     layout.inflate(wsize);

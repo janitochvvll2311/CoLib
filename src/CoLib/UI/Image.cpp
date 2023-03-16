@@ -5,24 +5,24 @@
 namespace co
 {
 
-    Image::Alignment Image::getHorizontalContentAlignment() const
+    Image::Anchor Image::getHorizontalContentAnchor() const
     {
-        return getHorizontalAlignment(m_image);
+        return getHorizontalAnchor(m_image);
     }
 
-    void Image::setHorizontalContentAlignment(Alignment value)
+    void Image::setHorizontalContentAnchor(Anchor value)
     {
-        setHorizontalAlignment(m_image, value);
+        setHorizontalAnchor(m_image, value);
     }
 
-    Image::Alignment Image::getVerticalContentAlignment() const
+    Image::Anchor Image::getVerticalContentAlignment() const
     {
-        return getVerticalAlignment(m_image);
+        return getVerticalAnchor(m_image);
     }
 
-    void Image::setVerticalContentAlignment(Alignment value)
+    void Image::setVerticalContentAnchor(Anchor value)
     {
-        setVerticalAlignment(m_image, value);
+        setVerticalAnchor(m_image, value);
     }
 
     const SharedBackground &Image::getImage() const
@@ -33,25 +33,25 @@ namespace co
     Image::Image()
         : m_image(new Background())
     {
-        attach(m_image);
+        append(m_image);
     }
 
     Image::~Image() {}
 
     //////////////////////////////////////////////////////////////////
 
-    void Image::onAttach(const SharedWidget &widget)
+    void Image::onAppend(const SharedNode &node)
     {
-        if (widget != m_image)
+        if (node != m_image)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("Image not support child changes");
         }
-        FrameLayout::onAttach(widget);
+        FrameLayout::onAppend(node);
     }
 
-    void Image::onDetach(const SharedWidget &widget)
+    void Image::onRemove(const SharedNode &node)
     {
-        throw InvalidOperationException();
+        throw InvalidOperationException("Image not support child changes");
     }
 
 }

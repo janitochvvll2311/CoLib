@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/System/Exception.hpp>
@@ -7,24 +8,24 @@
 namespace co
 {
 
-    LinearLayout::Alignment LinearLayout::getAlignment(const SharedWidget &widget) const
+    LinearLayout::Anchor LinearLayout::getAnchor(const SharedWidget &widget) const
     {
-        auto holder = getHolder(widget);
+        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
         if (!holder)
         {
             throw InvalidOperationException();
         }
-        return holder->getAlignment();
+        return holder->getAnchor();
     }
 
-    void LinearLayout::setAlignment(const SharedWidget &widget, Alignment value)
+    void LinearLayout::setAnchor(const SharedWidget &widget, Anchor value)
     {
-        auto holder = getHolder(widget);
+        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
         if (!holder)
         {
             throw InvalidOperationException();
         }
-        holder->setAlignment(value);
+        holder->setAnchor(value);
     }
 
     LinearLayout::Orientation LinearLayout::getOrientation() const
@@ -47,23 +48,24 @@ namespace co
         m_isReverse = value;
     }
 
-    LinearLayout::Alignment LinearLayout::getContentAlignment() const
+    LinearLayout::Anchor LinearLayout::getContentAnchor() const
     {
-        return m_cAlignment;
+        return m_cAnchor;
     }
 
-    void LinearLayout::setContentAlignment(Alignment value)
+    void LinearLayout::setContentAnchor(Anchor value)
     {
-        m_cAlignment = value;
+        m_cAnchor = value;
     }
 
     void LinearLayout::compact()
     {
         sf::Vector2f size(0, 0);
+        auto &holders = getHolders();
         switch (m_orientation)
         {
         case Horizontal:
-            for (auto &holder : m_holders)
+            for (auto &holder : holders)
             {
                 auto &widget = holder->getWidget();
                 widget->compact();
@@ -72,7 +74,7 @@ namespace co
             }
             break;
         case Vertical:
-            for (auto &holder : m_holders)
+            for (auto &holder : holders)
             {
                 auto &widget = holder->getWidget();
                 widget->compact();
@@ -81,23 +83,20 @@ namespace co
             }
             break;
         }
-        Block::compact();
-        auto &margin = getMargin();
-        auto &padding = getPadding();
-        setWidth(std::max(size.x, getMinWidth()) + margin.getHorizontal() + padding.getHorizontal());
-        setHeight(std::max(size.y, getMinHeight()) + margin.getVertical() + padding.getVertical());
+        GroupLayout::compact(size);
     }
 
     void LinearLayout::inflate(const sf::Vector2f &size)
     {
-        Block::inflate(size);
+        GroupLayout::inflate(size);
         sf::Vector2f _size(getInnerWidth(), getInnerHeight());
         f32t length = 0;
+        auto &holders = getHolders();
         switch (m_orientation)
         {
         case Horizontal:
         {
-            for (auto &holder : m_holders)
+            for (auto &holder : holders)
             {
                 auto &widget = holder->getWidget();
                 widget->inflate({0, _size.y});
@@ -106,7 +105,7 @@ namespace co
             f32t offset = _size.x - length;
             if (offset > 0)
             {
-                switch (m_cAlignment)
+                switch (m_cAnchor)
                 {
                 case Start:
                     offset = 0;
@@ -119,14 +118,14 @@ namespace co
             }
             if (m_isReverse)
             {
-                for (auto iterator = m_holders.rbegin(); iterator != m_holders.rend(); iterator++)
+                for (auto iterator = holders.rbegin(); iterator != holders.rend(); iterator++)
                 {
-                    auto &holder = *iterator;
+                    auto holder = std::dynamic_pointer_cast<WidgetHolder>(*iterator);
                     auto &widget = holder->getWidget();
                     widget->setLeft(widget->getLeft() + offset);
                     offset += widget->getOuterWidth();
                     f32t spacing = _size.y - widget->getOuterHeight();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -141,14 +140,14 @@ namespace co
             }
             else
             {
-                for (auto iterator = m_holders.begin(); iterator != m_holders.end(); iterator++)
+                for (auto iterator = holders.begin(); iterator != holders.end(); iterator++)
                 {
-                    auto &holder = *iterator;
+                    auto holder = std::dynamic_pointer_cast<WidgetHolder>(*iterator);
                     auto &widget = holder->getWidget();
                     widget->setLeft(widget->getLeft() + offset);
                     offset += widget->getOuterWidth();
                     f32t spacing = _size.y - widget->getOuterHeight();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -165,7 +164,7 @@ namespace co
         break;
         case Vertical:
         {
-            for (auto &holder : m_holders)
+            for (auto &holder : holders)
             {
                 auto &widget = holder->getWidget();
                 widget->inflate({_size.x, 0});
@@ -174,7 +173,7 @@ namespace co
             f32t offset = _size.y - length;
             if (offset > 0)
             {
-                switch (m_cAlignment)
+                switch (m_cAnchor)
                 {
                 case Start:
                     offset = 0;
@@ -187,14 +186,14 @@ namespace co
             }
             if (m_isReverse)
             {
-                for (auto iterator = m_holders.rbegin(); iterator != m_holders.rend(); iterator++)
+                for (auto iterator = holders.rbegin(); iterator != holders.rend(); iterator++)
                 {
-                    auto &holder = *iterator;
+                    auto holder = std::dynamic_pointer_cast<WidgetHolder>(*iterator);
                     auto &widget = holder->getWidget();
                     widget->setTop(widget->getTop() + offset);
                     offset += widget->getOuterHeight();
                     f32t spacing = _size.x - widget->getOuterWidth();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -209,14 +208,14 @@ namespace co
             }
             else
             {
-                for (auto iterator = m_holders.begin(); iterator != m_holders.end(); iterator++)
+                for (auto iterator = holders.begin(); iterator != holders.end(); iterator++)
                 {
-                    auto &holder = *iterator;
+                    auto holder = std::dynamic_pointer_cast<WidgetHolder>(*iterator);
                     auto &widget = holder->getWidget();
                     widget->setTop(widget->getTop() + offset);
                     offset += widget->getOuterHeight();
                     f32t spacing = _size.x - widget->getOuterWidth();
-                    switch (holder->getAlignment())
+                    switch (holder->getAnchor())
                     {
                     case Start:
                         break;
@@ -234,108 +233,32 @@ namespace co
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////
-
-    bool LinearLayout::dispatchEvent(Widget *target, const sf::Event &event)
-    {
-        bool handled = false;
-        for (auto &holder : m_holders)
-        {
-            if (dispatchInnerEvent(holder->getWidget(), target, event))
-            {
-                handled = true;
-            }
-        }
-        return (handled || handleEvent(target, event));
-    }
-
-    bool LinearLayout::bubbleEvent(Widget *target, const sf::Event &event)
-    {
-        if (event.type == sf::Event::GainedFocus)
-        {
-            for (auto &holder : m_holders)
-            {
-                auto &widget = holder->getWidget();
-                if (widget.get() != target)
-                {
-                    dispatchInnerEvent(widget, target, event);
-                }
-            }
-        }
-        return Block::bubbleEvent(target, event);
-    }
-
     LinearLayout::LinearLayout()
-        : m_orientation(Horizontal), m_isReverse(false), m_cAlignment(Start), m_holders() {}
+        : m_orientation(Horizontal), m_isReverse(false), m_cAnchor(Start) {}
 
     LinearLayout::~LinearLayout() {}
 
     //////////////////////////////////////////////////////////////////////
 
-    void LinearLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
+    SharedHolder LinearLayout::createHolder() const
     {
-        Block::onDraw(target, states);
-        if (m_holders.size() > 0)
-        {
-            auto &padding = getPadding();
-            auto _states = states;
-            _states.transform.translate({padding.left, padding.top});
-            for (auto &holder : m_holders)
-            {
-                target.draw(*holder->getWidget(), _states);
-            }
-        }
+        return std::make_shared<WidgetHolder>();
     }
 
-    void LinearLayout::onUpdate() const
+    //////////////////////////////////////////////////////////////////////
+
+    LinearLayout::Anchor LinearLayout::WidgetHolder::getAnchor() const
     {
-        Block::onUpdate();
-        for (auto &holder : m_holders)
-        {
-            holder->getWidget()->update(true);
-        }
+        return m_anchor;
     }
 
-    void LinearLayout::onAttach(const SharedWidget &widget)
+    void LinearLayout::WidgetHolder::setAnchor(Anchor value)
     {
-        auto holder = std::make_shared<WidgetHolder>();
-        holder->setWidget(widget);
-        m_holders.push_back(holder);
-    }
-
-    void LinearLayout::onDetach(const SharedWidget &widget)
-    {
-        m_holders.remove_if([&](auto &holder)
-                            { return holder->getWidget() == widget; });
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-
-    LinearLayout::SharedHolder LinearLayout::getHolder(const SharedWidget &widget) const
-    {
-        auto iterator = std::find_if(m_holders.begin(), m_holders.end(), [&](auto &holder)
-                                     { return holder->getWidget() == widget; });
-        if (iterator != m_holders.end())
-        {
-            return *iterator;
-        }
-        return nullptr;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    LinearLayout::Alignment LinearLayout::WidgetHolder::getAlignment() const
-    {
-        return m_alignment;
-    }
-
-    void LinearLayout::WidgetHolder::setAlignment(Alignment value)
-    {
-        m_alignment = value;
+        m_anchor = value;
     }
 
     LinearLayout::WidgetHolder::WidgetHolder()
-        : m_alignment(Start) {}
+        : m_anchor(Start) {}
 
     LinearLayout::WidgetHolder::~WidgetHolder() {}
 }

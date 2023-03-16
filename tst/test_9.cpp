@@ -34,9 +34,9 @@ auto makeLinear(const sf::Color &color)
     linear->setBackground(makeBackground(color));
     linear->setMargin(10);
     linear->setPadding(10);
-    linear->attach(makeBlock(sf::Color::Red));
-    linear->attach(makeBlock(sf::Color::Green));
-    linear->attach(makeBlock(sf::Color::Blue));
+    linear->append(makeBlock(sf::Color::Red));
+    linear->append(makeBlock(sf::Color::Green));
+    linear->append(makeBlock(sf::Color::Blue));
     linear->setMaxWidth(0);
     linear->setMaxHeight(0);
     return linear;
@@ -52,17 +52,17 @@ int main()
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
     co::Button button;
-    button.getBlock().setBackground(makeBackground(sf::Color::White));
-    button.getBlock().setMargin(10);
-    button.getBlock().setPadding(10);
+    button.setBackground(makeBackground(sf::Color::White));
+    button.setMargin(10);
+    button.setPadding(10);
 
-    button.getSpan().getText().setFont(font);
-    button.getSpan().getText().setString("It Works");
-    button.getSpan().getText().setFillColor(sf::Color::Red);
-    button.setHorizontalContentAlignment(co::Label::Center);
-    button.setVerticalContentAlignment(co::Label::Center);
+    button.getSpan()->getText().setFont(font);
+    button.getSpan()->getText().setString("It Works");
+    button.getSpan()->getText().setFillColor(sf::Color::Red);
+    button.setHorizontalContentAnchor(co::Label::Center);
+    button.setVerticalContentAnchor(co::Label::Center);
 
-    button.setOnClickListener([](auto &widget)
+    button.setOnClickListener([](auto &node, auto &event)
                               { std::cout << "Clicked\n"; });
 
     button.compact();
@@ -77,7 +77,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            button.handleEvent(event);
+            button.handleEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
