@@ -17,9 +17,7 @@ auto makeBlock(const sf::Color &color)
 {
     auto block = std::make_shared<co::Block>();
     block->setBackground(makeBackground(color));
-    block->setMinWidth(100);
     block->setMinHeight(100);
-    block->setMaxWidth(0);
     block->setMaxHeight(0);
     block->setMargin(10);
     return block;
@@ -49,14 +47,17 @@ int main()
     auto b1 = makeBlock(sf::Color::Red);
     linear.append(b1);
     linear.setAnchor(b1, co::LinearLayout::Start);
+    linear.setWeight(b1, 0.5);
 
     auto b2 = makeBlock(sf::Color::Green);
     linear.append(b2);
     linear.setAnchor(b2, co::LinearLayout::Center);
+    linear.setWeight(b2, 0.25);
 
     auto b3 = makeBlock(sf::Color::Blue);
     linear.append(b3);
     linear.setAnchor(b3, co::LinearLayout::End);
+    linear.setWeight(b3, 0.25);
 
     linear.compact();
     linear.inflate(wsize);

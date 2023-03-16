@@ -28,6 +28,26 @@ namespace co
         holder->setAnchor(value);
     }
 
+    f32t LinearLayout::getWeight(const SharedWidget &widget) const
+    {
+        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
+        if (!holder)
+        {
+            throw InvalidOperationException();
+        }
+        return holder->getWeight();
+    }
+
+    void LinearLayout::setWeight(const SharedWidget &widget, f32t value)
+    {
+        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
+        if (!holder)
+        {
+            throw InvalidOperationException();
+        }
+        holder->setWeight(value);
+    }
+
     LinearLayout::Orientation LinearLayout::getOrientation() const
     {
         return m_orientation;
@@ -157,8 +177,10 @@ namespace co
         {
             for (auto &holder : holders)
             {
-                auto &widget = holder->getWidget();
-                widget->inflate({0, _size.y});
+                auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
+                auto &widget = _holder->getWidget();
+                auto weight = _holder->getWeight();
+                widget->inflate({_size.x * weight, _size.y});
                 length += widget->getOuterWidth();
             }
             offset = _size.x - length;
@@ -183,8 +205,11 @@ namespace co
         {
             for (auto &holder : holders)
             {
+                auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
                 auto &widget = holder->getWidget();
                 widget->inflate({_size.x, 0});
+                auto weight = _holder->getWeight();
+                widget->inflate({_size.x, _size.y * weight});
                 length += widget->getOuterHeight();
             }
             offset = _size.y - length;
@@ -232,8 +257,18 @@ namespace co
         m_anchor = value;
     }
 
+    f32t LinearLayout::WidgetHolder::getWeight() const
+    {
+        return m_weight;
+    }
+
+    void LinearLayout::WidgetHolder::setWeight(f32t value)
+    {
+        m_weight = value;
+    }
+
     LinearLayout::WidgetHolder::WidgetHolder()
-        : m_anchor(Start) {}
+        : m_anchor(Start), m_weight(0) {}
 
     LinearLayout::WidgetHolder::~WidgetHolder() {}
 }

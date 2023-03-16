@@ -22,6 +22,9 @@ namespace co
         Anchor getAnchor(const SharedWidget &widget) const;
         void setAnchor(const SharedWidget &widget, Anchor value);
 
+        f32t getWeight(const SharedWidget &widget) const;
+        void setWeight(const SharedWidget &widget, f32t value);
+
         Orientation getOrientation() const;
         void setOritentation(Orientation value);
 
@@ -49,11 +52,15 @@ namespace co
             Anchor getAnchor() const;
             void setAnchor(Anchor value);
 
+            f32t getWeight() const;
+            void setWeight(f32t value);
+
             WidgetHolder();
             virtual ~WidgetHolder();
 
         private:
             Anchor m_anchor;
+            f32t m_weight;
         };
 
         Orientation m_orientation;
