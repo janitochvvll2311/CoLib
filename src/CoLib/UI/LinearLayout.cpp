@@ -83,14 +83,12 @@ namespace co
             }
             break;
         }
-        setWidth(size.x);
-        setHeight(size.y);
-        Block::compact();
+        GroupLayout::compact(size);
     }
 
     void LinearLayout::inflate(const sf::Vector2f &size)
     {
-        Block::inflate(size);
+        GroupLayout::inflate(size);
         sf::Vector2f _size(getInnerWidth(), getInnerHeight());
         f32t length = 0;
         auto &holders = getHolders();
@@ -241,11 +239,6 @@ namespace co
     LinearLayout::~LinearLayout() {}
 
     //////////////////////////////////////////////////////////////////////
-
-    sf::Vector2f LinearLayout::getContentSize() const
-    {
-        return {getWidth(), getHeight()};
-    }
 
     SharedHolder LinearLayout::createHolder() const
     {

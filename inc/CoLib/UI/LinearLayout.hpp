@@ -40,7 +40,6 @@ namespace co
         virtual ~LinearLayout();
 
     protected:
-        sf::Vector2f getContentSize() const override;
         SharedHolder createHolder() const override;
 
     private:

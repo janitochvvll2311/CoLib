@@ -40,7 +40,7 @@ namespace co
         virtual ~FrameLayout();
 
     protected:
-        sf::Vector2f getContentSize() const override;
+        using Block::compact;
 
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;

@@ -28,7 +28,7 @@ namespace co
         virtual ~AnchorLayout();
 
     protected:
-        sf::Vector2f getContentSize() const override;
+        SharedHolder createHolder() const override;
 
     private:
         class WidgetHolder;
@@ -52,12 +52,6 @@ namespace co
             Anchor m_hAnchor;
             Anchor m_vAnchor;
         };
-
-        //////////////////////////////////////////////////////
-
-        SharedHolder getHolder(const SharedWidget &widget) const;
-
-        std::list<SharedHolder> m_holders;
     };
 
 }

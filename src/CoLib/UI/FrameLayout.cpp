@@ -48,12 +48,15 @@ namespace co
 
     void FrameLayout::compact()
     {
+        sf::Vector2f size(0, 0);
         if (m_holder)
         {
             auto widget = getWidget();
             widget->compact();
+            size.x = widget->getOuterWidth();
+            size.y = widget->getOuterHeight();
         }
-        Block::compact();
+        Block::compact(size);
     }
 
     void FrameLayout::inflate(const sf::Vector2f &size)
@@ -125,19 +128,6 @@ namespace co
     FrameLayout::~FrameLayout() {}
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    sf::Vector2f FrameLayout::getContentSize() const
-    {
-        if (m_holder)
-        {
-            auto widget = getWidget();
-            return {widget->getWidth(), widget->getHeight()};
-        }
-        else
-        {
-            return {0, 0};
-        }
-    }
 
     void FrameLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {

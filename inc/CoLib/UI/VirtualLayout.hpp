@@ -19,14 +19,14 @@ namespace co
 
         ///////////////////////////////////////////////////////////////////////////
 
+        void compact() override;
+
         sf::Vector2f getInnerPoint(const sf::Vector2f &point) const override;
 
         VirtualLayout();
         virtual ~VirtualLayout();
 
     protected:
-        sf::Vector2f getContentSize() const override;
-
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
         void onUpdate() const override;
 

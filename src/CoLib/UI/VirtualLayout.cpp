@@ -16,6 +16,16 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////////
 
+    void VirtualLayout::compact()
+    {
+        auto widget = getWidget();
+        if (widget)
+        {
+            widget->compact();
+        }
+        FrameLayout::compact({0, 0});
+    }
+
     sf::Vector2f VirtualLayout::getInnerPoint(const sf::Vector2f &point) const
     {
         auto _point = FrameLayout::getInnerPoint(point);
@@ -33,11 +43,6 @@ namespace co
     VirtualLayout::~VirtualLayout() {}
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
-
-    sf::Vector2f VirtualLayout::getContentSize() const
-    {
-        return {0, 0};
-    }
 
     void VirtualLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
