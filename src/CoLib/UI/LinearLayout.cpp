@@ -13,7 +13,7 @@ namespace co
         auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
         if (!holder)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("This widget is not a child of this layout");
         }
         return holder->getAnchor();
     }
@@ -23,7 +23,7 @@ namespace co
         auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
         if (!holder)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("This widget is not a child of this layout");
         }
         holder->setAnchor(value);
     }
@@ -33,7 +33,7 @@ namespace co
         auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
         if (!holder)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("This widget is not a child of this layout");
         }
         return holder->getWeight();
     }
@@ -43,7 +43,7 @@ namespace co
         auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
         if (!holder)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException("This widget is not a child of this layout");
         }
         holder->setWeight(value);
     }
@@ -53,7 +53,7 @@ namespace co
         return m_orientation;
     }
 
-    void LinearLayout::setOritentation(Orientation value)
+    void LinearLayout::setOrientation(Orientation value)
     {
         m_orientation = value;
     }
@@ -207,7 +207,6 @@ namespace co
             {
                 auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
                 auto &widget = holder->getWidget();
-                widget->inflate({_size.x, 0});
                 auto weight = _holder->getWeight();
                 widget->inflate({_size.x, _size.y * weight});
                 length += widget->getOuterHeight();

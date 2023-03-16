@@ -123,7 +123,7 @@ int main()
 
     co::LinearLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
-    layout.setOritentation(co::LinearLayout::Vertical);
+    layout.setOrientation(co::LinearLayout::Vertical);
     layout.setContentAnchor(co::LinearLayout::Center);
 
     auto image = makeImage(texture);

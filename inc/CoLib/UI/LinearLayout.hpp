@@ -26,7 +26,7 @@ namespace co
         void setWeight(const SharedWidget &widget, f32t value);
 
         Orientation getOrientation() const;
-        void setOritentation(Orientation value);
+        void setOrientation(Orientation value);
 
         bool isReverse() const;
         void setReverse(bool value = true);

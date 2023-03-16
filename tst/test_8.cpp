@@ -28,20 +28,6 @@ auto makeBlock(const sf::Color &color)
     return block;
 }
 
-auto makeLinear(const sf::Color &color)
-{
-    auto linear = std::make_shared<co::LinearLayout>();
-    linear->setBackground(makeBackground(color));
-    linear->setMargin(10);
-    linear->setPadding(10);
-    linear->append(makeBlock(sf::Color::Red));
-    linear->append(makeBlock(sf::Color::Green));
-    linear->append(makeBlock(sf::Color::Blue));
-    linear->setMaxWidth(0);
-    linear->setMaxHeight(0);
-    return linear;
-}
-
 class Label : public co::Label
 {
 
@@ -60,6 +46,34 @@ public:
     }
 };
 
+auto makeLabelButton(const sf::Font &font)
+{
+    auto label = std::make_shared<Label>();
+    label->setBackground(makeBackground(sf::Color::Cyan));
+    label->setMargin(10);
+    label->setPadding(10);
+
+    label->getSpan()->getText().setFont(font);
+    label->getSpan()->getText().setString("It Works");
+    label->getSpan()->getText().setFillColor(sf::Color::Red);
+    label->setHorizontalContentAnchor(co::Label::Center);
+    label->setVerticalContentAnchor(co::Label::Center);
+    return label;
+}
+
+auto makeLinear(const sf::Color &color, const sf::Font &font)
+{
+    auto linear = std::make_shared<co::LinearLayout>();
+    linear->setBackground(makeBackground(color));
+    linear->setOrientation(co::LinearLayout::Vertical);
+    linear->setMargin(10);
+    linear->setPadding(10);
+    linear->append(makeLabelButton(font));
+    linear->append(makeLabelButton(font));
+    linear->append(makeLabelButton(font));
+    return linear;
+}
+
 int main()
 {
 
@@ -69,20 +83,12 @@ int main()
     sf::Font font;
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
-    Label label;
-    label.setBackground(makeBackground(sf::Color::White));
-    label.setMargin(10);
-    label.setPadding(10);
+    auto _layout = makeLinear(sf::Color::White, font);
+    auto &layout = *_layout;
 
-    label.getSpan()->getText().setFont(font);
-    label.getSpan()->getText().setString("It Works");
-    label.getSpan()->getText().setFillColor(sf::Color::Red);
-    label.setHorizontalContentAnchor(co::Label::Center);
-    label.setVerticalContentAnchor(co::Label::Center);
-
-    label.compact();
-    label.inflate(wsize);
-    label.invalidate();
+    layout.compact();
+    layout.inflate(wsize);
+    layout.invalidate();
 
     sf::Transformable transformable;
 
@@ -92,7 +98,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            label.handleEvent(nullptr, event);
+            layout.handleEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -101,20 +107,20 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                label.compact();
-                label.inflate(wsize);
-                label.invalidate();
+                layout.compact();
+                layout.inflate(wsize);
+                layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
-                label.compact();
-                label.inflate(cursor);
-                label.invalidate();
+                layout.compact();
+                layout.inflate(cursor);
+                layout.invalidate();
                 break;
             }
         }
 
         window.clear();
-        window.draw(label);
+        window.draw(layout);
         window.display();
     }
 
