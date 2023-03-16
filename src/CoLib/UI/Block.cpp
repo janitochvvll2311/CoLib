@@ -123,7 +123,7 @@ namespace co
     {
         auto &margin = getMargin();
         auto &padding = getPadding();
-        return {point.x - margin.getHorizontal() - padding.getHorizontal(), point.y - margin.getVertical() - padding.getVertical()};
+        return {point.x - (margin.left + padding.left), point.y - (margin.top + padding.top)};
     }
 
     Block::Block()

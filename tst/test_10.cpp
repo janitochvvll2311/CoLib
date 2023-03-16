@@ -80,6 +80,8 @@ int main()
     auto _ = font.loadFromFile("./res/grandview.ttf");
 
     co::LinearLayout layout;
+    layout.setMargin(10);
+    layout.setPadding(10);
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setOritentation(co::LinearLayout::Vertical);
     layout.setContentAnchor(co::LinearLayout::Center);

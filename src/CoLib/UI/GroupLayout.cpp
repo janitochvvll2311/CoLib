@@ -46,7 +46,7 @@ namespace co
                 auto &widget = holder->getWidget();
                 if (widget.get() != target)
                 {
-                    dispatchInnerEvent(widget, target, event);
+                    widget->dispatchEvent(target, event);
                 }
             }
         }
