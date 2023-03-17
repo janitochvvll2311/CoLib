@@ -4,23 +4,25 @@
 namespace co
 {
 
-    JobImpl::State JobImpl::getState() const
+    Job::State Job::getState() const
     {
         return m_state;
     }
 
-    Dispatcher *const JobImpl::getDispatcher() const
+    SharedDispatcher Job::getDispatcher() const
     {
-        return m_dispatcher;
+        return m_dispatcher.lock();
     }
 
-    void JobImpl::run()
+    /////////////////////////////////////////////////////////////
+
+    void Job::run()
     {
         m_monitor.lock();
         if (m_state != Ready)
         {
             m_monitor.unlock();
-            throw InvalidJobStateException();
+            throw InvalidOperationException();
         }
         m_state = Running;
         m_monitor.unlock();
@@ -47,13 +49,13 @@ namespace co
         }
     }
 
-    void JobImpl::wait() const
+    void Job::wait() const
     {
         m_waiter.lock();
         m_waiter.unlock();
     }
 
-    void JobImpl::cancel()
+    void Job::cancel()
     {
         m_monitor.lock();
         if (m_state != Running)
@@ -68,23 +70,56 @@ namespace co
         m_monitor.unlock();
     }
 
-    JobImpl::~JobImpl()
-    {
-        cancel();
-    }
-
-    ///////////////////////////////////////////////////
-
-    JobImpl::JobImpl(State state)
-        : m_monitor(),
-          m_waiter(),
-          m_state(state),
-          m_dispatcher(nullptr)
+    Job::Job(State state)
+        : m_monitor(), m_waiter(),
+          m_state(state), m_dispatcher()
     {
         if (m_state == Ready)
         {
             m_waiter.lock();
         }
     }
+
+    Job::~Job()
+    {
+        cancel();
+    }
+
+    ///////////////////////////////////////////////////////////////////
+
+    void Job::attach(const SharedDispatcher &dispatcher)
+    {
+        if (getDispatcher() != nullptr)
+        {
+            throw InvalidOperationException(JOB_ALREADY_ATTACHED_MESSAGE);
+        }
+        m_dispatcher = dispatcher;
+    }
+
+    void Job::detach()
+    {
+        if (getDispatcher() == nullptr)
+        {
+            throw InvalidOperationException(JOB_ALREADY_DETACHED_MESSAGE);
+        }
+        m_dispatcher.reset();
+    }
+
+    ///////////////////////////////////////////////////////////////////
+
+    void Job::Manager::attach(const SharedDispatcher &dispatcher)
+    {
+        m_job->attach(dispatcher);
+    }
+
+    void Job::Manager::detach()
+    {
+        m_job->detach();
+    }
+
+    Job::Manager::Manager(const SharedJob &job)
+        : m_job(job) {}
+
+    Job::Manager::~Manager() {}
 
 }

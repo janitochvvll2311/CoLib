@@ -46,10 +46,10 @@ namespace co
             : Exception(reason) {}
     };
 
-    class InvalidJobStateException : public Exception
+    class InvalidStateException : public Exception
     {
     public:
-        InvalidJobStateException(const std::string &reason = INVALID_JOB_STATE_EXCEPTION_MESSAGE)
+        InvalidStateException(const std::string &reason = INVALID_STATE_EXCEPTION_MESSAGE)
             : Exception(reason) {}
     };
 

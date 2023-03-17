@@ -1,43 +1,44 @@
 #include <algorithm>
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/System/Job.hpp>
+#include <CoLib/System/Utils.hpp>
 #include <CoLib/System/Dispatcher.hpp>
 
 namespace co
 {
 
-    bool Dispatcher::attach(const SharedJob &job)
+    void Dispatcher::append(const SharedJob &job)
     {
+        auto instance = getInstance();
+        auto manager = Job::Manager(job);
+        manager.attach(instance);
+        //
         m_monitor.lock();
-        if (job->m_dispatcher != nullptr)
-        {
-            m_monitor.unlock();
-            return false;
-        }
         m_jobs.push_back(job);
         if (m_jobs.size() == 1)
         {
             m_waiter.unlock();
         }
         m_monitor.unlock();
-        return true;
     }
 
-    bool Dispatcher::detach(const SharedJob &job)
+    void Dispatcher::remove(const SharedJob &job)
     {
-        m_monitor.lock();
-        if (job->m_dispatcher == this)
+        auto instace = getInstance();
+        if (job->getDispatcher() != instace)
         {
-            m_monitor.unlock();
-            return false;
+            throw InvalidOperationException(JOB_ALREADY_ATTACHED_MESSAGE);
         }
+        auto monitor = Job::Manager(job);
+        monitor.detach();
+        //
+        m_monitor.lock();
         m_jobs.remove(job);
         if (m_jobs.size() == 0)
         {
             m_waiter.lock();
         }
         m_monitor.unlock();
-        return true;
     }
 
     SharedJob Dispatcher::take()
@@ -48,9 +49,26 @@ namespace co
         {
             job = m_jobs.front();
             m_jobs.pop_front();
+            if (m_jobs.size() == 0)
+            {
+                m_waiter.lock();
+            }
         }
         m_monitor.unlock();
         return job;
+    }
+
+    bool Dispatcher::tryRemove(const SharedJob &job)
+    {
+        try
+        {
+            remove(job);
+            return true;
+        }
+        catch (...)
+        {
+            return false;
+        }
     }
 
     void Dispatcher::wait() const
@@ -76,18 +94,30 @@ namespace co
         }
         else
         {
-            for (auto &job : m_jobs)
-            {
-                job->m_dispatcher = nullptr;
-            }
             m_jobs.clear();
         }
         m_monitor.unlock();
     }
 
+    const SharedDispatcher Dispatcher::Main = Object::create<Dispatcher>();
+
     ////////////////////////////////////////////////////////////////
 
-    void runWorker(const WeakDispatcher &dispatcher)
+    SharedDispatcher Dispatcher::getInstance()
+    {
+        auto instance = cast<Dispatcher>();
+        if (!instance)
+        {
+            throw InvalidStateException(UNSAFE_OBJECT_INSTANCE_MESSAGE);
+        }
+        return instance;
+    }
+
+    ////////////////////////////////////////////////////////////////
+
+    void runWorker(
+        const WeakDispatcher &dispatcher,
+        const std::function<void(const Exception &)> &handler)
     {
         while (!dispatcher.expired())
         {
@@ -98,22 +128,15 @@ namespace co
                 auto job = _dispatcher->take();
                 if (job)
                 {
-                    try
-                    {
-                        job->run();
-                    }
-                    catch (...)
-                    {
-                    }
+                    runCatching(
+                        [&]()
+                        {
+                            job->run();
+                        },
+                        handler);
                 }
             }
         }
     }
 
-    ////////////////////////////////////////////////////////////////
-
-    namespace dispatchers
-    {
-        const SharedDispatcher Main(new Dispatcher());
-    }
 }

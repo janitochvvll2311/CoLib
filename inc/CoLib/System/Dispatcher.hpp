@@ -1,28 +1,35 @@
 #ifndef COLIB_DISPATCHER_HPP
 #define COLIB_DISPATCHER_HPP
 
-#include <memory>
 #include <list>
 #include <mutex>
 #include <functional>
-#include <CoLib/System/Export.hpp>
+#include <CoLib/System/Object.hpp>
 
 namespace co
 {
 
-    class JobImpl;
-    using SharedJob = std::shared_ptr<JobImpl>;
+    class Exception;
+
+    class Job;
+    using SharedJob = std::shared_ptr<Job>;
+
+    class Dispatcher;
+    using SharedDispatcher = std::shared_ptr<Dispatcher>;
 
     //////////////////////////////////////////////////////////////////
 
     class COLIB_SYSTEM_API Dispatcher
+        : public Object
     {
 
     public:
-        bool attach(const SharedJob &job);
-        bool detach(const SharedJob &job);
+        void append(const SharedJob &job);
+        void remove(const SharedJob &job);
 
         SharedJob take();
+        bool tryRemove(const SharedJob &job);
+
         void wait() const;
         void run();
 
@@ -31,7 +38,11 @@ namespace co
         Dispatcher();
         ~Dispatcher();
 
+        static const SharedDispatcher Main;
+
     private:
+        SharedDispatcher getInstance();
+
         mutable std::mutex m_monitor;
         mutable std::mutex m_waiter;
 
@@ -43,14 +54,9 @@ namespace co
     using SharedDispatcher = std::shared_ptr<Dispatcher>;
     using WeakDispatcher = std::weak_ptr<Dispatcher>;
 
-    void COLIB_SYSTEM_API runWorker(const WeakDispatcher &dispatcher);
-
-    //////////////////////////////////////////////////////////////////////////////
-
-    namespace dispatchers
-    {
-        const extern COLIB_SYSTEM_API SharedDispatcher Main;
-    }
+    void COLIB_SYSTEM_API runWorker(
+        const WeakDispatcher &dispatcher = Dispatcher::Main,
+        const std::function<void(const Exception &)> &handler = [](auto &exception) {});
 
 }
 

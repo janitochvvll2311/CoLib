@@ -4,11 +4,16 @@ namespace co
 {
 
     const s8t LIBRARY_VERSION = COLIB_VERSION_STRING;
+
     const s8t UNKNOWN_EXCEPTION_MESSAGE = "Unknown exception";
     const s8t NOT_IMPLEMENTED_EXCEPTION_MESSAGE = "Not implemented exception";
     const s8t INVALID_VALUE_EXCEPTION_MESSAGE = "Invalid value exception";
     const s8t INVALID_OPERATION_EXCEPTION_MESSAGE = "Invalid operation exception";
+    const s8t INVALID_STATE_EXCEPTION_MESSAGE = "Invalid state exception";
 
-    const s8t INVALID_JOB_STATE_EXCEPTION_MESSAGE = "Invalid job state exception";
+    const s8t UNSAFE_OBJECT_INSTANCE_MESSAGE = "The object instance is not safe";
+
+    const s8t JOB_ALREADY_ATTACHED_MESSAGE = "This Job is already attached to another dispatcher";
+    const s8t JOB_ALREADY_DETACHED_MESSAGE = "This job is already detached from the dispatcher";
 
 }
