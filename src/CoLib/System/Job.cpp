@@ -4,8 +4,86 @@
 namespace co
 {
 
-    Job::Job() {}
-    Job::~Job() {}
+    Job::State Job::getState() const
+    {
+        return m_state;
+    }
+
+    SharedDispatcher Job::getDispatcher() const
+    {
+        return m_dispatcher.lock();
+    }
+
+    /////////////////////////////////////////////////////////////
+
+    void Job::run()
+    {
+        m_monitor.lock();
+        if (m_state != Ready)
+        {
+            m_monitor.unlock();
+            throw InvalidOperationException();
+        }
+        m_state = Running;
+        m_monitor.unlock();
+        try
+        {
+            onRun();
+            m_monitor.lock();
+            if (m_state == Running)
+            {
+                m_state = Done;
+                m_waiter.unlock();
+            }
+            m_monitor.unlock();
+        }
+        catch (...)
+        {
+            m_monitor.lock();
+            if (m_state == Running)
+            {
+                m_state = Error;
+                m_waiter.unlock();
+            }
+            m_monitor.unlock();
+        }
+    }
+
+    void Job::wait() const
+    {
+        m_waiter.lock();
+        m_waiter.unlock();
+    }
+
+    void Job::cancel()
+    {
+        m_monitor.lock();
+        if (m_state != Running)
+        {
+            m_state = Canceled;
+            m_waiter.unlock();
+        }
+        else
+        {
+            m_state = Canceled;
+        }
+        m_monitor.unlock();
+    }
+
+    Job::Job(State state)
+        : m_monitor(), m_waiter(),
+          m_state(state), m_dispatcher()
+    {
+        if (m_state == Ready)
+        {
+            m_waiter.lock();
+        }
+    }
+
+    Job::~Job()
+    {
+        cancel();
+    }
 
     ///////////////////////////////////////////////////////////////////
 
@@ -15,7 +93,7 @@ namespace co
         {
             throw InvalidOperationException(JOB_ALREADY_ATTACHED_MESSAGE);
         }
-        onAttach(dispatcher);
+        m_dispatcher = dispatcher;
     }
 
     void Job::detach()
@@ -24,7 +102,7 @@ namespace co
         {
             throw InvalidOperationException(JOB_ALREADY_DETACHED_MESSAGE);
         }
-        onDetach();
+        m_dispatcher.reset();
     }
 
     ///////////////////////////////////////////////////////////////////

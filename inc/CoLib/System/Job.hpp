@@ -1,14 +1,15 @@
 #ifndef COLIB_JOB_HPP
 #define COLIB_JOB_HPP
 
-#include <memory>
-#include <CoLib/System/Export.hpp>
+#include <mutex>
+#include <CoLib/System/Object.hpp>
 
 namespace co
 {
 
     class Dispatcher;
     using SharedDispatcher = std::shared_ptr<Dispatcher>;
+    using WeakDispatcher = std::weak_ptr<Dispatcher>;
 
     class Job;
     using SharedJob = std::shared_ptr<Job>;
@@ -16,6 +17,7 @@ namespace co
     /////////////////////////////////////////////////////
 
     class COLIB_SYSTEM_API Job
+        : public Object
     {
 
     public:
@@ -29,14 +31,14 @@ namespace co
             Canceled
         };
 
-        virtual State getState() const = 0;
-        virtual SharedDispatcher getDispatcher() const = 0;
+        State getState() const;
+        SharedDispatcher getDispatcher() const;
 
-        virtual void run() = 0;
-        virtual void wait() const = 0;
-        virtual void cancel() const = 0;
+        void run();
+        void wait() const;
+        void cancel();
 
-        Job();
+        Job(State state = Empty);
         virtual ~Job();
 
         ////////////////////////////////////////
@@ -56,12 +58,16 @@ namespace co
         };
 
     protected:
-        virtual void onAttach(const SharedDispatcher &dispatcher) = 0;
-        virtual void onDetach() = 0;
+        virtual void onRun() = 0;
 
     private:
         void attach(const SharedDispatcher &dispatcher);
         void detach();
+
+        mutable std::mutex m_monitor;
+        mutable std::mutex m_waiter;
+        State m_state;
+        WeakDispatcher m_dispatcher;
     };
 
 }
