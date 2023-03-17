@@ -81,11 +81,6 @@ namespace co
         }
         else
         {
-            for (auto &job : m_jobs)
-            {
-                auto manager = Job::Manager(job);
-                manager.detach();
-            }
             m_jobs.clear();
         }
         m_monitor.unlock();

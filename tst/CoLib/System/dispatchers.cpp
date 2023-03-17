@@ -26,18 +26,19 @@ protected:
 void test()
 {
 
-    auto dispatcher = co::Object::create<co::Dispatcher>();
+    auto dispatcher = co::create<co::Dispatcher>();
     std::thread worker(
         [&]()
         {
             co::runWorker(dispatcher);
         });
-    dispatcher->append(co::Object::create<Job>());
-    dispatcher->append(co::Object::create<Job>());
-    auto last = co::Object::create<Job>();
+    worker.detach();
+    dispatcher->append(co::create<Job>());
+    dispatcher->append(co::create<Job>());
+    auto last = co::create<Job>();
     dispatcher->append(last);
-    dispatcher->append(co::Object::create<Job>());
-    dispatcher->append(co::Object::create<Job>());
+    dispatcher->append(co::create<Job>());
+    dispatcher->append(co::create<Job>());
     last->wait();
     dispatcher.reset();
 }

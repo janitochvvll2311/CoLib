@@ -32,6 +32,11 @@ namespace co
         WeakObject m_self;
     };
 
+    ////////////////////////////////////////////////////////////
+
+    template <typename T, typename... As>
+    std::shared_ptr<T> create(As &&...args);
+
 }
 
 #include <CoLib/System/Object.inl>

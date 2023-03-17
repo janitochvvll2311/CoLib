@@ -23,4 +23,12 @@ namespace co
         return object;
     }
 
+    ////////////////////////////////////////////////////////////
+
+    template <typename T, typename... As>
+    inline std::shared_ptr<T> create(As &&...args)
+    {
+        return Object::create<T>(args...);
+    }
+
 }
