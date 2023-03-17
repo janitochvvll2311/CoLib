@@ -58,6 +58,19 @@ namespace co
         return job;
     }
 
+    bool Dispatcher::tryRemove(const SharedJob &job)
+    {
+        try
+        {
+            remove(job);
+            return true;
+        }
+        catch (...)
+        {
+            return false;
+        }
+    }
+
     void Dispatcher::wait() const
     {
         m_waiter.lock();
@@ -85,6 +98,8 @@ namespace co
         }
         m_monitor.unlock();
     }
+
+    const SharedDispatcher Dispatcher::Main = Object::create<Dispatcher>();
 
     ////////////////////////////////////////////////////////////////
 
@@ -124,10 +139,4 @@ namespace co
         }
     }
 
-    ////////////////////////////////////////////////////////////////
-
-    namespace dispatchers
-    {
-        const SharedDispatcher Main = Object::create<Dispatcher>();
-    }
 }

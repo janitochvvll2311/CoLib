@@ -69,7 +69,7 @@ namespace co
         State m_state;
         WeakDispatcher m_dispatcher;
     };
-
+    
 }
 
 #endif // COLIB_JOB_HPP

@@ -28,6 +28,8 @@ namespace co
         void remove(const SharedJob &job);
 
         SharedJob take();
+        bool tryRemove(const SharedJob &job);
+
         void wait() const;
         void run();
 
@@ -35,6 +37,8 @@ namespace co
 
         Dispatcher();
         ~Dispatcher();
+
+        static const SharedDispatcher Main;
 
     private:
         SharedDispatcher getInstance();
@@ -51,15 +55,8 @@ namespace co
     using WeakDispatcher = std::weak_ptr<Dispatcher>;
 
     void COLIB_SYSTEM_API runWorker(
-        const WeakDispatcher &dispatcher,
+        const WeakDispatcher &dispatcher = Dispatcher::Main,
         const std::function<void(const Exception &)> &handler = [](auto &exception) {});
-
-    //////////////////////////////////////////////////////////////////////////////
-
-    namespace dispatchers
-    {
-        const extern COLIB_SYSTEM_API SharedDispatcher Main;
-    }
 
 }
 
