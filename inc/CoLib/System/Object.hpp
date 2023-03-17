@@ -7,6 +7,11 @@
 namespace co
 {
 
+    class Object;
+    using WeakObject = std::weak_ptr<Object>;
+
+    ////////////////////////////////////////////
+
     class COLIB_SYSTEM_API Object
     {
 
@@ -20,11 +25,11 @@ namespace co
         Object();
         virtual ~Object();
 
-        template <typename T, typename...As>
-        static std::shared_ptr<T> create(As&&... args);
+        template <typename T, typename... As>
+        static std::shared_ptr<T> create(As &&...args);
 
     private:
-        std::weak_ptr<Object> m_self;
+        WeakObject m_self;
     };
 
 }
