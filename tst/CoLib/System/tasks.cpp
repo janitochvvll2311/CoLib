@@ -13,9 +13,12 @@ auto makeTask()
     co::Task<void> task(
         []()
         {
-            std::cout << "Running\n";
+            std::hash<std::thread::id> hasher;
+            std::cout << hasher(std::this_thread::get_id());
+            std::cout << ": Running\n";
             sf::sleep(sf::seconds(2));
-            std::cout << "Done\n";
+            std::cout << hasher(std::this_thread::get_id());
+            std::cout << ": Done\n";
         });
     return task;
 }
@@ -25,16 +28,31 @@ auto makeTask(int result)
     co::Task<int> task(
         [=]()
         {
-            std::cout << "Running\n";
+            std::hash<std::thread::id> hasher;
+            std::cout << hasher(std::this_thread::get_id());
+            std::cout << ": Running\n";
             sf::sleep(sf::seconds(2));
-            std::cout << "Done\n";
+            std::cout << hasher(std::this_thread::get_id());
+            std::cout << ": Done\n";
             return result;
         });
     return task;
 }
 
+auto runWorker()
+{
+    std::thread worker([]()
+                       { co::runWorker(co::Dispatcher::Main); });
+    worker.detach();
+}
+
 void test()
 {
+    runWorker();
+    runWorker();
+    runWorker();
+    runWorker();
+    runWorker();
     makeTask().start();
     makeTask(1).start();
     makeTask().start();
@@ -45,12 +63,10 @@ void test()
     makeTask(4).start();
     makeTask().start();
     makeTask(5).start();
-    co::runWorker(co::Dispatcher::Main);
 }
 
 int main()
 {
-
     co::runCatching(
         test,
         [](auto &exception)
