@@ -55,6 +55,7 @@
 				"-c",
 				"-fPIC",
 				"-I${workspaceFolder}\\inc",
+				"-I${workspaceFolder}\\src",
 				"${file}",
 				"-o",
 				"${fileDirname}\\obj\\${fileBasenameNoExtension}.o"

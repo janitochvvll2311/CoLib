@@ -3,13 +3,10 @@
 
 #include <memory>
 #include <functional>
-#include <CoLib/Config.hpp>
+#include <CoLib/System/Dispatcher.hpp>
 
 namespace co
 {
-
-    class Job;
-    using SharedJob = std::shared_ptr<Job>;
 
     template <typename T>
     class Task;
@@ -19,17 +16,40 @@ namespace co
 
     ////////////////////////////////////////
 
-    class BaseTask
+    class COLIB_SYSTEM_API BaseTask
     {
     public:
-        BaseTask();
-        virtual ~BaseTask();
+        struct Work;
+        using SharedWork = std::shared_ptr<Work>;
 
-    protected:
         struct Work
         {
             virtual void run() = 0;
         };
+
+        enum State
+        {
+            Empty,
+            Ready,
+            Running,
+            Done,
+            Canceled,
+            Error
+        };
+
+        /////////////////////////////////////////////////////
+
+        State getState() const;
+
+        void start(const SharedDispatcher &dispatcher = Dispatcher::Main);
+        void wait() const;
+        void cancel();
+
+        BaseTask(const SharedWork &work = nullptr);
+        virtual ~BaseTask();
+
+    protected:
+        const SharedWork &getWork() const;
 
     private:
         SharedJob m_job;

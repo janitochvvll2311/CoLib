@@ -13,4 +13,6 @@ namespace co
     const s8t JOB_ALREADY_ATTACHED_STRING = "This Job is already attached to a Dispatcher";
     const s8t JOB_ALREADY_DETACHED_STRING = "This Job is already detached from the Dispatcher";
 
+    const s8t EMPTY_TASK_STRING = "The Task was Empty";
+
 }

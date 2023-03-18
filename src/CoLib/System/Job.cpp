@@ -1,3 +1,4 @@
+#define COLIB_SYSTEM_EXPORTS
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/System/Job.hpp>
 
