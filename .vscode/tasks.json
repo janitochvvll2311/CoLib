@@ -9,11 +9,11 @@
 				"-fdiagnostics-color=always",
 				"--std=c++17",
 				"-g",
-				"-Iinc",
+				"-I${workspaceFolder}\\inc",
 				"${file}",
 				"-o",
-				"bin/${fileBasenameNoExtension}.exe",
-				"bin/*.dll"
+				"${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+				"${workspaceFolder}\\bin\\*.dll"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
@@ -31,12 +31,11 @@
 				"--std=c++17",
 				"--shared",
 				"-g",
-				"-Iinc",
-				"-Isrc",
-				"${file}",
+				"-I${workspaceFolder}\\inc",
+				"${fileDirname}\\obj\\*.o",
 				"-o",
-				"bin/${fileBasenameNoExtension}.dll",
-				"bin/*.dll"
+				"${workspaceFolder}\\bin\\${fileBasenameNoExtension}.dll",
+				"${workspaceFolder}\\bin\\*.dll"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
@@ -54,11 +53,11 @@
 				"--std=c++17",
 				"-g",
 				"-c",
-				"-Iinc",
+				"-fPIC",
+				"-I${workspaceFolder}\\inc",
 				"${file}",
 				"-o",
-				"obj/${fileBasenameNoExtension}.o",
-				"bin/*.dll"
+				"${fileDirname}\\obj\\${fileBasenameNoExtension}.o"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
