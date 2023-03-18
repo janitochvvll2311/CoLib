@@ -3,10 +3,11 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "C/C++: g++.exe compile program file",
-			"command": "C:/mingw64/bin/g++.exe",
+			"label": "C/C++: Compile program file",
+			"command": "g++.exe",
 			"args": [
 				"-fdiagnostics-color=always",
+				"--std=c++17",
 				"-g",
 				"-Iinc",
 				"${file}",
@@ -19,19 +20,15 @@
 			},
 			"problemMatcher": [
 				"$gcc"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"detail": "compilador: C:/mingw64/bin/g++.exe"
+			]
 		},
 		{
 			"type": "cppbuild",
-			"label": "C/C++: g++.exe compile library file",
-			"command": "C:/mingw64/bin/g++.exe",
+			"label": "C/C++: Compile library file",
+			"command": "g++.exe",
 			"args": [
 				"-fdiagnostics-color=always",
+				"--std=c++17",
 				"--shared",
 				"-g",
 				"-Iinc",
@@ -46,12 +43,29 @@
 			},
 			"problemMatcher": [
 				"$gcc"
+			]
+		},
+		{
+			"type": "cppbuild",
+			"label": "C/C++: Compile object file",
+			"command": "g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"--std=c++17",
+				"-g",
+				"-c",
+				"-Iinc",
+				"${file}",
+				"-o",
+				"obj/${fileBasenameNoExtension}.o",
+				"bin/*.dll"
 			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
+			"options": {
+				"cwd": "${workspaceFolder}"
 			},
-			"detail": "compilador: C:/mingw64/bin/g++.exe"
+			"problemMatcher": [
+				"$gcc"
+			]
 		}
 	]
 }
