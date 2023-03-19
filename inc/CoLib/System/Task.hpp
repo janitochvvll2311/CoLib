@@ -1,6 +1,7 @@
 #ifndef COLIB_TASK_HPP
 #define COLIB_TASK_HPP
 
+#include <optional>
 #include <CoLib/System/Dispatcher.hpp>
 
 namespace co
@@ -12,7 +13,7 @@ namespace co
     template <typename T>
     using TaskWork = std::function<T()>;
 
-    ////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
 
     class COLIB_SYSTEM_API BaseTask
     {
@@ -60,8 +61,16 @@ namespace co
         : public BaseTask
     {
     public:
-        Task(const TaskWork<void> &work);
-        ~Task();
+        Task(const TaskWork<void> &work = nullptr);
+        ~Task() = default;
+
+    private:
+        struct VoidWork : public Work
+        {
+            void run() override;
+            VoidWork(const TaskWork<void> &_work);
+            TaskWork<void> work;
+        };
     };
 
     ///////////////////////////////////////
@@ -71,10 +80,23 @@ namespace co
         : public BaseTask
     {
     public:
-        Task(const TaskWork<T> &work);
-        ~Task();
+        const std::optional<T> &await() const;
+
+        Task(const TaskWork<T> &work = nullptr);
+        ~Task() = default;
+
+    private:
+        struct ResultWork : public Work
+        {
+            void run() override;
+            ResultWork(const TaskWork<T> &_work);
+            TaskWork<T> work;
+            std::optional<T> result;
+        };
     };
 
 }
+
+#include <CoLib/System/Task.inl>
 
 #endif // COLIB_TASK_HPP

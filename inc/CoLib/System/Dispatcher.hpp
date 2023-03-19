@@ -17,6 +17,7 @@ namespace co
     using SharedDispatcher = std::shared_ptr<Dispatcher>;
     using WeakDispatcher = std::weak_ptr<Dispatcher>;
 
+    class Exception;
     using ExceptionHandler = std::function<void(const Exception &)>;
 
     //////////////////////////////////////////////////////////////
