@@ -1,3 +1,4 @@
+#define COLIB_GRAPHICS_EXPORTS
 #include <SFML/System/String.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/VertexArray.hpp>

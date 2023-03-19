@@ -1,3 +1,4 @@
+#define COLIB_GRAPHICS_EXPORTS
 #include <math.h>
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/Graphics/Ellipse.hpp>
