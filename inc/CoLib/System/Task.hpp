@@ -13,6 +13,9 @@ namespace co
     template <typename T>
     using TaskWork = std::function<T()>;
 
+    class TaskImpl;
+    using SharedTaskImpl = std::shared_ptr<TaskImpl>;
+
     ///////////////////////////////////////////////////////////
 
     class COLIB_SYSTEM_API BaseTask
@@ -51,7 +54,7 @@ namespace co
         const SharedWork &getWork() const;
 
     private:
-        SharedJob m_job;
+        SharedTaskImpl m_impl;
     };
 
     ////////////////////////////////////////

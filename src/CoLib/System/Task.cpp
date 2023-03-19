@@ -8,9 +8,9 @@ namespace co
 
     BaseTask::State BaseTask::getState() const
     {
-        if (m_job != nullptr)
+        if (m_impl != nullptr)
         {
-            auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
+            auto job = std::dynamic_pointer_cast<TaskImpl>(m_impl);
             return job->getState();
         }
         return Empty;
@@ -18,47 +18,47 @@ namespace co
 
     void BaseTask::start(const SharedDispatcher &dispatcher)
     {
-        if (m_job == nullptr)
+        if (m_impl == nullptr)
         {
             throw InvalidOperationException(EMPTY_TASK_STRING);
         }
-        dispatcher->append(m_job);
+        dispatcher->append(m_impl);
     }
 
     void BaseTask::wait() const
     {
-        if (!m_job)
+        if (!m_impl)
         {
             throw InvalidOperationException(EMPTY_TASK_STRING);
         }
-        auto dispatcher = m_job->getDispatcher();
-        if (!dispatcher || dispatcher->tryRemove(m_job))
+        auto dispatcher = m_impl->getDispatcher();
+        if (!dispatcher || dispatcher->tryRemove(m_impl))
         {
-            m_job->run();
+            m_impl->run();
         }
         else
         {
-            auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
+            auto job = std::dynamic_pointer_cast<TaskImpl>(m_impl);
             job->wait();
         }
     }
 
     void BaseTask::cancel()
     {
-        if (m_job == nullptr)
+        if (m_impl == nullptr)
         {
             throw InvalidOperationException(EMPTY_TASK_STRING);
         }
-        auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
+        auto job = std::dynamic_pointer_cast<TaskImpl>(m_impl);
         job->cancel();
     }
 
     BaseTask::BaseTask(const SharedWork &work)
-        : m_job()
+        : m_impl()
     {
         if (work != nullptr)
         {
-            m_job.reset(new TaskImpl(work));
+            m_impl.reset(new TaskImpl(work));
         }
     }
 
@@ -68,7 +68,7 @@ namespace co
 
     const BaseTask::SharedWork &BaseTask::getWork() const
     {
-        auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
+        auto job = std::dynamic_pointer_cast<TaskImpl>(m_impl);
         return job->getWork();
     }
 
