@@ -1,8 +1,6 @@
 #ifndef COLIB_TASK_HPP
 #define COLIB_TASK_HPP
 
-#include <memory>
-#include <functional>
 #include <CoLib/System/Dispatcher.hpp>
 
 namespace co

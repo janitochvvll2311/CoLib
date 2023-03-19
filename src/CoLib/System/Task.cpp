@@ -1,6 +1,6 @@
 #define COLIB_SYSTEM_EXPORTS
-#include <CoLib/System/TaskJob.hpp>
 #include <CoLib/System/Exception.hpp>
+#include <CoLib/System/TaskImpl.hpp>
 #include <CoLib/System/Task.hpp>
 
 namespace co
@@ -10,7 +10,7 @@ namespace co
     {
         if (m_job != nullptr)
         {
-            auto job = std::dynamic_pointer_cast<TaskJob>(m_job);
+            auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
             return job->getState();
         }
         return Empty;
@@ -32,9 +32,14 @@ namespace co
             throw InvalidOperationException(EMPTY_TASK_STRING);
         }
         auto dispatcher = m_job->getDispatcher();
-        if (!dispatcher || dispatcher->remove(m_job))
+        if (!dispatcher || dispatcher->tryRemove(m_job))
         {
             m_job->run();
+        }
+        else
+        {
+            auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
+            job->wait();
         }
     }
 
@@ -44,7 +49,7 @@ namespace co
         {
             throw InvalidOperationException(EMPTY_TASK_STRING);
         }
-        auto job = std::dynamic_pointer_cast<TaskJob>(m_job);
+        auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
         job->cancel();
     }
 
@@ -53,7 +58,7 @@ namespace co
     {
         if (work != nullptr)
         {
-            m_job.reset(new TaskJob(work));
+            m_job.reset(new TaskImpl(work));
         }
     }
 
@@ -63,7 +68,7 @@ namespace co
 
     const BaseTask::SharedWork &BaseTask::getWork() const
     {
-        auto job = std::dynamic_pointer_cast<TaskJob>(m_job);
+        auto job = std::dynamic_pointer_cast<TaskImpl>(m_job);
         return job->getWork();
     }
 

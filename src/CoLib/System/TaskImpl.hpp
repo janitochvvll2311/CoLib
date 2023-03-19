@@ -1,7 +1,6 @@
 #ifndef COLIB_TASK_JOB_HPP
 #define COLIB_TASK_JOB_HPP
 
-#include <mutex>
 #include <CoLib/System/Job.hpp>
 #include <CoLib/System/Task.hpp>
 
@@ -12,7 +11,7 @@ namespace co
 
     /////////////////////////////////////////////////////////////////
 
-    class TaskJob
+    class TaskImpl
         : public Job
     {
 
@@ -24,8 +23,8 @@ namespace co
         void wait() const;
         void cancel();
 
-        TaskJob(const SharedTaskWork &work);
-        virtual ~TaskJob();
+        TaskImpl(const SharedTaskWork &work);
+        virtual ~TaskImpl();
 
     protected:
         void onRun() override;

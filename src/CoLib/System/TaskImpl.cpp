@@ -1,34 +1,34 @@
 #define COLIB_SYSTEM_EXPORTS
 #include <CoLib/System/Exception.hpp>
-#include <CoLib/System/TaskJob.hpp>
+#include <CoLib/System/TaskImpl.hpp>
 
 namespace co
 {
 
-    Dispatcher *TaskJob::getDispatcher() const
+    Dispatcher *TaskImpl::getDispatcher() const
     {
         return m_dispatcher;
     }
 
-    BaseTask::State TaskJob::getState() const
+    BaseTask::State TaskImpl::getState() const
     {
         return m_state;
     }
 
-    const SharedTaskWork &TaskJob::getWork() const
+    const SharedTaskWork &TaskImpl::getWork() const
     {
         return m_work;
     }
 
     /////////////////////////////////////////////////////////////////
 
-    void TaskJob::wait() const
+    void TaskImpl::wait() const
     {
         m_waiter.lock();
         m_waiter.unlock();
     }
 
-    void TaskJob::cancel()
+    void TaskImpl::cancel()
     {
         m_monitor.lock();
         if (m_state != BaseTask::Running)
@@ -43,7 +43,7 @@ namespace co
         m_monitor.unlock();
     }
 
-    TaskJob::TaskJob(const SharedTaskWork &work)
+    TaskImpl::TaskImpl(const SharedTaskWork &work)
         : m_monitor(), m_waiter(), m_state(BaseTask::Empty), m_dispatcher(), m_work(work)
     {
         if (work != nullptr)
@@ -53,14 +53,14 @@ namespace co
         }
     }
 
-    TaskJob::~TaskJob()
+    TaskImpl::~TaskImpl()
     {
         cancel();
     }
 
     ////////////////////////////////////////////////////////////
 
-    void TaskJob::onRun()
+    void TaskImpl::onRun()
     {
         m_monitor.lock();
         if (m_state != BaseTask::Ready)
@@ -93,12 +93,12 @@ namespace co
         }
     }
 
-    void TaskJob::onAttach(Dispatcher *dispatcher)
+    void TaskImpl::onAttach(Dispatcher *dispatcher)
     {
         m_dispatcher = dispatcher;
     }
 
-    void TaskJob::onDetach()
+    void TaskImpl::onDetach()
     {
         m_dispatcher = nullptr;
     }
