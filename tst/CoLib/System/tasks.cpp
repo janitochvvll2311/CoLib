@@ -23,7 +23,7 @@ auto makeTask()
         []()
         {
             std::cout << "Begin ---\n";
-            sf::sleep(sf::seconds(2));
+            sf::sleep(sf::seconds(5));
             std::cout << "End\n";
         });
     return task;
@@ -35,7 +35,7 @@ auto makeTask(int value)
         [=]()
         {
             std::cout << ("Begin " + std::to_string(value) + "\n");
-            sf::sleep(sf::seconds(2));
+            sf::sleep(sf::seconds(5));
             std::cout << ("End " + std::to_string(value) + "\n");
             return value;
         });
@@ -48,6 +48,7 @@ void test()
     runWorker();
     runWorker();
     auto task = makeTask(3);
+    task.cancel();
     makeTask().start();
     makeTask(1).start();
     makeTask().start();
