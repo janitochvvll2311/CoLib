@@ -12,14 +12,14 @@ namespace co
           public virtual LeafNode
     {
     public:
-        Node *getParent() const override;
+        Node *getParent() const override final;
 
         Span();
         virtual ~Span();
 
     protected:
-        void onAttach(Node *parent) override;
-        void onDetach() override;
+        void onAttach(Node *parent) override final;
+        void onDetach() override final;
 
     private:
         Node *m_parent;
