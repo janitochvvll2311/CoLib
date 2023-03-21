@@ -9,6 +9,23 @@ namespace co
         return m_parent;
     }
 
+    sf::Vector2f Span::compact()
+    {
+        auto bounds = getLocalBounds();
+        return {bounds.width, bounds.height};
+    }
+
+    sf::Vector2f Span::inflate(const sf::Vector2f &size)
+    {
+        return compact();
+    }
+
+    void Span::place(const sf::Vector2f &position)
+    {
+        auto bounds = getLocalBounds();
+        setPosition({position.x - bounds.left, position.y - bounds.top});
+    }
+
     Span::Span()
         : m_parent(nullptr) {}
 

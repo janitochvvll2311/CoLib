@@ -19,6 +19,15 @@ auto makeBackground(const sf::Color &color)
     return surface;
 }
 
+auto makeSpan(const sf::String &string, const sf::Color &color)
+{
+    auto span = std::make_shared<co::Span>();
+    span->setFont(font);
+    span->setString(string);
+    span->setFillColor(color);
+    return span;
+}
+
 auto makeBlock(const sf::Color &color)
 {
     auto block = std::make_shared<co::Block>();
@@ -57,17 +66,12 @@ int main()
     _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
-    co::Span span;
-    span.setFont(font);
-    span.setString("It Works");
-    span.setFillColor(sf::Color::Red);
-
     co::FrameLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setMargin(10);
     layout.setPadding(10);
 
-    auto content = makeFrame(sf::Color::Magenta, makeFrame(sf::Color::Cyan, makeBlock(sf::Color::Red)));
+    auto content = makeFrame(sf::Color::Magenta, makeFrame(sf::Color::Cyan, makeSpan("It Works", sf::Color::Red)));
     layout.append(content);
     layout.setHorizontalAnchor(content, co::FrameLayout::Center);
     layout.setVerticalAnchor(content, co::FrameLayout::Center);
