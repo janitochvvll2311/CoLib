@@ -20,6 +20,8 @@ namespace co
     {
 
     public:
+        Node *getParent() const override final;
+
         bool isValid() const;
         void invalidate();
         void update(bool force = false) const;
@@ -33,11 +35,15 @@ namespace co
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
 
+        void onAttach(Node *parent) override final;
+        void onDetach() override final;
+
         virtual void onUpdate() const;
         virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
 
     private:
         mutable bool m_isValid;
+        Node *m_parent;
     };
 
 }

@@ -5,6 +5,11 @@
 namespace co
 {
 
+    Node *Widget::getParent() const
+    {
+        return m_parent;
+    }
+
     bool Widget::isValid() const
     {
         return m_isValid;
@@ -46,7 +51,7 @@ namespace co
     }
 
     Widget::Widget()
-        : m_isValid(false) {}
+        : m_isValid(false), m_parent(nullptr) {}
 
     Widget::~Widget() {}
 
@@ -58,6 +63,16 @@ namespace co
         auto _states = states;
         _states.transform.translate({getLeft(), getTop()});
         onDraw(target, _states);
+    }
+
+    void Widget::onAttach(Node *parent)
+    {
+        m_parent = parent;
+    }
+
+    void Widget::onDetach()
+    {
+        m_parent = nullptr;
     }
 
     void Widget::onUpdate() const {}
