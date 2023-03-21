@@ -83,22 +83,29 @@ namespace co
         m_maxHeight = value;
     }
 
-    void Block::compact()
+    sf::Vector2f Block::compact()
     {
-        setLeft(0);
-        setTop(0);
-        setWidth(m_minWidth + m_margin.getHorizontal() + m_padding.getHorizontal());
-        setHeight(m_minHeight + m_margin.getVertical() + m_padding.getVertical());
+        auto cSize = compactContent();
+        setWidth(std::max(m_minWidth, cSize.x) + m_margin.getHorizontal() + m_padding.getHorizontal());
+        setHeight(std::max(m_minHeight, cSize.y) + m_margin.getVertical() + m_padding.getVertical());
+        return {getWidth(), getHeight()};
     }
 
-    void Block::inflate(const sf::Vector2f &size)
+    sf::Vector2f Block::inflate(const sf::Vector2f &size)
     {
-        setLeft(0);
-        setTop(0);
-        setWidth(std::max(getWidth(), std::min(size.x, m_maxWidth)));
-        setHeight(std::max(getHeight(), std::min(size.y, m_maxHeight)));
-        shrink(m_margin);
+        sf::Vector2f outerSize(std::max(getWidth(), std::min(size.x, m_maxWidth)),
+                               std::max(getHeight(), std::min(size.y, m_maxHeight)));
+        setWidth(outerSize.x - m_margin.getHorizontal());
+        setHeight(outerSize.y - m_margin.getVertical());
+        inflateContent();
         update();
+        return outerSize;
+    }
+
+    void Block::place(const sf::Vector2f &position)
+    {
+        setLeft(position.x + m_margin.left);
+        setTop(position.y + m_margin.top);
     }
 
     Block::Block()
@@ -120,7 +127,10 @@ namespace co
             _states.transform.translate({getLeft(), getTop()});
             target.draw(*m_background, _states);
         }
+        onDraw(target, states);
     }
+
+    void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const {}
 
     void Block::onAttach(Node *parent)
     {
@@ -131,6 +141,13 @@ namespace co
     {
         m_parent = nullptr;
     }
+
+    sf::Vector2f Block::compactContent() const
+    {
+        return {0, 0};
+    }
+
+    void Block::inflateContent() const {}
 
     ////////////////////////////////////////////////////////////////////////////////////////////
 

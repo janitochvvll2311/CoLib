@@ -2,6 +2,7 @@
 #define COLIB_INFLATABLE_HPP
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/System/Vector2.hpp>
 
 namespace co
 {
@@ -10,8 +11,9 @@ namespace co
     {
 
     public:
-        virtual void compact() = 0;
-        virtual void inflate(const sf::Vector2f &size) = 0;
+        virtual sf::Vector2f compact() = 0;
+        virtual sf::Vector2f inflate(const sf::Vector2f &size) = 0;
+        virtual void place(const sf::Vector2f &position) = 0;
 
         Inflatable() = default;
         virtual ~Inflatable() = default;
