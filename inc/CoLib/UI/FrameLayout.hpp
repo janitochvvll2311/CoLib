@@ -39,6 +39,9 @@ namespace co
 
         struct Holder
         {
+            Holder() = default;
+            virtual ~Holder() = default;
+
             SharedNode child;
             Anchor hAnchor;
             Anchor vAnchor;
