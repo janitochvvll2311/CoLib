@@ -2,6 +2,7 @@
 #include <CoLib/System/Exception.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
 
 namespace co
@@ -32,7 +33,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return m_holder->hAnchor;
     }
@@ -41,7 +42,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         m_holder->hAnchor = value;
     }
@@ -50,7 +51,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return m_holder->vAnchor;
     }
@@ -59,7 +60,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         m_holder->vAnchor = value;
     }
@@ -90,7 +91,7 @@ namespace co
     {
         if (m_holder != nullptr)
         {
-            throw InvalidOperationException("Frame layout has a child already");
+            throw InvalidOperationException(CHILD_NODE_ALREADY_ATTACHED_STRING);
         }
         m_holder.reset(new Holder());
         m_holder->child = child;
@@ -102,7 +103,7 @@ namespace co
     {
         if (m_holder == nullptr || m_holder->child != child)
         {
-            throw InvalidOperationException("Frame layout has another child already");
+            throw InvalidOperationException(CHILD_NODE_ALREADY_ATTACHED_STRING);
         }
         m_holder.reset();
     }

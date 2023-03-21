@@ -1,5 +1,6 @@
 #define COLIB_UI_EXPORTS
 #include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/AnchorLayout.hpp>
 
 namespace co
@@ -10,7 +11,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor;
     }
@@ -20,7 +21,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor = value;
     }
@@ -30,7 +31,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor;
     }
@@ -40,7 +41,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor = value;
     }

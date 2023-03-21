@@ -10,4 +10,7 @@ namespace co
     const s8t PARENT_NODES_NOT_SUPPORTED_STRING = "This node not support parent nodes";
     const s8t CHILD_NODES_NOT_SUPPORTED_STRING = "This node not support child nodes";
 
+    const s8t CHILD_NODE_ALREADY_ATTACHED_STRING = "This parent node has another child node already attached";
+    const s8t NOT_CHILD_NODE_STTRING = "This node not a child of the parent node";
+
 }
