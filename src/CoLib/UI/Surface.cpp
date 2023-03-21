@@ -23,12 +23,13 @@ namespace co
         m_color = value;
     }
 
-    void Surface::compact()
+    sf::Vector2f Surface::compact()
     {
         setLeft(0);
         setTop(0);
         setWidth(0);
         setHeight(0);
+        return {0, 0};
     }
 
     void Surface::inflate(const sf::Vector2f &size)

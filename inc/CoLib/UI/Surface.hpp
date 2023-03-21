@@ -22,7 +22,7 @@ namespace co
         const sf::Color &getColor() const;
         void setColor(const sf::Color &value);
 
-        void compact() override final;
+        sf::Vector2f compact() override final;
         void inflate(const sf::Vector2f &size) override final;
 
         Surface();

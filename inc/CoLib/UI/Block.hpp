@@ -44,7 +44,7 @@ namespace co
         f32t getMaxHeight() const;
         void setMaxHeight(f32t value);
 
-        void compact() override final;
+        sf::Vector2f compact() override final;
         void inflate(const sf::Vector2f &size) override final;
 
         Block();
@@ -52,9 +52,13 @@ namespace co
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
+        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
 
         void onAttach(Node *parent) override final;
         void onDetach() override final;
+
+        virtual sf::Vector2f compactContent() const;
+        virtual void inflateContent() const;
 
     private:
         void update() const;
