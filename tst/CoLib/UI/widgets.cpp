@@ -2,7 +2,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include <CoLib/UI/Surface.hpp>
+#include <CoLib/UI/Span.hpp>
 
 sf::Image image;
 sf::Texture texture;
@@ -19,11 +19,9 @@ int main()
     _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
-    co::Surface surface;
-
-    surface.compact();
-    surface.inflate(wsize);
-    surface.invalidate();
+    co::Span span;
+    span.setFont(font);
+    span.setString("It Works");
 
     while (window.isOpen())
     {
@@ -39,19 +37,13 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                surface.compact();
-                surface.inflate(wsize);
-                surface.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
-                surface.compact();
-                surface.inflate(cursor);
-                surface.invalidate();
                 break;
             }
         }
         window.clear();
-        window.draw(surface);
+        window.draw(span);
         window.display();
     }
 
