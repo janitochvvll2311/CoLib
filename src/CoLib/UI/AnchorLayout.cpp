@@ -1,0 +1,117 @@
+#define COLIB_UI_EXPORTS
+#include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/AnchorLayout.hpp>
+
+namespace co
+{
+
+    AnchorLayout::Anchor AnchorLayout::getHorizontalAnchor(const SharedNode &child) const
+    {
+        auto holder = getHolder(child);
+        if (holder == nullptr)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        return std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor;
+    }
+
+    void AnchorLayout::setHorizontalAnchor(const SharedNode &child, Anchor value)
+    {
+        auto holder = getHolder(child);
+        if (holder == nullptr)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor = value;
+    }
+
+    AnchorLayout::Anchor AnchorLayout::getVerticalAnchor(const SharedNode &child) const
+    {
+        auto holder = getHolder(child);
+        if (holder == nullptr)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        return std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor;
+    }
+
+    void AnchorLayout::setVerticalAnchor(const SharedNode &child, Anchor value)
+    {
+        auto holder = getHolder(child);
+        if (holder == nullptr)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor = value;
+    }
+
+    AnchorLayout::AnchorLayout() {}
+    AnchorLayout::~AnchorLayout() {}
+
+    ///////////////////////////////////////////////////////////
+
+    sf::Vector2f AnchorLayout::compactContent() const
+    {
+        sf::Vector2f cSize(0, 0);
+        for (szt i = 0; i < getChildCount(); i++)
+        {
+            auto child = getChild(i);
+            auto inflatable = std::dynamic_pointer_cast<Inflatable>(child);
+            if (inflatable)
+            {
+                auto size = inflatable->compact();
+                cSize.x = std::max(cSize.x, size.x);
+                cSize.y = std::max(cSize.y, size.y);
+            }
+        }
+        return cSize;
+    }
+
+    void AnchorLayout::inflateContent() const
+    {
+        if (getChildCount() > 0)
+        {
+            auto &padding = getPadding();
+            sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
+            for (szt i = 0; i < getChildCount(); i++)
+            {
+                auto holder = std::dynamic_pointer_cast<AnchorHolder>(getHolder(i));
+                auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                if (inflatable)
+                {
+                    auto size = inflatable->inflate(innerSize);
+                    sf::Vector2f position(0, 0);
+                    switch (holder->hAnchor)
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        position.x = innerSize.x - size.x;
+                        break;
+                    case Center:
+                        position.x = (innerSize.x - size.x) / 2;
+                        break;
+                    }
+                    switch (holder->vAnchor)
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        position.y = innerSize.y - size.y;
+                        break;
+                    case Center:
+                        position.y = (innerSize.y - size.y) / 2;
+                        break;
+                    }
+                    inflatable->place(position);
+                }
+            }
+        }
+    }
+
+    AnchorLayout::SharedHolder AnchorLayout::createHolder() const
+    {
+        return std::make_shared<AnchorHolder>();
+    }
+
+}

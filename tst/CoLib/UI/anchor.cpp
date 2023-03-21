@@ -6,6 +6,7 @@
 #include <CoLib/UI/Surface.hpp>
 #include <CoLib/UI/Block.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
+#include <CoLib/UI/AnchorLayout.hpp>
 
 sf::Image image;
 sf::Texture texture;
@@ -62,15 +63,22 @@ int main()
     span.setString("It Works");
     span.setFillColor(sf::Color::Red);
 
-    co::FrameLayout layout;
+    co::AnchorLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setMargin(10);
     layout.setPadding(10);
 
-    auto content = makeFrame(sf::Color::Magenta, makeFrame(sf::Color::Cyan, makeBlock(sf::Color::Red)));
-    layout.append(content);
-    layout.setHorizontalAnchor(content, co::FrameLayout::Center);
-    layout.setVerticalAnchor(content, co::FrameLayout::Center);
+    auto b1 = makeBlock(sf::Color::Red);
+    layout.append(b1);
+    layout.setHorizontalAnchor(b1, co::AnchorLayout::Start);
+
+    auto b2 = makeBlock(sf::Color::Green);
+    layout.append(b2);
+    layout.setHorizontalAnchor(b2, co::AnchorLayout::End);
+
+    auto b3 = makeBlock(sf::Color::Blue);
+    layout.append(b3);
+    layout.setHorizontalAnchor(b3, co::AnchorLayout::Center);
 
     layout.compact();
     layout.inflate(wsize);
