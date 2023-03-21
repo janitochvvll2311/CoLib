@@ -4,11 +4,19 @@
 #include <SFML/Graphics.hpp>
 #include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/Surface.hpp>
+#include <CoLib/UI/Block.hpp>
 
 sf::Image image;
 sf::Texture texture;
 sf::Font font;
 bool _;
+
+auto makeBackground(const sf::Color &color)
+{
+    auto surface = std::make_shared<co::Surface>();
+    surface->setColor(color);
+    return surface;
+}
 
 int main()
 {
@@ -25,10 +33,13 @@ int main()
     span.setString("It Works");
     span.setFillColor(sf::Color::Red);
 
-    co::Surface surface;
-    surface.compact();
-    surface.inflate(wsize);
-    surface.update();
+    co::Block block;
+    block.setBackground(makeBackground(sf::Color::Yellow));
+    block.setMargin(10);
+    block.setPadding(10);
+
+    block.compact();
+    block.inflate(wsize);
 
     while (window.isOpen())
     {
@@ -44,19 +55,17 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                surface.compact();
-                surface.inflate(wsize);
-                surface.update();
+                block.compact();
+                block.inflate(wsize);
                 break;
             case sf::Event::MouseButtonPressed:
-                surface.compact();
-                surface.inflate(cursor);
-                surface.update();
+                block.compact();
+                block.inflate(cursor);
                 break;
             }
         }
         window.clear();
-        window.draw(surface);
+        window.draw(block);
         window.draw(span);
         window.display();
     }

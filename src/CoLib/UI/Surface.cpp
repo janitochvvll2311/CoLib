@@ -37,17 +37,7 @@ namespace co
         setTop(0);
         setWidth(size.x);
         setHeight(size.y);
-    }
-
-    void Surface::update() const
-    {
-        auto width = getWidth();
-        auto height = getHeight();
-        if (width > 0 && height > 0)
-        {
-            fitPoints(m_array, sf::FloatRect({0, 0}, {width, height}));
-            setColors(m_array, m_color);
-        }
+        update();
     }
 
     Surface::Surface()
@@ -60,7 +50,7 @@ namespace co
 
     Surface::~Surface() {}
 
-    /////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 
     void Surface::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
@@ -80,6 +70,19 @@ namespace co
     void Surface::onDetach()
     {
         m_parent = nullptr;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    void Surface::update() const
+    {
+        auto width = getWidth();
+        auto height = getHeight();
+        if (width > 0 && height > 0)
+        {
+            fitPoints(m_array, sf::FloatRect({0, 0}, {width, height}));
+            setColors(m_array, m_color);
+        }
     }
 
 }

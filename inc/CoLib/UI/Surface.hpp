@@ -25,8 +25,6 @@ namespace co
         void compact() override final;
         void inflate(const sf::Vector2f &size) override final;
 
-        void update() const;
-
         Surface();
         virtual ~Surface();
 
@@ -37,6 +35,8 @@ namespace co
         void onDetach() override final;
 
     private:
+        void update() const;
+
         mutable sf::VertexArray m_array;
 
         sf::Color m_color;
