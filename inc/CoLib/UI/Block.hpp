@@ -45,7 +45,8 @@ namespace co
         void setMaxHeight(f32t value);
 
         sf::Vector2f compact() override final;
-        void inflate(const sf::Vector2f &size) override final;
+        sf::Vector2f inflate(const sf::Vector2f &size) override final;
+        void place(const sf::Vector2f &position) override final;
 
         Block();
         virtual ~Block();

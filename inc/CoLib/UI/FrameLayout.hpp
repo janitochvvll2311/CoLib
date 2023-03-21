@@ -15,6 +15,12 @@ namespace co
         szt getChildCount() const override final;
         SharedNode getChild(szt index) const override final;
 
+        Anchor getHorizontalAnchor(const SharedNode &child) const;
+        void setHorizontalAnchor(const SharedNode &child, Anchor value);
+
+        Anchor getVerticalAnchor(const SharedNode &child) const;
+        void setVerticalAnchor(const SharedNode &child, Anchor value);
+
         FrameLayout();
         virtual ~FrameLayout();
 

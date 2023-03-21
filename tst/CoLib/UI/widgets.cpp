@@ -25,6 +25,10 @@ auto makeBlock(const sf::Color &color)
     block->setBackground(makeBackground(color));
     block->setMargin(10);
     block->setPadding(10);
+    block->setMinWidth(100);
+    block->setMinHeight(100);
+    block->setMaxWidth(0);
+    block->setMaxHeight(0);
     return block;
 }
 
@@ -34,6 +38,8 @@ auto makeFrame(const sf::Color &color, const co::SharedNode &child = nullptr)
     frame->setBackground(makeBackground(color));
     frame->setMargin(10);
     frame->setPadding(10);
+    frame->setMaxWidth(0);
+    frame->setMaxHeight(0);
     if (child)
     {
         frame->append(child);
@@ -60,10 +66,15 @@ int main()
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setMargin(10);
     layout.setPadding(10);
-    layout.append(makeFrame(sf::Color::Magenta, makeFrame(sf::Color::Cyan, makeBlock(sf::Color::Red))));
+
+    auto content = makeFrame(sf::Color::Magenta, makeFrame(sf::Color::Cyan, makeBlock(sf::Color::Red)));
+    layout.append(content);
+    layout.setHorizontalAnchor(content, co::FrameLayout::Center);
+    layout.setVerticalAnchor(content, co::FrameLayout::Center);
 
     layout.compact();
     layout.inflate(wsize);
+    layout.place({0, 0});
 
     while (window.isOpen())
     {
@@ -81,10 +92,12 @@ int main()
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 layout.compact();
                 layout.inflate(wsize);
+                layout.place({0, 0});
                 break;
             case sf::Event::MouseButtonPressed:
                 layout.compact();
                 layout.inflate(cursor);
+                layout.place({0, 0});
                 break;
             }
         }

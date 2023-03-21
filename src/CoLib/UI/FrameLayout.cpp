@@ -28,6 +28,42 @@ namespace co
         return nullptr;
     }
 
+    FrameLayout::Anchor FrameLayout::getHorizontalAnchor(const SharedNode &child) const
+    {
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        return m_holder->hAnchor;
+    }
+
+    void FrameLayout::setHorizontalAnchor(const SharedNode &child, Anchor value)
+    {
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        m_holder->hAnchor = value;
+    }
+
+    FrameLayout::Anchor FrameLayout::getVerticalAnchor(const SharedNode &child) const
+    {
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        return m_holder->vAnchor;
+    }
+
+    void FrameLayout::setVerticalAnchor(const SharedNode &child, Anchor value)
+    {
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException("This node is not a child of this layout");
+        }
+        m_holder->vAnchor = value;
+    }
+
     FrameLayout::FrameLayout()
         : m_holder(nullptr) {}
 
@@ -92,7 +128,32 @@ namespace co
             if (inflatable)
             {
                 auto &padding = getPadding();
-                inflatable->inflate({getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical()});
+                sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
+                auto size = inflatable->inflate(innerSize);
+                sf::Vector2f position(0, 0);
+                switch (m_holder->hAnchor)
+                {
+                case Start:
+                    break;
+                case End:
+                    position.x = innerSize.x - size.x;
+                    break;
+                case Center:
+                    position.x = (innerSize.x - size.x) / 2;
+                    break;
+                }
+                switch (m_holder->vAnchor)
+                {
+                case Start:
+                    break;
+                case End:
+                    position.y = innerSize.y - size.y;
+                    break;
+                case Center:
+                    position.y = (innerSize.y - size.y) / 2;
+                    break;
+                }
+                inflatable->place(position);
             }
         }
     }

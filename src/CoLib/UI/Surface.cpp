@@ -25,20 +25,23 @@ namespace co
 
     sf::Vector2f Surface::compact()
     {
-        setLeft(0);
-        setTop(0);
         setWidth(0);
         setHeight(0);
         return {0, 0};
     }
 
-    void Surface::inflate(const sf::Vector2f &size)
+    sf::Vector2f Surface::inflate(const sf::Vector2f &size)
     {
-        setLeft(0);
-        setTop(0);
         setWidth(size.x);
         setHeight(size.y);
         update();
+        return size;
+    }
+
+    void Surface::place(const sf::Vector2f &position)
+    {
+        setLeft(position.x);
+        setTop(position.y);
     }
 
     Surface::Surface()
