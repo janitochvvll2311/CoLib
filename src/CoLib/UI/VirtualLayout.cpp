@@ -1,4 +1,5 @@
 #define COLIB_UI_EXPORTS
+#include <SFML/Window/Event.hpp>
 #include <CoLib/Graphics/Rectangle.hpp>
 #include <CoLib/Graphics/Utils.hpp>
 #include <CoLib/UI/VirtualLayout.hpp>
@@ -61,6 +62,31 @@ namespace co
                 }
             }
         }
+    }
+
+    bool VirtualLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
+    {
+        auto holder = getHolder();
+        if (holder)
+        {
+            switch (event.type)
+            {
+            case sf::Event::MouseButtonPressed:
+            case sf::Event::MouseButtonReleased:
+                if (contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
+                {
+                    auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
+                    auto _event = event;
+                    _event.mouseButton.x = innerPoint.x;
+                    _event.mouseButton.y = innerPoint.y;
+                    return holder->child->dispatchEvent(target, _event);
+                }
+                break;
+            default:
+                return holder->child->dispatchEvent(target, event);
+            }
+        }
+        return false;
     }
 
     sf::Vector2f VirtualLayout::compactContent() const

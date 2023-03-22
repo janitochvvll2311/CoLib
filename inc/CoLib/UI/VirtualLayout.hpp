@@ -17,6 +17,7 @@ namespace co
         const sf::Transform &getInnerTransform() const;
         void setInnerTransform(const sf::Transform &value);
 
+        bool dispatchChildrenEvents(Node *target, const sf::Event &event) const override;
         sf::Vector2f getInnerPoint(const sf::Vector2f &point) const override final;
 
         VirtualLayout();
