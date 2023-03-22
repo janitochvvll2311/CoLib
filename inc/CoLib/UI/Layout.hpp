@@ -9,7 +9,6 @@ namespace co
     class Layout
     {
     public:
-        virtual sf::Vector2f getAbsolutePlace() const = 0;
         Layout() = default;
         virtual ~Layout() = default;
     };

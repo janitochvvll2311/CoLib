@@ -56,6 +56,39 @@ auto makeFrame(const sf::Color &color, const co::SharedNode &child = nullptr)
     return frame;
 }
 
+class Button
+    : public co::Label
+{
+
+public:
+    bool handleEvent(Node *target, const sf::Event &event)
+    {
+        if (!target && event.type == sf::Event::MouseButtonReleased)
+        {
+            sf::Vector2f origin(0, 0);
+            if (getBlock().contains({event.mouseButton.x - origin.x, event.mouseButton.y - origin.y}))
+            {
+                std::cout << "Clicked\n";
+            }
+        }
+        return false;
+    }
+};
+
+auto makeButton()
+{
+    auto button = std::make_shared<Button>();
+    button->setHorizontalContentAnchor(co::Label::Anchor::Center);
+    button->setVerticalContentAnchor(co::Label::Anchor::Center);
+    button->getBlock().setBackground(makeBackground(sf::Color::White));
+    button->getBlock().setMargin(10);
+    button->getBlock().setPadding(10);
+    button->getSpan().setFont(font);
+    button->getSpan().setString("It Works");
+    button->getSpan().setFillColor(sf::Color::Red);
+    return button;
+}
+
 int main()
 {
 
@@ -66,19 +99,13 @@ int main()
     _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
-    co::Label label;
-    label.setHorizontalContentAnchor(co::Label::Anchor::Center);
-    label.setVerticalContentAnchor(co::Label::Anchor::Center);
-    label.getBlock().setBackground(makeBackground(sf::Color::White));
-    label.getBlock().setMargin(10);
-    label.getBlock().setPadding(10);
-    label.getSpan().setFont(font);
-    label.getSpan().setString("It Works");
-    label.getSpan().setFillColor(sf::Color::Red);
+    co::FrameLayout layout;
+    layout.setBackground(makeBackground(sf::Color::White));
+    layout.append(makeFrame(sf::Color::Red, makeFrame(sf::Color::Green, makeFrame(sf::Color::Blue, makeButton()))));
 
-    label.compact();
-    label.inflate(wsize);
-    label.place({0, 0});
+    layout.compact();
+    layout.inflate(wsize);
+    layout.place({0, 0});
 
     while (window.isOpen())
     {
@@ -86,6 +113,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            layout.dispatchEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -94,19 +122,19 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                label.compact();
-                label.inflate(wsize);
-                label.place({0, 0});
+                layout.compact();
+                layout.inflate(wsize);
+                layout.place({0, 0});
                 break;
             case sf::Event::MouseButtonPressed:
-                label.compact();
-                label.inflate(cursor);
-                label.place({0, 0});
+                layout.compact();
+                layout.inflate(cursor);
+                layout.place({0, 0});
                 break;
             }
         }
         window.clear();
-        window.draw(label);
+        window.draw(layout);
         window.display();
     }
 

@@ -16,7 +16,6 @@ namespace co
     public:
         szt getChildCount() const override final;
         SharedNode getChild(szt index) const override final;
-        sf::Vector2f getAbsolutePlace() const override final;
 
         Anchor getHorizontalAnchor(const SharedNode &child) const;
         void setHorizontalAnchor(const SharedNode &child, Anchor value);

@@ -38,10 +38,6 @@ namespace co
         virtual bool handleEvent(Node *target, const sf::Event &event);
         virtual void spreadEvent(Node *target, const sf::Event &event);
 
-        Node *queryNode(const Query &query) const;
-        std::list<Node *> queryNodes(const Query &query) const;
-        Node *closestNode(const Query &query) const;
-
         Node();
         virtual ~Node();
 

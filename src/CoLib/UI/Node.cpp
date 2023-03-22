@@ -75,57 +75,6 @@ namespace co
         root->dispatchEvent(target, event);
     }
 
-    Node *Node::queryNode(const Query &query) const
-    {
-        if (query(*this))
-        {
-            return const_cast<Node *>(this);
-        }
-        for (szt i = 0; i < getChildCount(); i++)
-        {
-            auto child = getChild(i);
-            auto node = child->queryNode(query);
-            if (node)
-            {
-                return node;
-            }
-        }
-        return nullptr;
-    }
-
-    std::list<Node *> Node::queryNodes(const Query &query) const
-    {
-        std::list<Node *> nodes;
-        if (query(*this))
-        {
-            nodes.push_back(const_cast<Node *>(this));
-        }
-        for (szt i = 0; i < getChildCount(); i++)
-        {
-            auto child = getChild(i);
-            auto _nodes = child->queryNodes(query);
-            for (auto node : _nodes)
-            {
-                nodes.push_back(node);
-            }
-        }
-        return nodes;
-    }
-
-    Node *Node::closestNode(const Query &query) const
-    {
-        if (query(*this))
-        {
-            return const_cast<Node *>(this);
-        }
-        auto parent = getParent();
-        if (parent)
-        {
-            return parent->closestNode(query);
-        }
-        return nullptr;
-    }
-
     Node::Node() {}
     Node::~Node() {}
 

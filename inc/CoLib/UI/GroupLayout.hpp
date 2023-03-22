@@ -16,7 +16,6 @@ namespace co
     public:
         szt getChildCount() const override final;
         SharedNode getChild(szt index) const override final;
-        sf::Vector2f getAbsolutePlace() const override final;
 
         GroupLayout();
         virtual ~GroupLayout();
