@@ -75,11 +75,11 @@ namespace co
         root->dispatchEvent(target, event);
     }
 
-    Node *Node::queryNode(const Query &query)
+    Node *Node::queryNode(const Query &query) const
     {
         if (query(*this))
         {
-            return this;
+            return const_cast<Node *>(this);
         }
         for (szt i = 0; i < getChildCount(); i++)
         {
@@ -93,12 +93,12 @@ namespace co
         return nullptr;
     }
 
-    std::list<Node *> Node::queryNodes(const Query &query)
+    std::list<Node *> Node::queryNodes(const Query &query) const
     {
         std::list<Node *> nodes;
         if (query(*this))
         {
-            nodes.push_back(this);
+            nodes.push_back(const_cast<Node *>(this));
         }
         for (szt i = 0; i < getChildCount(); i++)
         {
@@ -112,11 +112,11 @@ namespace co
         return nodes;
     }
 
-    Node *Node::closestNode(const Query &query)
+    Node *Node::closestNode(const Query &query) const
     {
         if (query(*this))
         {
-            return this;
+            return const_cast<Node *>(this);
         }
         auto parent = getParent();
         if (parent)
