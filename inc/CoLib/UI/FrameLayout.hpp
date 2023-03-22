@@ -30,6 +30,8 @@ namespace co
         void onAppend(const SharedNode &child) override final;
         void onRemove(const SharedNode &child) override final;
 
+        bool dispatchChildrenEvents(Node *target, const sf::Event &event) const override;
+
         sf::Vector2f compactContent() const override final;
         void inflateContent() const override final;
 

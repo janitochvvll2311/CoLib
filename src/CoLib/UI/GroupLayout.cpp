@@ -59,6 +59,19 @@ namespace co
                             { return holder->child == child; });
     }
 
+    bool GroupLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
+    {
+        bool handled = false;
+        for (auto &holder : m_holders)
+        {
+            if (holder->child->dispatchEvent(target, event))
+            {
+                handled = true;
+            }
+        }
+        return handled;
+    }
+
     GroupLayout::SharedHolder GroupLayout::createHolder() const
     {
         return std::make_shared<Holder>();

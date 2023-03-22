@@ -108,6 +108,11 @@ namespace co
         m_holder.reset();
     }
 
+    bool FrameLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
+    {
+        return (m_holder != nullptr && m_holder->child->dispatchEvent(target, event));
+    }
+
     sf::Vector2f FrameLayout::compactContent() const
     {
         if (m_holder)
