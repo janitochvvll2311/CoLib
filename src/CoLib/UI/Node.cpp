@@ -75,6 +75,57 @@ namespace co
         root->dispatchEvent(target, event);
     }
 
+    Node *Node::queryNode(const Query &query)
+    {
+        if (query(*this))
+        {
+            return this;
+        }
+        for (szt i = 0; i < getChildCount(); i++)
+        {
+            auto child = getChild(i);
+            auto node = child->queryNode(query);
+            if (node)
+            {
+                return node;
+            }
+        }
+        return nullptr;
+    }
+
+    std::list<Node *> Node::queryNodes(const Query &query)
+    {
+        std::list<Node *> nodes;
+        if (query(*this))
+        {
+            nodes.push_back(this);
+        }
+        for (szt i = 0; i < getChildCount(); i++)
+        {
+            auto child = getChild(i);
+            auto _nodes = child->queryNodes(query);
+            for (auto node : _nodes)
+            {
+                nodes.push_back(node);
+            }
+        }
+        return nodes;
+    }
+
+    Node *Node::closestNode(const Query &query)
+    {
+        if (query(*this))
+        {
+            return this;
+        }
+        auto parent = getParent();
+        if (parent)
+        {
+            return parent->closestNode(query);
+        }
+        return nullptr;
+    }
+
     Node::Node() {}
     Node::~Node() {}
 
