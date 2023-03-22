@@ -1,4 +1,5 @@
 #define COLIB_UI_EXPORTS
+#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/Graphics/Rectangle.hpp>
@@ -23,6 +24,16 @@ namespace co
         m_color = value;
     }
 
+    const SharedTexture &Surface::getTexture() const
+    {
+        return m_texture;
+    }
+
+    void Surface::setTexture(const SharedTexture &value)
+    {
+        m_texture = value;
+    }
+
     sf::Vector2f Surface::compact()
     {
         setWidth(0);
@@ -45,7 +56,7 @@ namespace co
     }
 
     Surface::Surface()
-        : m_array(sf::PrimitiveType::TriangleFan), m_color(sf::Color::White), m_parent(nullptr)
+        : m_array(sf::PrimitiveType::TriangleFan), m_color(sf::Color::White), m_texture(nullptr), m_parent(nullptr)
     {
         Rectangle rectangle(1, 1);
         setPoints(m_array, rectangle);
@@ -62,6 +73,7 @@ namespace co
         {
             auto _states = states;
             _states.transform.translate({getLeft(), getTop()});
+            _states.texture = m_texture.get();
             target.draw(m_array, _states);
         }
     }
@@ -86,6 +98,11 @@ namespace co
         {
             fitPoints(m_array, sf::FloatRect({0, 0}, {width, height}));
             setColors(m_array, m_color);
+            if (m_texture)
+            {
+                sf::Vector2f tSize(m_texture->getSize());
+                setTexCoords(m_array, {{0, 0}, tSize});
+            }
         }
     }
 

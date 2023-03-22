@@ -14,8 +14,11 @@ bool _;
 
 auto makeBackground(const sf::Color &color)
 {
+    auto texture = std::make_shared<sf::Texture>();
+    _ = texture->loadFromFile("./res/avatar.jpg");
     auto surface = std::make_shared<co::Surface>();
     surface->setColor(color);
+    surface->setTexture(texture);
     return surface;
 }
 

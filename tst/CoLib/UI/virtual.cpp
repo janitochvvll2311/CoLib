@@ -10,9 +10,8 @@
 #include <CoLib/UI/Input.hpp>
 #include <CoLib/UI/LinearLayout.hpp>
 #include <CoLib/UI/VirtualLayout.hpp>
+#include <CoLib/UI/Image.hpp>
 
-sf::Image image;
-sf::Texture texture;
 sf::Font font;
 bool _;
 
@@ -90,6 +89,21 @@ auto makeInput()
     return input;
 }
 
+auto makeImage()
+{
+    auto image = std::make_shared<co::Image>();
+    image->setHorizontalContentAnchor(co::Label::Anchor::Center);
+    image->setVerticalContentAnchor(co::Label::Anchor::Center);
+    image->getBlock().setBackground(makeBackground(sf::Color::Red));
+    image->getBlock().setMargin(10);
+    image->getBlock().setPadding(10);
+    auto texture = std::make_shared<sf::Texture>();
+    _ = texture->loadFromFile("./res/avatar.jpg");
+    image->getSurface().setTexture(texture);
+    image->getSurface().setColor(sf::Color::White);
+    return image;
+}
+
 auto makeLinear()
 {
     auto layout = std::make_shared<co::LinearLayout>();
@@ -104,10 +118,10 @@ auto makeLinear()
     layout->setAnchor(input1, co::LinearLayout::Start);
     layout->setWeight(input1, 0.33);
 
-    auto input2 = makeInput();
-    layout->append(input2);
-    layout->setAnchor(input2, co::LinearLayout::End);
-    layout->setWeight(input2, 0.33);
+    auto image1 = makeImage();
+    layout->append(image1);
+    layout->setAnchor(image1, co::LinearLayout::End);
+    layout->setWeight(image1, 0.33);
 
     auto button1 = makeButton();
     layout->append(button1);
@@ -123,8 +137,6 @@ int main()
     sf::RenderWindow window({640, 480}, "My Window");
     window.setFramerateLimit(30);
     auto wsize = sf::Vector2f(window.getSize());
-    _ = image.loadFromFile("./res/avatar.jpg");
-    _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
     co::VirtualLayout layout;
@@ -149,9 +161,9 @@ int main()
         {
             if (layout.dispatchEvent(nullptr, event))
             {
-                //layout.compact();
-                //layout.inflate(wsize);
-                //layout.place({0, 0});
+                // layout.compact();
+                // layout.inflate(wsize);
+                // layout.place({0, 0});
             }
             switch (event.type)
             {

@@ -9,6 +9,10 @@
 namespace co
 {
 
+    using SharedTexture = std::shared_ptr<sf::Texture>;
+
+    ////////////////////////////////////////////////////////
+
     class COLIB_UI_API Surface
         : public Box,
           public virtual sf::Drawable,
@@ -21,6 +25,9 @@ namespace co
 
         const sf::Color &getColor() const;
         void setColor(const sf::Color &value);
+
+        const SharedTexture &getTexture() const;
+        void setTexture(const SharedTexture &value);
 
         sf::Vector2f compact() override final;
         sf::Vector2f inflate(const sf::Vector2f &size) override final;
@@ -41,6 +48,7 @@ namespace co
         mutable sf::VertexArray m_array;
 
         sf::Color m_color;
+        SharedTexture m_texture;
         Node *m_parent;
     };
 
