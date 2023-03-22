@@ -3,20 +3,17 @@
 
 #include <list>
 #include <CoLib/UI/Block.hpp>
-#include <CoLib/UI/Layout.hpp>
 
 namespace co
 {
 
     class COLIB_UI_API GroupLayout
-        : public Block,
-          public virtual Layout
+        : public Block
     {
 
     public:
         szt getChildCount() const override final;
         SharedNode getChild(szt index) const override final;
-        sf::Vector2f getAbsoluteInnerOrigin() const override final;
 
         GroupLayout();
         virtual ~GroupLayout();

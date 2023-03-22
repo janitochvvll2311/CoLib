@@ -37,9 +37,6 @@ namespace co
         virtual bool handleEvent(Node *target, const sf::Event &event);
         virtual void spreadEvent(Node *target, const sf::Event &event);
 
-        template <typename T>
-        T *closestInstance() const;
-
         Node();
         virtual ~Node();
 
@@ -88,7 +85,5 @@ namespace co
     };
 
 }
-
-#include <CoLib/UI/Node.inl>
 
 #endif // COLIB_NODE_HPP

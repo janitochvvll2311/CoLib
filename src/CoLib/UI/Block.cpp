@@ -108,6 +108,11 @@ namespace co
         setTop(position.y + m_margin.top);
     }
 
+    sf::Vector2f Block::getInnerPoint(const sf::Vector2f &point) const
+    {
+        return {point.x - getLeft() - m_padding.left, point.y - getTop() - m_padding.top};
+    }
+
     Block::Block()
         : m_background(nullptr),
           m_margin(0), m_padding(0),

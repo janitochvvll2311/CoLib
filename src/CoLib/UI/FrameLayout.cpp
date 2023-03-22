@@ -1,7 +1,8 @@
 #define COLIB_UI_EXPORTS
-#include <CoLib/System/Exception.hpp>
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <CoLib/System/Exception.hpp>
 #include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
 
@@ -27,18 +28,6 @@ namespace co
             return m_holder->child;
         }
         return nullptr;
-    }
-
-    sf::Vector2f FrameLayout::getAbsoluteInnerOrigin() const
-    {
-        auto layout = closestInstance<Layout>();
-        if (layout)
-        {
-            auto &padding = getPadding();
-            auto origin = layout->getAbsoluteInnerOrigin();
-            return {origin.x + getLeft() + padding.left, origin.y + getTop() + padding.top};
-        }
-        return {getLeft(), getTop()};
     }
 
     FrameLayout::Anchor FrameLayout::getHorizontalAnchor(const SharedNode &child) const
@@ -122,7 +111,24 @@ namespace co
 
     bool FrameLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
     {
-        return (m_holder != nullptr && m_holder->child->dispatchEvent(target, event));
+        if (m_holder)
+        {
+            switch (event.type)
+            {
+            case sf::Event::MouseButtonPressed:
+            case sf::Event::MouseButtonReleased:
+            {
+                auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
+                auto _event = event;
+                _event.mouseButton.x = innerPoint.x;
+                _event.mouseButton.y = innerPoint.y;
+                return m_holder->child->dispatchEvent(target, _event);
+            }
+            default:
+                return m_holder->child->dispatchEvent(target, event);
+            }
+        }
+        return false;
     }
 
     sf::Vector2f FrameLayout::compactContent() const

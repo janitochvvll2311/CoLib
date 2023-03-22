@@ -1,4 +1,5 @@
 #define COLIB_UI_EXPORTS
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/GroupLayout.hpp>
@@ -19,18 +20,6 @@ namespace co
             return holder->child;
         }
         return nullptr;
-    }
-
-    sf::Vector2f GroupLayout::getAbsoluteInnerOrigin() const
-    {
-        auto layout = closestInstance<Layout>();
-        if (layout)
-        {
-            auto &padding = getPadding();
-            auto origin = layout->getAbsoluteInnerOrigin();
-            return {origin.x + getLeft() + padding.left, origin.y + getTop() + padding.top};
-        }
-        return {getLeft(), getTop()};
     }
 
     GroupLayout::GroupLayout()
@@ -73,15 +62,40 @@ namespace co
 
     bool GroupLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
     {
-        bool handled = false;
-        for (auto &holder : m_holders)
+
+        if (m_holders.size() > 0)
         {
-            if (holder->child->dispatchEvent(target, event))
+            bool handled = false;
+            switch (event.type)
             {
-                handled = true;
+            case sf::Event::MouseButtonPressed:
+            case sf::Event::MouseButtonReleased:
+            {
+                auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
+                auto _event = event;
+                _event.mouseButton.x = innerPoint.x;
+                _event.mouseButton.y = innerPoint.y;
+                for (auto &holder : m_holders)
+                {
+                    if (holder->child->dispatchEvent(target, _event))
+                    {
+                        handled = true;
+                    }
+                }
+                return handled;
+            }
+            default:
+                for (auto &holder : m_holders)
+                {
+                    if (holder->child->dispatchEvent(target, event))
+                    {
+                        handled = true;
+                    }
+                }
+                return handled;
             }
         }
-        return handled;
+        return false;
     }
 
     GroupLayout::SharedHolder GroupLayout::createHolder() const
