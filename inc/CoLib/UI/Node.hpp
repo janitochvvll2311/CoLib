@@ -21,7 +21,7 @@ namespace co
     {
 
     public:
-        using EventHandler = std::function<void(Node &, const sf::Event &)>;
+        using EventListener = std::function<void(Node &, const sf::Event &)>;
 
         virtual Node *getParent() const = 0;
         virtual szt getChildCount() const = 0;

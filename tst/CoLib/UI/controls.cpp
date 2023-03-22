@@ -6,6 +6,7 @@
 #include <CoLib/UI/Surface.hpp>
 #include <CoLib/UI/Block.hpp>
 #include <CoLib/UI/Label.hpp>
+#include <CoLib/UI/Button.hpp>
 
 sf::Image image;
 sf::Texture texture;
@@ -56,27 +57,9 @@ auto makeFrame(const sf::Color &color, const co::SharedNode &child = nullptr)
     return frame;
 }
 
-class Button
-    : public co::Label
-{
-
-public:
-    bool handleEvent(Node *target, const sf::Event &event)
-    {
-        if (!target && event.type == sf::Event::MouseButtonReleased)
-        {
-            if (getBlock().contains({float(event.mouseButton.x), float(event.mouseButton.y)}))
-            {
-                std::cout << "Clicked\n";
-            }
-        }
-        return false;
-    }
-};
-
 auto makeButton()
 {
-    auto button = std::make_shared<Button>();
+    auto button = std::make_shared<co::Button>();
     button->setHorizontalContentAnchor(co::Label::Anchor::Center);
     button->setVerticalContentAnchor(co::Label::Anchor::Center);
     button->getBlock().setBackground(makeBackground(sf::Color::White));
@@ -85,6 +68,8 @@ auto makeButton()
     button->getSpan().setFont(font);
     button->getSpan().setString("It Works");
     button->getSpan().setFillColor(sf::Color::Red);
+    button->setOnClickListener([](auto &node, auto &event)
+                               { std::cout << "Clicked\n"; });
     return button;
 }
 
