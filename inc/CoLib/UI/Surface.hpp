@@ -5,6 +5,12 @@
 #include <CoLib/UI/Node.hpp>
 #include <CoLib/UI/Box.hpp>
 #include <CoLib/UI/Inflatable.hpp>
+#include <CoLib/UI/Updatable.hpp>
+
+namespace sf
+{
+    class Texture;
+}
 
 namespace co
 {
@@ -17,7 +23,8 @@ namespace co
         : public Box,
           public virtual sf::Drawable,
           public virtual LeafNode,
-          public virtual Inflatable
+          public virtual Inflatable,
+          public virtual Updatable
     {
 
     public:
@@ -33,6 +40,9 @@ namespace co
         sf::Vector2f inflate(const sf::Vector2f &size) override final;
         void place(const sf::Vector2f &position) override final;
 
+        bool isValid() const override final;
+        void invalidate() override final;
+
         Surface();
         virtual ~Surface();
 
@@ -42,9 +52,10 @@ namespace co
         void onAttach(Node *parent) override final;
         void onDetach() override final;
 
-    private:
-        void update() const;
+        void onUpdate() const override;
 
+    private:
+        mutable bool m_isValid;
         mutable sf::VertexArray m_array;
 
         sf::Color m_color;
