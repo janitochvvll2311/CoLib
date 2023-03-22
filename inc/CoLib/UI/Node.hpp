@@ -31,6 +31,7 @@ namespace co
         virtual bool dispatchEvent(Node *target, const sf::Event &event);
         virtual bool bubbleEvent(Node *target, const sf::Event &event);
         virtual bool handleEvent(Node *target, const sf::Event &event);
+        virtual void spreadEvent(Node *target, const sf::Event &event);
 
         Node();
         virtual ~Node();
