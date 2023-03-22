@@ -8,6 +8,7 @@
 #include <CoLib/UI/Label.hpp>
 #include <CoLib/UI/Button.hpp>
 #include <CoLib/UI/Input.hpp>
+#include <CoLib/UI/AnchorLayout.hpp>
 
 sf::Image image;
 sf::Texture texture;
@@ -63,9 +64,11 @@ auto makeInput()
     auto input = std::make_shared<co::Input>();
     input->setHorizontalContentAnchor(co::Label::Anchor::Center);
     input->setVerticalContentAnchor(co::Label::Anchor::Center);
-    input->getBlock().setBackground(makeBackground(sf::Color::White));
+    input->getBlock().setBackground(makeBackground(sf::Color::Yellow));
     input->getBlock().setMargin(10);
     input->getBlock().setPadding(10);
+    input->getBlock().setMaxWidth(0);
+    input->getBlock().setMaxHeight(0);
     input->getSpan().setFont(font);
     input->getSpan().setString("It Works");
     input->getSpan().setFillColor(sf::Color::Red);
@@ -82,11 +85,25 @@ int main()
     _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
-    co::FrameLayout layout;
+    co::AnchorLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setMargin(10);
     layout.setPadding(10);
-    layout.append(makeFrame(sf::Color::Red, makeFrame(sf::Color::Green, makeFrame(sf::Color::Blue, makeInput()))));
+
+    auto input1 = makeInput();
+    layout.append(input1);
+    layout.setHorizontalAnchor(input1, co::AnchorLayout::Start);
+    layout.setVerticalAnchor(input1, co::AnchorLayout::Start);
+
+    auto input2 = makeInput();
+    layout.append(input2);
+    layout.setHorizontalAnchor(input2, co::AnchorLayout::End);
+    layout.setVerticalAnchor(input2, co::AnchorLayout::End);
+
+    auto input3 = makeInput();
+    layout.append(input3);
+    layout.setHorizontalAnchor(input3, co::AnchorLayout::Center);
+    layout.setVerticalAnchor(input3, co::AnchorLayout::Center);
 
     layout.compact();
     layout.inflate(wsize);

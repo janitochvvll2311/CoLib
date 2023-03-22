@@ -51,7 +51,7 @@ namespace co
 
     void Input::onFocus(const sf::Event &event)
     {
-        bubbleEvent(this, event);
+        spreadEvent(this, event);
     }
 
 }
