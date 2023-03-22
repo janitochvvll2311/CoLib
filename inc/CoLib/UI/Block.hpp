@@ -1,26 +1,36 @@
 #ifndef COLIB_BLOCK_HPP
 #define COLIB_BLOCK_HPP
 
+#include <SFML/Graphics/Drawable.hpp>
+#include <CoLib/UI/Box.hpp>
 #include <CoLib/UI/Thickness.hpp>
-#include <CoLib/UI/Widget.hpp>
+#include <CoLib/UI/Node.hpp>
+#include <CoLib/UI/Inflatable.hpp>
 
 namespace co
 {
 
-    class Background;
-    using SharedBackground = std::shared_ptr<Background>;
+    using SharedDrawable = std::shared_ptr<sf::Drawable>;
 
-    class Widget;
-    using SharedWidget = std::shared_ptr<Widget>;
+    ////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////
-
-    class COLIB_UI_API Block : public Widget
+    class COLIB_UI_API Block
+        : public Box,
+          public virtual sf::Drawable,
+          public virtual LeafNode,
+          public virtual Inflatable
     {
-
     public:
-        const SharedBackground &getBackground() const;
-        void setBackground(const SharedBackground &value);
+        Node *getParent() const override final;
+
+        const SharedDrawable &getBackground() const;
+        void setBackground(const SharedDrawable &value);
+
+        const Thickness &getMargin() const;
+        void setMargin(const Thickness &value);
+
+        const Thickness &getPadding() const;
+        void setPadding(const Thickness &value);
 
         f32t getMinWidth() const;
         void setMinWidth(f32t value);
@@ -34,45 +44,38 @@ namespace co
         f32t getMaxHeight() const;
         void setMaxHeight(f32t value);
 
-        //////////////////////////////////////////////////////////////
+        sf::Vector2f compact() override final;
+        sf::Vector2f inflate(const sf::Vector2f &size) override final;
+        void place(const sf::Vector2f &position) override final;
 
-        const Thickness &getMargin() const;
-        void setMargin(const Thickness &value);
-
-        const Thickness &getPadding() const;
-        void setPadding(const Thickness &value);
-
-        f32t getOuterWidth() const override;
-        f32t getInnerWidth() const override;
-
-        f32t getOuterHeight() const override;
-        f32t getInnerHeight() const override;
-
-        void compact() override;
-        void inflate(const sf::Vector2f &size) override;
-
-        //////////////////////////////////////////////////////////////////
-
-        sf::Vector2f getInnerPoint(const sf::Vector2f &point) const override;
+        sf::Vector2f getInnerSize() const;
+        virtual sf::Vector2f getInnerPoint(const sf::Vector2f &point) const;
 
         Block();
         virtual ~Block();
 
     protected:
-        void compact(const sf::Vector2f &cSize);
+        void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
+        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
 
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        void onUpdate() const override;
+        void onAttach(Node *parent) override final;
+        void onDetach() override final;
+
+        virtual sf::Vector2f compactContent() const;
+        virtual void inflateContent() const;
+        virtual void updateContent() const;
 
     private:
-        mutable SharedBackground m_background;
+        void update() const;
 
+        SharedDrawable m_background;
+        Thickness m_margin;
+        Thickness m_padding;
         f32t m_minWidth;
         f32t m_maxWidth;
         f32t m_minHeight;
         f32t m_maxHeight;
-        Thickness m_margin;
-        Thickness m_padding;
+        Node *m_parent;
     };
 
 }

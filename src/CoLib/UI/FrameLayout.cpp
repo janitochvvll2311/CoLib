@@ -1,125 +1,69 @@
+#define COLIB_UI_EXPORTS
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/System/Exception.hpp>
-#include <CoLib/UI/Block.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
 
 namespace co
 {
 
-    FrameLayout::Anchor FrameLayout::getHorizontalAnchor(const SharedWidget &widget) const
-    {
-        if (!m_holder || getWidget() != widget)
-        {
-            throw InvalidOperationException();
-        }
-        return m_holder->getHorizontalAnchor();
-    }
-
-    void FrameLayout::setHorizontalAnchor(const SharedWidget &widget, Anchor value) const
-    {
-        if (!m_holder || getWidget() != widget)
-        {
-            throw InvalidOperationException();
-        }
-        m_holder->setHorizontalAnchor(value);
-    }
-
-    FrameLayout::Anchor FrameLayout::getVerticalAnchor(const SharedWidget &widget) const
-    {
-        if (!m_holder || getWidget() != widget)
-        {
-            throw InvalidOperationException();
-        }
-        return m_holder->getVerticalAnchor();
-    }
-
-    void FrameLayout::setVerticalAnchor(const SharedWidget &widget, Anchor value) const
-    {
-        if (!m_holder || getWidget() != widget)
-        {
-            throw InvalidOperationException();
-        }
-        m_holder->setVerticalAnchor(value);
-    }
-
-    ////////////////////////////////////////////////////////////////
-
-    void FrameLayout::compact()
-    {
-        sf::Vector2f size(0, 0);
-        if (m_holder)
-        {
-            auto widget = getWidget();
-            widget->compact();
-            size.x = widget->getOuterWidth();
-            size.y = widget->getOuterHeight();
-        }
-        Block::compact(size);
-    }
-
-    void FrameLayout::inflate(const sf::Vector2f &size)
-    {
-        Block::inflate(size);
-        if (m_holder)
-        {
-            sf::Vector2f _size(getInnerWidth(), getInnerHeight());
-            auto widget = getWidget();
-            widget->inflate(_size);
-            switch (m_holder->getHorizontalAnchor())
-            {
-            case Start:
-                break;
-            case End:
-                widget->setLeft(widget->getLeft() + _size.x - widget->getOuterWidth());
-                break;
-            case Center:
-                widget->setLeft(widget->getLeft() + (_size.x - widget->getOuterWidth()) / 2);
-                break;
-            }
-            switch (m_holder->getVerticalAnchor())
-            {
-            case Start:
-                break;
-            case End:
-                widget->setTop(widget->getTop() + _size.y - widget->getOuterHeight());
-                break;
-            case Center:
-                widget->setTop(widget->getTop() + (_size.y - widget->getOuterHeight()) / 2);
-                break;
-            }
-        }
-    }
-
-    SharedWidget FrameLayout::getWidget() const
-    {
-        if (m_holder)
-        {
-            return m_holder->getWidget();
-        }
-        return nullptr;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////
-
     szt FrameLayout::getChildCount() const
     {
-        return m_holder ? 1 : 0;
+        if (m_holder)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     SharedNode FrameLayout::getChild(szt index) const
     {
-        if (m_holder && index == 0)
+        if (index == 0 && m_holder != nullptr)
         {
-            return m_holder->getWidget();
+            return m_holder->child;
         }
-        return NoNode;
+        return nullptr;
     }
 
-    bool FrameLayout::dispatchEvent(Node *target, const sf::Event &event)
+    FrameLayout::Anchor FrameLayout::getHorizontalAnchor(const SharedNode &child) const
     {
-        return ((m_holder && dispatchInnerEvent(getWidget(), target, event)) || handleEvent(target, event));
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
+        }
+        return m_holder->hAnchor;
+    }
+
+    void FrameLayout::setHorizontalAnchor(const SharedNode &child, Anchor value)
+    {
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
+        }
+        m_holder->hAnchor = value;
+    }
+
+    FrameLayout::Anchor FrameLayout::getVerticalAnchor(const SharedNode &child) const
+    {
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
+        }
+        return m_holder->vAnchor;
+    }
+
+    void FrameLayout::setVerticalAnchor(const SharedNode &child, Anchor value)
+    {
+        if (!m_holder || m_holder->child != child)
+        {
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
+        }
+        m_holder->vAnchor = value;
     }
 
     FrameLayout::FrameLayout()
@@ -127,77 +71,119 @@ namespace co
 
     FrameLayout::~FrameLayout() {}
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////
 
     void FrameLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
-        Block::onDraw(target, states);
         if (m_holder)
         {
-            auto &padding = getPadding();
-            auto _states = states;
-            _states.transform.translate({padding.left, padding.top});
-            target.draw(*getWidget(), _states);
+            auto drawable = std::dynamic_pointer_cast<sf::Drawable>(m_holder->child);
+            if (drawable)
+            {
+                auto &padding = getPadding();
+                auto _states = states;
+                _states.transform.translate({getLeft() + padding.left, getTop() + padding.top});
+                target.draw(*drawable, _states);
+            }
         }
     }
 
-    void FrameLayout::onUpdate() const
+    void FrameLayout::onAppend(const SharedNode &child)
     {
-        Block::onUpdate();
-        if (m_holder)
+        if (m_holder != nullptr)
         {
-            getWidget()->update(true);
+            throw InvalidOperationException(CHILD_NODE_ALREADY_ATTACHED_STRING);
         }
+        m_holder.reset(new Holder());
+        m_holder->child = child;
+        m_holder->hAnchor = Start;
+        m_holder->vAnchor = Start;
     }
 
-    void FrameLayout::onAppend(const SharedNode &node)
+    void FrameLayout::onRemove(const SharedNode &child)
     {
-        SharedWidget widget = std::dynamic_pointer_cast<Widget>(node);
-        if (widget)
+        if (m_holder == nullptr || m_holder->child != child)
         {
-            m_holder.reset(new WidgetHolder());
-            m_holder->setWidget(widget);
-        }
-        else
-        {
-            throw InvalidOperationException("This node is not a widget");
-        }
-    }
-
-    void FrameLayout::onRemove(const SharedNode &node)
-    {
-        if (getWidget() != node)
-        {
-            throw InvalidOperationException("This node is not a child of the parent node");
+            throw InvalidOperationException(CHILD_NODE_ALREADY_ATTACHED_STRING);
         }
         m_holder.reset();
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    FrameLayout::Anchor FrameLayout::WidgetHolder::getHorizontalAnchor() const
+    bool FrameLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
     {
-        return m_hAnchor;
+        if (m_holder)
+        {
+            switch (event.type)
+            {
+            case sf::Event::MouseButtonPressed:
+            case sf::Event::MouseButtonReleased:
+            {
+                auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
+                auto _event = event;
+                _event.mouseButton.x = innerPoint.x;
+                _event.mouseButton.y = innerPoint.y;
+                return m_holder->child->dispatchEvent(target, _event);
+            }
+            default:
+                return m_holder->child->dispatchEvent(target, event);
+            }
+        }
+        return false;
     }
 
-    void FrameLayout::WidgetHolder::setHorizontalAnchor(Anchor value)
+    sf::Vector2f FrameLayout::compactContent() const
     {
-        m_hAnchor = value;
+        if (m_holder)
+        {
+            auto inflatable = std::dynamic_pointer_cast<Inflatable>(m_holder->child);
+            if (inflatable)
+            {
+                return inflatable->compact();
+            }
+        }
+        return {0, 0};
     }
 
-    FrameLayout::Anchor FrameLayout::WidgetHolder::getVerticalAnchor() const
+    void FrameLayout::inflateContent() const
     {
-        return m_vAnchor;
+        if (m_holder)
+        {
+            auto inflatable = std::dynamic_pointer_cast<Inflatable>(m_holder->child);
+            if (inflatable)
+            {
+                sf::Vector2f innerSize = getInnerSize();
+                auto size = inflatable->inflate(innerSize);
+                sf::Vector2f position(0, 0);
+                switch (m_holder->hAnchor)
+                {
+                case Start:
+                    break;
+                case End:
+                    position.x = innerSize.x - size.x;
+                    break;
+                case Center:
+                    position.x = (innerSize.x - size.x) / 2;
+                    break;
+                }
+                switch (m_holder->vAnchor)
+                {
+                case Start:
+                    break;
+                case End:
+                    position.y = innerSize.y - size.y;
+                    break;
+                case Center:
+                    position.y = (innerSize.y - size.y) / 2;
+                    break;
+                }
+                inflatable->place(position);
+            }
+        }
     }
 
-    void FrameLayout::WidgetHolder::setVerticalAnchor(Anchor value)
+    FrameLayout::SharedHolder FrameLayout::getHolder() const
     {
-        m_vAnchor = value;
+        return m_holder;
     }
-
-    FrameLayout::WidgetHolder::WidgetHolder()
-        : m_hAnchor(Start), m_vAnchor(Start) {}
-
-    FrameLayout::WidgetHolder::~WidgetHolder() {}
 
 }

@@ -1,22 +1,47 @@
+#define COLIB_UI_EXPORTS
 #include <limits>
+#include <math.h>
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <CoLib/UI/Background.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/Block.hpp>
 
 namespace co
 {
 
-    const SharedBackground &Block::getBackground() const
+    Node *Block::getParent() const
+    {
+        return m_parent;
+    }
+
+    const SharedDrawable &Block::getBackground() const
     {
         return m_background;
     }
 
-    void Block::setBackground(const SharedBackground &value)
+    void Block::setBackground(const SharedDrawable &value)
     {
         m_background = value;
     }
 
-    //////////////////////////////////////////////////////////
+    const Thickness &Block::getMargin() const
+    {
+        return m_margin;
+    }
+
+    void Block::setMargin(const Thickness &value)
+    {
+        m_margin = value;
+    }
+
+    const Thickness &Block::getPadding() const
+    {
+        return m_padding;
+    }
+
+    void Block::setPadding(const Thickness &value)
+    {
+        m_padding = value;
+    }
 
     f32t Block::getMinWidth() const
     {
@@ -58,107 +83,97 @@ namespace co
         m_maxHeight = value;
     }
 
-    const Thickness &Block::getMargin() const
+    sf::Vector2f Block::compact()
     {
-        return m_margin;
+        auto cSize = compactContent();
+        setWidth(std::max(m_minWidth, cSize.x) + m_margin.getHorizontal() + m_padding.getHorizontal());
+        setHeight(std::max(m_minHeight, cSize.y) + m_margin.getVertical() + m_padding.getVertical());
+        return {getWidth(), getHeight()};
     }
 
-    void Block::setMargin(const Thickness &value)
+    sf::Vector2f Block::inflate(const sf::Vector2f &size)
     {
-        m_margin = value;
+        sf::Vector2f outerSize(std::max(getWidth(), std::min(size.x, m_maxWidth)),
+                               std::max(getHeight(), std::min(size.y, m_maxHeight)));
+        setWidth(outerSize.x - m_margin.getHorizontal());
+        setHeight(outerSize.y - m_margin.getVertical());
+        inflateContent();
+        update();
+        return outerSize;
     }
 
-    const Thickness &Block::getPadding() const
+    void Block::place(const sf::Vector2f &position)
     {
-        return m_padding;
+        setLeft(position.x + m_margin.left);
+        setTop(position.y + m_margin.top);
     }
 
-    void Block::setPadding(const Thickness &value)
+    sf::Vector2f Block::getInnerSize() const
     {
-        m_padding = value;
+        return {getWidth() - m_padding.getHorizontal(), getHeight() - m_padding.getVertical()};
     }
-
-    f32t Block::getOuterWidth() const
-    {
-        return getWidth() + m_margin.getHorizontal();
-    }
-
-    f32t Block::getInnerWidth() const
-    {
-        return getWidth() - m_padding.getHorizontal();
-    }
-
-    f32t Block::getOuterHeight() const
-    {
-        return getHeight() + m_margin.getVertical();
-    }
-
-    f32t Block::getInnerHeight() const
-    {
-        return getHeight() - m_padding.getVertical();
-    }
-
-    /////////////////////////////////////////////////////////
-
-    void Block::compact()
-    {
-        compact({0, 0});
-    }
-
-    void Block::inflate(const sf::Vector2f &size)
-    {
-        sf::Vector2f _size(std::max(getWidth(), std::min(size.x, m_maxWidth + m_margin.getHorizontal())),
-                           std::max(getHeight(), std::min(size.y, m_maxHeight + m_margin.getVertical())));
-        Widget::inflate(_size);
-        shrink(m_margin);
-        if (m_background)
-        {
-            m_background->inflate({getWidth(), getHeight()});
-        }
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     sf::Vector2f Block::getInnerPoint(const sf::Vector2f &point) const
     {
-        auto &margin = getMargin();
-        auto &padding = getPadding();
-        return {point.x - (getLeft() + margin.left + padding.left), point.y - (getTop() + margin.top + padding.top)};
+        return {point.x - getLeft() - m_padding.left, point.y - getTop() - m_padding.top};
     }
 
     Block::Block()
-        : m_background(),
+        : m_background(nullptr),
+          m_margin(0), m_padding(0),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
-          m_margin(0), m_padding(0) {}
+          m_parent(nullptr) {}
 
     Block::~Block() {}
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////
 
-    void Block::compact(const sf::Vector2f &cSize)
-    {
-        Widget::compact();
-        setWidth(std::max(m_minWidth, cSize.x) + m_margin.getHorizontal() + m_padding.getHorizontal());
-        setHeight(std::max(m_minHeight, cSize.y) + m_margin.getVertical() + m_padding.getVertical());
-    }
-
-    void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
+    void Block::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
         if (m_background)
         {
-            target.draw(*m_background, states);
+            auto _states = states;
+            _states.transform.translate({getLeft(), getTop()});
+            target.draw(*m_background, _states);
         }
-        Widget::onDraw(target, states);
+        onDraw(target, states);
     }
 
-    void Block::onUpdate() const
+    void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const {}
+
+    void Block::onAttach(Node *parent)
     {
-        Widget::onUpdate();
+        m_parent = parent;
+    }
+
+    void Block::onDetach()
+    {
+        m_parent = nullptr;
+    }
+
+    sf::Vector2f Block::compactContent() const
+    {
+        return {0, 0};
+    }
+
+    void Block::inflateContent() const {}
+    void Block::updateContent() const {}
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    void Block::update() const
+    {
         if (m_background)
         {
-            m_background->update(true);
+            auto inflatable = std::dynamic_pointer_cast<Inflatable>(m_background);
+            if (inflatable)
+            {
+                inflatable->compact();
+                inflatable->inflate({getWidth(), getHeight()});
+            }
         }
+        updateContent();
     }
 
 }

@@ -2,29 +2,33 @@
 #define COLIB_SPAN_HPP
 
 #include <SFML/Graphics/Text.hpp>
-#include <CoLib/UI/Widget.hpp>
+#include <CoLib/UI/Node.hpp>
+#include <CoLib/UI/Inflatable.hpp>
 
 namespace co
 {
 
-    class COLIB_UI_API Span : public Widget
+    class COLIB_UI_API Span
+        : public sf::Text,
+          public virtual LeafNode,
+          public virtual Inflatable
     {
-
     public:
-        sf::Text &getText();
-        const sf::Text &getText() const;
+        Node *getParent() const override final;
 
-        void compact() override;
-        void inflate(const sf::Vector2f &size) override;
+        sf::Vector2f compact() override final;
+        sf::Vector2f inflate(const sf::Vector2f &size) override final;
+        void place(const sf::Vector2f &position) override final;
 
         Span();
         virtual ~Span();
 
     protected:
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
+        void onAttach(Node *parent) override final;
+        void onDetach() override final;
 
     private:
-        sf::Text m_text;
+        Node *m_parent;
     };
 
 }

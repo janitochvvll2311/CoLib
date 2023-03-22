@@ -1,21 +1,48 @@
+#define COLIB_SYSTEM_EXPORTS
 #include <CoLib/System/Exception.hpp>
 
 namespace co
 {
 
-    const char *Exception::what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_NOTHROW
+    void runCatching(const Action &action, const ExceptionHandler &handler)
     {
-        return getReason();
+        try
+        {
+            action();
+        }
+        catch (const std::exception &exception)
+        {
+            handler(Exception(exception.what()));
+        }
+        catch (const std::string &exception)
+        {
+            handler(Exception(exception));
+        }
+        catch (const s8t exception)
+        {
+            handler(Exception(exception));
+        }
+        catch (...)
+        {
+            handler(Exception(UNKNOWN_EXCEPTION_STRING));
+        }
     }
 
-    const s8t Exception::getReason() const
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    const std::string &Exception::getReason() const
     {
-        return m_reason.c_str();
+        return m_reason;
     }
 
     Exception::Exception(const std::string &reason)
         : m_reason(reason) {}
 
-    Exception::~Exception() = default;
+    Exception::~Exception() {}
+
+    const char *Exception::what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT
+    {
+        return m_reason.c_str();
+    }
 
 }

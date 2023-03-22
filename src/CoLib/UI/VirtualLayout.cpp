@@ -1,4 +1,6 @@
+#define COLIB_UI_EXPORTS
 #include <CoLib/Graphics/Rectangle.hpp>
+#include <CoLib/Graphics/Utils.hpp>
 #include <CoLib/UI/VirtualLayout.hpp>
 
 namespace co
@@ -16,20 +18,10 @@ namespace co
 
     ///////////////////////////////////////////////////////////////////////////
 
-    void VirtualLayout::compact()
-    {
-        auto widget = getWidget();
-        if (widget)
-        {
-            widget->compact();
-        }
-        FrameLayout::compact({0, 0});
-    }
-
     sf::Vector2f VirtualLayout::getInnerPoint(const sf::Vector2f &point) const
     {
         auto _point = FrameLayout::getInnerPoint(point);
-        return m_transform.getInverse().transformPoint(point);
+        return m_transform.getInverse().transformPoint(_point);
     }
 
     VirtualLayout::VirtualLayout()
@@ -37,7 +29,7 @@ namespace co
     {
         co::Rectangle rectangle(1, 1);
         m_surface.setPrimitiveType(sf::PrimitiveType::TriangleFan);
-        m_surface.setPoints(rectangle);
+        setPoints(m_surface, rectangle);
     }
 
     VirtualLayout::~VirtualLayout() {}
@@ -46,38 +38,57 @@ namespace co
 
     void VirtualLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
-        Block::onDraw(target, states);
-        auto widget = getWidget();
-        if (widget)
+        auto holder = getHolder();
+        if (holder)
         {
-            sf::Vector2f size(getInnerWidth(), getInnerHeight());
-            if (size.x > 0 && size.y > 0)
+            sf::Vector2f innerSize(getInnerSize());
+            if (innerSize.x > 0 && innerSize.y > 0)
             {
-                auto _states = states;
-                _states.transform = m_transform;
-                m_texture.clear(sf::Color::Transparent);
-                m_texture.draw(*widget, _states);
-                m_texture.display();
-                //
-                auto &padding = getPadding();
-                _states = states;
-                _states.transform.translate({padding.left, padding.top});
-                target.draw(m_surface, _states);
+                auto drawable = std::dynamic_pointer_cast<sf::Drawable>(holder->child);
+                if (drawable)
+                {
+                    auto _states = states;
+                    _states.transform = m_transform;
+                    m_texture.clear(sf::Color::Transparent);
+                    m_texture.draw(*drawable, _states);
+                    m_texture.display();
+                    //
+                    auto &padding = getPadding();
+                    _states = states;
+                    _states.transform.translate({getLeft() + padding.left, getTop() + padding.top});
+                    _states.texture = &(m_texture.getTexture());
+                    target.draw(m_surface, _states);
+                }
             }
         }
     }
 
-    void VirtualLayout::onUpdate() const
+    sf::Vector2f VirtualLayout::compactContent() const
     {
-        FrameLayout::onUpdate();
-        if (getWidget())
+        auto holder = getHolder();
+        if (holder)
         {
-            sf::Vector2f size(getInnerWidth(), getInnerHeight());
-            if (size.x > 0 && size.y > 0)
+            auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+            if (inflatable)
             {
-                auto _ = m_texture.create(size.x, size.y);
-                m_surface.setTexture(&(m_texture.getTexture()));
-                m_surface.fitPoints({{0, 0}, size});
+                inflatable->compact();
+            }
+        }
+        return {0, 0};
+    }
+
+    void VirtualLayout::updateContent() const
+    {
+        auto holder = getHolder();
+        if (holder)
+        {
+            sf::Vector2f innerSize(getInnerSize());
+            if (innerSize.x > 0 && innerSize.y > 0)
+            {
+                auto _ = m_texture.create(innerSize.x, innerSize.y);
+                sf::Vector2f tSize(m_texture.getSize());
+                setTexCoords(m_surface, {{0, 0}, tSize});
+                fitPoints(m_surface, {{0, 0}, innerSize});
             }
         }
     }

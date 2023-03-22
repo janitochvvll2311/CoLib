@@ -1,139 +1,117 @@
-#include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
+#define COLIB_UI_EXPORTS
 #include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/AnchorLayout.hpp>
 
 namespace co
 {
 
-    AnchorLayout::Anchor AnchorLayout::getHorizontalAnchor(const SharedWidget &widget) const
+    AnchorLayout::Anchor AnchorLayout::getHorizontalAnchor(const SharedNode &child) const
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
-        if (!holder)
+        auto holder = getHolder(child);
+        if (holder == nullptr)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        return holder->getHorizontalAnchor();
+        return std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor;
     }
 
-    void AnchorLayout::setHorizontalAnchor(const SharedWidget &widget, Anchor value)
+    void AnchorLayout::setHorizontalAnchor(const SharedNode &child, Anchor value)
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
-        if (!holder)
+        auto holder = getHolder(child);
+        if (holder == nullptr)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        holder->setHorizontalAnchor(value);
+        std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor = value;
     }
 
-    AnchorLayout::Anchor AnchorLayout::getVerticalAnchor(const SharedWidget &widget) const
+    AnchorLayout::Anchor AnchorLayout::getVerticalAnchor(const SharedNode &child) const
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
-        if (!holder)
+        auto holder = getHolder(child);
+        if (holder == nullptr)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        return holder->getVerticalAnchor();
+        return std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor;
     }
 
-    void AnchorLayout::setVerticalAnchor(const SharedWidget &widget, Anchor value)
+    void AnchorLayout::setVerticalAnchor(const SharedNode &child, Anchor value)
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
-        if (!holder)
+        auto holder = getHolder(child);
+        if (holder == nullptr)
         {
-            throw InvalidOperationException();
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        holder->setVerticalAnchor(value);
-    }
-
-    void AnchorLayout::compact()
-    {
-        sf::Vector2f size(0, 0);
-        auto &holders = getHolders();
-        for (auto &holder : holders)
-        {
-            auto &widget = holder->getWidget();
-            widget->compact();
-            size.x = std::max(size.x, widget->getWidth());
-            size.y = std::max(size.y, widget->getHeight());
-        }
-        GroupLayout::compact(size);
-    }
-
-    void AnchorLayout::inflate(const sf::Vector2f &size)
-    {
-        GroupLayout::inflate(size);
-        sf::Vector2f _size(getInnerWidth(), getInnerHeight());
-        auto &holders = getHolders();
-        for (auto &holder : holders)
-        {
-            auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
-            auto &widget = _holder->getWidget();
-            widget->inflate(_size);
-            sf::Vector2f spacing(getInnerWidth() - widget->getOuterWidth(),
-                                 getInnerHeight() - widget->getOuterHeight());
-            switch (_holder->getHorizontalAnchor())
-            {
-            case Start:
-                break;
-            case End:
-                widget->setLeft(widget->getLeft() + spacing.x);
-                break;
-            case Center:
-                widget->setLeft(widget->getLeft() + spacing.x / 2);
-                break;
-            }
-            switch (_holder->getVerticalAnchor())
-            {
-            case Start:
-                break;
-            case End:
-                widget->setTop(widget->getTop() + spacing.y);
-                break;
-            case Center:
-                widget->setTop(widget->getTop() + spacing.y / 2);
-                break;
-            }
-        }
+        std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor = value;
     }
 
     AnchorLayout::AnchorLayout() {}
-
     AnchorLayout::~AnchorLayout() {}
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
 
-    SharedHolder AnchorLayout::createHolder() const
+    sf::Vector2f AnchorLayout::compactContent() const
     {
-        return std::make_shared<WidgetHolder>();
+        sf::Vector2f cSize(0, 0);
+        for (szt i = 0; i < getChildCount(); i++)
+        {
+            auto child = getChild(i);
+            auto inflatable = std::dynamic_pointer_cast<Inflatable>(child);
+            if (inflatable)
+            {
+                auto size = inflatable->compact();
+                cSize.x = std::max(cSize.x, size.x);
+                cSize.y = std::max(cSize.y, size.y);
+            }
+        }
+        return cSize;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-
-    AnchorLayout::Anchor AnchorLayout::WidgetHolder::getHorizontalAnchor() const
+    void AnchorLayout::inflateContent() const
     {
-        return m_hAnchor;
+        if (getChildCount() > 0)
+        {
+            sf::Vector2f innerSize = getInnerSize();
+            for (auto &holder : getHolders())
+            {
+                auto _holder = std::dynamic_pointer_cast<AnchorHolder>(holder);
+                auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                if (inflatable)
+                {
+                    auto size = inflatable->inflate(innerSize);
+                    sf::Vector2f position(0, 0);
+                    switch (_holder->hAnchor)
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        position.x = innerSize.x - size.x;
+                        break;
+                    case Center:
+                        position.x = (innerSize.x - size.x) / 2;
+                        break;
+                    }
+                    switch (_holder->vAnchor)
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        position.y = innerSize.y - size.y;
+                        break;
+                    case Center:
+                        position.y = (innerSize.y - size.y) / 2;
+                        break;
+                    }
+                    inflatable->place(position);
+                }
+            }
+        }
     }
 
-    void AnchorLayout::WidgetHolder::setHorizontalAnchor(Anchor value)
+    AnchorLayout::SharedHolder AnchorLayout::createHolder() const
     {
-        m_hAnchor = value;
+        return std::make_shared<AnchorHolder>();
     }
-
-    AnchorLayout::Anchor AnchorLayout::WidgetHolder::getVerticalAnchor() const
-    {
-        return m_vAnchor;
-    }
-
-    void AnchorLayout::WidgetHolder::setVerticalAnchor(Anchor value)
-    {
-        m_vAnchor = value;
-    }
-
-    AnchorLayout::WidgetHolder::WidgetHolder()
-        : m_hAnchor(Start), m_vAnchor(Start) {}
-
-    AnchorLayout::WidgetHolder::~WidgetHolder() {}
 
 }

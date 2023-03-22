@@ -5,17 +5,20 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
+sf::Image image;
+sf::Texture texture;
+sf::Font font;
+sf::Music music;
+
 int main()
 {
 
-    sf::Image image;
     if (!image.loadFromFile("./res/avatar.jpg"))
     {
         std::cout << "Error on image loading\n";
         return -1;
     }
 
-    sf::Texture texture;
     if (!texture.loadFromImage(image))
     {
         std::cout << "Error on texture loading\n";
@@ -26,7 +29,6 @@ int main()
     shape.setSize({200, 200});
     shape.setTexture(&texture);
 
-    sf::Font font;
     if (!font.loadFromFile("./res/grandview.ttf"))
     {
         std::cout << "Error on font loading\n";
@@ -37,7 +39,6 @@ int main()
     text.setFont(font);
     text.setString("It Works");
 
-    sf::Music music;
     if (!music.openFromFile("./res/canon_like.ogg"))
     {
         std::cout << "Error on music loading\n";

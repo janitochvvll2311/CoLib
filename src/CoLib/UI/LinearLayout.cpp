@@ -1,51 +1,53 @@
+#define COLIB_UI_EXPORTS
 #include <algorithm>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/LinearLayout.hpp>
 
 namespace co
 {
 
-    LinearLayout::Anchor LinearLayout::getAnchor(const SharedWidget &widget) const
+    LinearLayout::Anchor LinearLayout::getAnchor(const SharedNode &widget) const
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
+        auto holder = getHolder(widget);
         if (!holder)
         {
-            throw InvalidOperationException("This widget is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        return holder->getAnchor();
+        return std::dynamic_pointer_cast<LinearHolder>(holder)->anchor;
     }
 
-    void LinearLayout::setAnchor(const SharedWidget &widget, Anchor value)
+    void LinearLayout::setAnchor(const SharedNode &widget, Anchor value)
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
+        auto holder = getHolder(widget);
         if (!holder)
         {
-            throw InvalidOperationException("This widget is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        holder->setAnchor(value);
+        std::dynamic_pointer_cast<LinearHolder>(holder)->anchor = value;
     }
 
-    f32t LinearLayout::getWeight(const SharedWidget &widget) const
+    f32t LinearLayout::getWeight(const SharedNode &widget) const
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
+        auto holder = getHolder(widget);
         if (!holder)
         {
-            throw InvalidOperationException("This widget is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        return holder->getWeight();
+        return std::dynamic_pointer_cast<LinearHolder>(holder)->weight;
     }
 
-    void LinearLayout::setWeight(const SharedWidget &widget, f32t value)
+    void LinearLayout::setWeight(const SharedNode &widget, f32t value)
     {
-        auto holder = std::dynamic_pointer_cast<WidgetHolder>(getHolder(widget));
+        auto holder = getHolder(widget);
         if (!holder)
         {
-            throw InvalidOperationException("This widget is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
-        holder->setWeight(value);
+        std::dynamic_pointer_cast<LinearHolder>(holder)->weight = value;
     }
 
     LinearLayout::Orientation LinearLayout::getOrientation() const
@@ -78,160 +80,6 @@ namespace co
         m_cAnchor = value;
     }
 
-    void LinearLayout::compact()
-    {
-        sf::Vector2f size(0, 0);
-        auto &holders = getHolders();
-        switch (m_orientation)
-        {
-        case Horizontal:
-            for (auto &holder : holders)
-            {
-                auto &widget = holder->getWidget();
-                widget->compact();
-                size.x += widget->getWidth();
-                size.y = std::max(size.y, widget->getHeight());
-            }
-            break;
-        case Vertical:
-            for (auto &holder : holders)
-            {
-                auto &widget = holder->getWidget();
-                widget->compact();
-                size.y += widget->getHeight();
-                size.x = std::max(size.x, widget->getWidth());
-            }
-            break;
-        }
-        GroupLayout::compact(size);
-    }
-
-    void LinearLayout::inflate(const sf::Vector2f &size)
-    {
-        GroupLayout::inflate(size);
-        sf::Vector2f _size(getInnerWidth(), getInnerHeight());
-        f32t length = 0;
-        f32t offset = 0;
-        auto fixOffset = [&]()
-        {
-            if (offset > 0)
-            {
-                switch (m_cAnchor)
-                {
-                case Start:
-                    offset = 0;
-                    break;
-                case End:
-                    break;
-                case Center:
-                    offset /= 2;
-                }
-            }
-            else
-            {
-                offset = 0;
-            }
-        };
-        auto aligHorizontal = [&](SharedHolder holder)
-        {
-            auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
-            auto &widget = _holder->getWidget();
-            widget->setLeft(widget->getLeft() + offset);
-            offset += widget->getOuterWidth();
-            f32t spacing = _size.y - widget->getOuterHeight();
-            switch (_holder->getAnchor())
-            {
-            case Start:
-                break;
-            case End:
-                widget->setTop(widget->getTop() + spacing);
-                break;
-            case Center:
-                widget->setTop(widget->getTop() + spacing / 2);
-                break;
-            }
-        };
-        auto alignVertical = [&](SharedHolder holder)
-        {
-            auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
-            auto &widget = _holder->getWidget();
-            widget->setTop(widget->getTop() + offset);
-            offset += widget->getOuterHeight();
-            f32t spacing = _size.x - widget->getOuterWidth();
-            switch (_holder->getAnchor())
-            {
-            case Start:
-                break;
-            case End:
-                widget->setLeft(widget->getLeft() + spacing);
-                break;
-            case Center:
-                widget->setLeft(widget->getLeft() + spacing / 2);
-                break;
-            }
-        };
-        auto &holders = getHolders();
-        switch (m_orientation)
-        {
-        case Horizontal:
-        {
-            for (auto &holder : holders)
-            {
-                auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
-                auto &widget = _holder->getWidget();
-                auto weight = _holder->getWeight();
-                widget->inflate({_size.x * weight, _size.y});
-                length += widget->getOuterWidth();
-            }
-            offset = _size.x - length;
-            fixOffset();
-            if (m_isReverse)
-            {
-                for (auto iterator = holders.rbegin(); iterator != holders.rend(); iterator++)
-                {
-                    aligHorizontal(*iterator);
-                }
-            }
-            else
-            {
-                for (auto iterator = holders.begin(); iterator != holders.end(); iterator++)
-                {
-                    aligHorizontal(*iterator);
-                }
-            }
-        }
-        break;
-        case Vertical:
-        {
-            for (auto &holder : holders)
-            {
-                auto _holder = std::dynamic_pointer_cast<WidgetHolder>(holder);
-                auto &widget = holder->getWidget();
-                auto weight = _holder->getWeight();
-                widget->inflate({_size.x, _size.y * weight});
-                length += widget->getOuterHeight();
-            }
-            offset = _size.y - length;
-            fixOffset();
-            if (m_isReverse)
-            {
-                for (auto iterator = holders.rbegin(); iterator != holders.rend(); iterator++)
-                {
-                    alignVertical(*iterator);
-                }
-            }
-            else
-            {
-                for (auto iterator = holders.begin(); iterator != holders.end(); iterator++)
-                {
-                    alignVertical(*iterator);
-                }
-            }
-        }
-        break;
-        }
-    }
-
     LinearLayout::LinearLayout()
         : m_orientation(Horizontal), m_isReverse(false), m_cAnchor(Start) {}
 
@@ -239,35 +87,186 @@ namespace co
 
     //////////////////////////////////////////////////////////////////////
 
-    SharedHolder LinearLayout::createHolder() const
+    sf::Vector2f LinearLayout::compactContent() const
     {
-        return std::make_shared<WidgetHolder>();
+        sf::Vector2f cSize(0, 0);
+        if (getChildCount() > 0)
+        {
+            auto &holders = getHolders();
+            switch (m_orientation)
+            {
+            case Horizontal:
+                for (auto &holder : holders)
+                {
+                    auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                    if (inflatable)
+                    {
+                        auto size = inflatable->compact();
+                        cSize.x += size.x;
+                        cSize.y = std::max(cSize.y, size.y);
+                    }
+                }
+                break;
+            case Vertical:
+                for (auto &holder : holders)
+                {
+                    auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                    if (inflatable)
+                    {
+                        auto size = inflatable->compact();
+                        cSize.y += size.y;
+                        cSize.x = std::max(cSize.x, size.x);
+                    }
+                }
+                break;
+            }
+        }
+        return cSize;
     }
 
-    //////////////////////////////////////////////////////////////////////
-
-    LinearLayout::Anchor LinearLayout::WidgetHolder::getAnchor() const
+    void LinearLayout::inflateContent() const
     {
-        return m_anchor;
+        if (getChildCount() > 0)
+        {
+            auto &padding = getPadding();
+            sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
+            f32t length = 0;
+            f32t offset = 0;
+            auto fixOffset = [&]()
+            {
+                if (offset > 0)
+                {
+                    switch (m_cAnchor)
+                    {
+                    case Start:
+                        offset = 0;
+                        break;
+                    case End:
+                        break;
+                    case Center:
+                        offset /= 2;
+                    }
+                }
+                else
+                {
+                    offset = 0;
+                }
+            };
+            auto aligHorizontal = [&](SharedHolder holder)
+            {
+                auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                if (inflatable)
+                {
+                    auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
+                    sf::Vector2f position(offset, 0);
+                    switch (_holder->anchor)
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        position.y = innerSize.y - _holder->size.y;
+                        break;
+                    case Center:
+                        position.y = (innerSize.y - _holder->size.y) / 2;
+                        break;
+                    }
+                    inflatable->place(position);
+                    offset += _holder->size.x;
+                }
+            };
+            auto alignVertical = [&](SharedHolder holder)
+            {
+                auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                if (inflatable)
+                {
+                    auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
+                    sf::Vector2f position(0, offset);
+                    switch (_holder->anchor)
+                    {
+                    case Start:
+                        break;
+                    case End:
+                        position.x = innerSize.x - _holder->size.x;
+                        break;
+                    case Center:
+                        position.x = (innerSize.x - _holder->size.x) / 2;
+                        break;
+                    }
+                    inflatable->place(position);
+                    offset += _holder->size.y;
+                }
+            };
+            auto &holders = getHolders();
+            switch (m_orientation)
+            {
+            case Horizontal:
+            {
+                for (auto &holder : holders)
+                {
+                    auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                    if (inflatable)
+                    {
+                        auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
+                        auto size = inflatable->inflate({innerSize.x * _holder->weight, innerSize.y});
+                        length += size.x;
+                        _holder->size = size;
+                    }
+                }
+                offset = innerSize.x - length;
+                fixOffset();
+                if (m_isReverse)
+                {
+                    for (auto iterator = holders.rbegin(); iterator != holders.rend(); iterator++)
+                    {
+                        aligHorizontal(*iterator);
+                    }
+                }
+                else
+                {
+                    for (auto iterator = holders.begin(); iterator != holders.end(); iterator++)
+                    {
+                        aligHorizontal(*iterator);
+                    }
+                }
+            }
+            break;
+            case Vertical:
+            {
+                for (auto &holder : holders)
+                {
+                    auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                    if (inflatable)
+                    {
+                        auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
+                        auto size = inflatable->inflate({innerSize.x, innerSize.y * _holder->weight});
+                        length += size.y;
+                        _holder->size = size;
+                    }
+                }
+                offset = innerSize.y - length;
+                fixOffset();
+                if (m_isReverse)
+                {
+                    for (auto iterator = holders.rbegin(); iterator != holders.rend(); iterator++)
+                    {
+                        alignVertical(*iterator);
+                    }
+                }
+                else
+                {
+                    for (auto iterator = holders.begin(); iterator != holders.end(); iterator++)
+                    {
+                        alignVertical(*iterator);
+                    }
+                }
+            }
+            break;
+            }
+        }
     }
 
-    void LinearLayout::WidgetHolder::setAnchor(Anchor value)
+    LinearLayout::SharedHolder LinearLayout::createHolder() const
     {
-        m_anchor = value;
+        return std::make_shared<LinearHolder>();
     }
-
-    f32t LinearLayout::WidgetHolder::getWeight() const
-    {
-        return m_weight;
-    }
-
-    void LinearLayout::WidgetHolder::setWeight(f32t value)
-    {
-        m_weight = value;
-    }
-
-    LinearLayout::WidgetHolder::WidgetHolder()
-        : m_anchor(Start), m_weight(0) {}
-
-    LinearLayout::WidgetHolder::~WidgetHolder() {}
 }

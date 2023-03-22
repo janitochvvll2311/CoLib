@@ -11,7 +11,7 @@ namespace co
     {
     public:
         virtual szt getPointCount() const = 0;
-        virtual sf::Vector2f getPoint(szt index, szt precision) const = 0;
+        virtual sf::Vector2f getPoint(szt index, szt precision = 1) const = 0;
         PointSource() = default;
         virtual ~PointSource() = default;
     };

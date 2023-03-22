@@ -2,75 +2,54 @@
 #define COLIB_FRAME_LAYOUT_HPP
 
 #include <CoLib/UI/Block.hpp>
-#include <CoLib/UI/Thickness.hpp>
-#include <CoLib/UI/WidgetHolder.hpp>
 
 namespace co
 {
-
-    class Background;
-    using SharedBackground = std::shared_ptr<Background>;
-
-    ///////////////////////////////////////////////////////
 
     class COLIB_UI_API FrameLayout
         : public Block
     {
 
     public:
-        Anchor getHorizontalAnchor(const SharedWidget &widget) const;
-        void setHorizontalAnchor(const SharedWidget &widget, Anchor value) const;
+        szt getChildCount() const override final;
+        SharedNode getChild(szt index) const override final;
 
-        Anchor getVerticalAnchor(const SharedWidget &widget) const;
-        void setVerticalAnchor(const SharedWidget &widget, Anchor value) const;
+        Anchor getHorizontalAnchor(const SharedNode &child) const;
+        void setHorizontalAnchor(const SharedNode &child, Anchor value);
 
-        void compact() override;
-        void inflate(const sf::Vector2f &size) override;
-
-        SharedWidget getWidget() const;
-
-        ///////////////////////////////////////////////////////////
-
-        szt getChildCount() const override;
-        SharedNode getChild(szt index) const override;
-
-        bool dispatchEvent(Node *target, const sf::Event &event) override;
+        Anchor getVerticalAnchor(const SharedNode &child) const;
+        void setVerticalAnchor(const SharedNode &child, Anchor value);
 
         FrameLayout();
         virtual ~FrameLayout();
 
     protected:
-        using Block::compact;
+        struct Holder;
+        using SharedHolder = std::shared_ptr<Holder>;
 
         void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        void onUpdate() const override;
 
-        void onAppend(const SharedNode &node) override;
-        void onRemove(const SharedNode &node) override;
+        void onAppend(const SharedNode &child) override final;
+        void onRemove(const SharedNode &child) override final;
 
-    private:
-        class WidgetHolder;
-        using SharedHolder = std::shared_ptr<WidgetHolder>;
+        bool dispatchChildrenEvents(Node *target, const sf::Event &event) const override;
 
-        /////////////////////////////////////////////////////////////
+        sf::Vector2f compactContent() const override;
+        void inflateContent() const override;
 
-        class WidgetHolder : public co::WidgetHolder
+        SharedHolder getHolder() const;
+
+        struct Holder
         {
-        public:
-            Anchor getHorizontalAnchor() const;
-            void setHorizontalAnchor(Anchor value);
+            Holder() = default;
+            virtual ~Holder() = default;
 
-            Anchor getVerticalAnchor() const;
-            void setVerticalAnchor(Anchor value);
-
-            WidgetHolder();
-            virtual ~WidgetHolder();
-
-        private:
-            Anchor m_hAnchor;
-            Anchor m_vAnchor;
+            SharedNode child;
+            Anchor hAnchor;
+            Anchor vAnchor;
         };
 
+    private:
         SharedHolder m_holder;
     };
 

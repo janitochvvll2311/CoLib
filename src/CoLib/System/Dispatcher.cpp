@@ -1,7 +1,6 @@
-#include <algorithm>
+#define COLIB_SYSTEM_EXPORTS
 #include <CoLib/System/Exception.hpp>
 #include <CoLib/System/Job.hpp>
-#include <CoLib/System/Utils.hpp>
 #include <CoLib/System/Dispatcher.hpp>
 
 namespace co
@@ -9,10 +8,7 @@ namespace co
 
     void Dispatcher::append(const SharedJob &job)
     {
-        auto instance = getInstance();
-        auto manager = Job::Manager(job);
-        manager.attach(instance);
-        //
+        job->attach(this);
         m_monitor.lock();
         m_jobs.push_back(job);
         if (m_jobs.size() == 1)
@@ -24,38 +20,19 @@ namespace co
 
     void Dispatcher::remove(const SharedJob &job)
     {
-        auto instace = getInstance();
-        if (job->getDispatcher() != instace)
-        {
-            throw InvalidOperationException(JOB_ALREADY_ATTACHED_MESSAGE);
-        }
-        auto monitor = Job::Manager(job);
-        monitor.detach();
-        //
         m_monitor.lock();
+        if (job->getDispatcher() != this)
+        {
+            m_monitor.unlock();
+            throw InvalidOperationException(JOB_ALREADY_ATTACHED_STRING);
+        }
+        job->detach();
         m_jobs.remove(job);
         if (m_jobs.size() == 0)
         {
             m_waiter.lock();
         }
         m_monitor.unlock();
-    }
-
-    SharedJob Dispatcher::take()
-    {
-        m_monitor.lock();
-        SharedJob job(nullptr);
-        if (m_jobs.size() > 0)
-        {
-            job = m_jobs.front();
-            m_jobs.pop_front();
-            if (m_jobs.size() == 0)
-            {
-                m_waiter.lock();
-            }
-        }
-        m_monitor.unlock();
-        return job;
     }
 
     bool Dispatcher::tryRemove(const SharedJob &job)
@@ -71,16 +48,45 @@ namespace co
         }
     }
 
-    void Dispatcher::wait() const
+    SharedJob Dispatcher::take()
+    {
+        m_monitor.lock();
+        SharedJob job(nullptr);
+        if (m_jobs.size() > 0)
+        {
+            job = m_jobs.front();
+            m_jobs.pop_front();
+            job->detach();
+            if (m_jobs.size() == 0)
+            {
+                m_waiter.lock();
+            }
+        }
+        m_monitor.unlock();
+        return job;
+    }
+
+    SharedJob Dispatcher::wait()
     {
         m_waiter.lock();
-        m_waiter.unlock();
+        m_monitor.lock();
+        SharedJob job(nullptr);
+        if (m_jobs.size() > 0)
+        {
+            job = m_jobs.front();
+            m_jobs.pop_front();
+            job->detach();
+            if (m_jobs.size() > 0)
+            {
+                m_waiter.unlock();
+            }
+        }
+        m_monitor.unlock();
+        return job;
     }
 
     Dispatcher::Dispatcher()
-        : m_monitor(),
-          m_waiter(),
-          m_jobs()
+        : m_monitor(), m_waiter(), m_jobs()
     {
         m_waiter.lock();
     }
@@ -99,33 +105,20 @@ namespace co
         m_monitor.unlock();
     }
 
-    const SharedDispatcher Dispatcher::Main = Object::create<Dispatcher>();
+    const SharedDispatcher Dispatcher::Main = std::make_shared<Dispatcher>();
 
-    ////////////////////////////////////////////////////////////////
-
-    SharedDispatcher Dispatcher::getInstance()
-    {
-        auto instance = cast<Dispatcher>();
-        if (!instance)
-        {
-            throw InvalidStateException(UNSAFE_OBJECT_INSTANCE_MESSAGE);
-        }
-        return instance;
-    }
-
-    ////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
     void runWorker(
         const WeakDispatcher &dispatcher,
-        const std::function<void(const Exception &)> &handler)
+        const ExceptionHandler &handler)
     {
         while (!dispatcher.expired())
         {
             auto _dispatcher = dispatcher.lock();
             if (_dispatcher != nullptr)
             {
-                _dispatcher->wait();
-                auto job = _dispatcher->take();
+                auto job = _dispatcher->wait();
                 if (job)
                 {
                     runCatching(

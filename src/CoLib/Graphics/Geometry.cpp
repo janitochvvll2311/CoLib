@@ -1,3 +1,4 @@
+#define COLIB_GRAPHICS_EXPORTS
 #include <math.h>
 #include <limits>
 #include <CoLib/Graphics/Geometry.hpp>

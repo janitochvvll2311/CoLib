@@ -1,57 +1,95 @@
-#include <CoLib/System/Exception.hpp>
+#define COLIB_UI_EXPORTS
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/Label.hpp>
 
 namespace co
 {
 
-    Label::Anchor Label::getHorizontalContentAnchor() const
+    Node *Label::getParent() const
     {
-        return getHorizontalAnchor(m_span);
+        return m_root.getParent();
+    }
+
+    Label::Anchor Label::getHorizontalContentAnchor()
+    {
+        return m_root.getHorizontalAnchor(m_root.getChild(0));
     }
 
     void Label::setHorizontalContentAnchor(Anchor value)
     {
-        setHorizontalAnchor(m_span, value);
+        m_root.setHorizontalAnchor(m_root.getChild(0), value);
     }
 
-    Label::Anchor Label::getVerticalContentAlignment() const
+    Label::Anchor Label::getVerticalContentAnchor()
     {
-        return getVerticalAnchor(m_span);
+        return m_root.getVerticalAnchor(m_root.getChild(0));
     }
 
     void Label::setVerticalContentAnchor(Anchor value)
     {
-        setVerticalAnchor(m_span, value);
+        m_root.setVerticalAnchor(m_root.getChild(0), value);
     }
 
-    const SharedSpan &Label::getSpan() const
+    Block &Label::getBlock()
     {
-        return m_span;
+        return m_root;
+    }
+
+    const Block &Label::getBlock() const
+    {
+        return m_root;
+    }
+
+    Span &Label::getSpan()
+    {
+        return *(std::dynamic_pointer_cast<Span>(m_root.getChild(0)));
+    }
+
+    const Span &Label::getSpan() const
+    {
+        return *(std::dynamic_pointer_cast<Span>(m_root.getChild(0)));
+    }
+
+    sf::Vector2f Label::compact()
+    {
+        return m_root.compact();
+    }
+
+    sf::Vector2f Label::inflate(const sf::Vector2f &size)
+    {
+        return m_root.inflate(size);
+    }
+
+    void Label::place(const sf::Vector2f &position)
+    {
+        m_root.place(position);
     }
 
     Label::Label()
-        : m_span(new Span())
+        : m_root()
     {
-        append(m_span);
+        m_root.append(std::make_shared<Span>());
     }
 
     Label::~Label() {}
 
-    //////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
 
-    void Label::onAppend(const SharedNode &node)
+    void Label::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
-        if (node != m_span)
-        {
-            throw InvalidOperationException("Label not support child changes");
-        }
-        FrameLayout::onAppend(node);
+        target.draw(m_root, states);
     }
 
-    void Label::onRemove(const SharedNode &node)
+    void Label::onAttach(Node *parent)
     {
-        throw InvalidOperationException("Label not support child changes");
+        m_root.attach(parent);
+    }
+
+    void Label::onDetach()
+    {
+        m_root.detach();
     }
 
 }

@@ -3,7 +3,6 @@
 
 #include <list>
 #include <CoLib/UI/GroupLayout.hpp>
-#include <CoLib/UI/WidgetHolder.hpp>
 
 namespace co
 {
@@ -19,11 +18,11 @@ namespace co
             Vertical
         };
 
-        Anchor getAnchor(const SharedWidget &widget) const;
-        void setAnchor(const SharedWidget &widget, Anchor value);
+        Anchor getAnchor(const SharedNode &child) const;
+        void setAnchor(const SharedNode &child, Anchor value);
 
-        f32t getWeight(const SharedWidget &widget) const;
-        void setWeight(const SharedWidget &widget, f32t value);
+        f32t getWeight(const SharedNode &child) const;
+        void setWeight(const SharedNode &child, f32t value);
 
         Orientation getOrientation() const;
         void setOrientation(Orientation value);
@@ -36,31 +35,24 @@ namespace co
 
         //////////////////////////////////////////////////////////////
 
-        void compact() override;
-        void inflate(const sf::Vector2f &size) override;
-
         LinearLayout();
         virtual ~LinearLayout();
 
     protected:
+        sf::Vector2f compactContent() const override final;
+        void inflateContent() const override final;
+
         SharedHolder createHolder() const override;
 
     private:
-        class WidgetHolder : public co::WidgetHolder
+        struct LinearHolder : public Holder
         {
-        public:
-            Anchor getAnchor() const;
-            void setAnchor(Anchor value);
+            LinearHolder() = default;
+            virtual ~LinearHolder() = default;
 
-            f32t getWeight() const;
-            void setWeight(f32t value);
-
-            WidgetHolder();
-            virtual ~WidgetHolder();
-
-        private:
-            Anchor m_anchor;
-            f32t m_weight;
+            Anchor anchor;
+            f32t weight;
+            sf::Vector2f size;
         };
 
         Orientation m_orientation;

@@ -1,3 +1,4 @@
+#define COLIB_GRAPHICS_EXPORTS
 #include <SFML/System/String.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -50,8 +51,9 @@ namespace co
     {
         for (szt i = 0; i < count; i++)
         {
-            array[i].position.x = (array[i].position.x - srcRect.left) / srcRect.width * dstRect.width + dstRect.left;
-            array[i].position.y = (array[i].position.y - srcRect.top) / srcRect.height * dstRect.height + dstRect.top;
+            auto &vertex = array[i];
+            vertex.position.x = (vertex.position.x - srcRect.left) / srcRect.width * dstRect.width + dstRect.left;
+            vertex.position.y = (vertex.position.y - srcRect.top) / srcRect.height * dstRect.height + dstRect.top;
         }
     }
 
@@ -92,8 +94,9 @@ namespace co
     {
         for (szt i = 0; i < count; i++)
         {
-            array[i].texCoords.x = (array[i].position.x - srcRect.left) / srcRect.width * dstRect.width + dstRect.left;
-            array[i].texCoords.y = (array[i].position.y - srcRect.top) / srcRect.height * dstRect.height + dstRect.top;
+            auto &vertex = array[i];
+            vertex.texCoords.x = (vertex.position.x - srcRect.left) / srcRect.width * dstRect.width + dstRect.left;
+            vertex.texCoords.y = (vertex.position.y - srcRect.top) / srcRect.height * dstRect.height + dstRect.top;
         }
     }
 

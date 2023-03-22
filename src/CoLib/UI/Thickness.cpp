@@ -1,3 +1,4 @@
+#define COLIB_UI_EXPORTS
 #include <CoLib/UI/Thickness.hpp>
 
 namespace co

@@ -2,18 +2,17 @@
 #define COLIB_BUTTON_HPP
 
 #include <CoLib/UI/Label.hpp>
-#include <CoLib/UI/Clickable.hpp>
 #include <CoLib/UI/Focusable.hpp>
+#include <CoLib/UI/Clickable.hpp>
 
 namespace co
 {
 
     class COLIB_UI_API Button
         : public Label,
-          public virtual Clickable,
-          public virtual Focusable
+          public virtual Focusable,
+          public virtual Clickable
     {
-
     public:
         const EventListener &getOnClickListener() const;
         void setOnClickListener(const EventListener &value);
@@ -24,12 +23,12 @@ namespace co
         virtual ~Button();
 
     protected:
-        void onClick(const sf::Event &event) override;
         void onFocus(const sf::Event &event) override;
+        void onClick(const sf::Event &event) override;
 
     private:
-        EventListener m_onClick;
         bool m_focused;
+        EventListener m_onClick;
     };
 
 }

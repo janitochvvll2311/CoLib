@@ -7,31 +7,48 @@ namespace co
 {
 
     class Span;
-    using SharedSpan = std::shared_ptr<Span>;
+    class Block;
 
-    ///////////////////////////////////////////////////////
+    //////////////////////////////////////////////
 
-    class COLIB_UI_API Label : public FrameLayout
+    class COLIB_UI_API Label
+        : public virtual sf::Drawable,
+          public virtual LeafNode,
+          public virtual Inflatable
     {
 
     public:
-        Anchor getHorizontalContentAnchor() const;
+        using Anchor = FrameLayout::Anchor;
+
+        Node *getParent() const override final;
+
+        Anchor getHorizontalContentAnchor();
         void setHorizontalContentAnchor(Anchor value);
 
-        Anchor getVerticalContentAlignment() const;
+        Anchor getVerticalContentAnchor();
         void setVerticalContentAnchor(Anchor value);
 
-        const SharedSpan &getSpan() const;
+        Block &getBlock();
+        const Block &getBlock() const;
+
+        Span &getSpan();
+        const Span &getSpan() const;
+
+        sf::Vector2f compact() override final;
+        sf::Vector2f inflate(const sf::Vector2f &size) override final;
+        void place(const sf::Vector2f &position) override final;
 
         Label();
         virtual ~Label();
 
     protected:
-        void onAppend(const SharedNode &node) override;
-        void onRemove(const SharedNode &node) override;
+        void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
+
+        void onAttach(Node *parent) override final;
+        void onDetach() override final;
 
     private:
-        SharedSpan m_span;
+        FrameLayout m_root;
     };
 
 }

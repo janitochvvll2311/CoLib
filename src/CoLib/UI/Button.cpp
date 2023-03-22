@@ -1,3 +1,4 @@
+#define COLIB_UI_EXPORTS
 #include <SFML/Window/Event.hpp>
 #include <CoLib/UI/Button.hpp>
 
@@ -19,7 +20,7 @@ namespace co
         switch (event.type)
         {
         case sf::Event::MouseButtonReleased:
-            if (!target && contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
+            if (!target && getBlock().contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
             {
                 focus();
                 onClick(event);
@@ -34,11 +35,16 @@ namespace co
     }
 
     Button::Button()
-        : m_onClick(), m_focused(false) {}
+        : m_focused(false), m_onClick() {}
 
     Button::~Button() {}
 
     ///////////////////////////////////////////////////////////////////////
+
+    void Button::onFocus(const sf::Event &event)
+    {
+        spreadEvent(this, event);
+    }
 
     void Button::onClick(const sf::Event &event)
     {
@@ -50,11 +56,6 @@ namespace co
         {
             bubbleEvent(this, event);
         }
-    }
-
-    void Button::onFocus(const sf::Event &event)
-    {
-        bubbleEvent(this, event);
     }
 
 }

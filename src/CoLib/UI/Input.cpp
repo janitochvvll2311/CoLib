@@ -1,3 +1,4 @@
+#define COLIB_UI_EXPORTS
 #include <SFML/Window/Event.hpp>
 #include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/Input.hpp>
@@ -11,7 +12,7 @@ namespace co
         switch (event.type)
         {
         case sf::Event::MouseButtonReleased:
-            if (!target && contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
+            if (!target && getBlock().contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
             {
                 focus();
                 return true;
@@ -23,18 +24,17 @@ namespace co
         case sf::Event::TextEntered:
             if (m_focused)
             {
-                auto &text = getSpan()->getText();
-                auto &string = text.getString();
+                auto &span = getSpan();
+                auto &string = getSpan().getString();
                 switch (event.text.unicode)
                 {
                 case '\b':
-                    text.setString(string.substring(0, string.getSize() - 1));
+                    span.setString(string.substring(0, string.getSize() - 1));
                     break;
                 default:
-                    text.setString(string + event.text.unicode);
+                    span.setString(string + event.text.unicode);
                     break;
                 }
-                invalidate();
                 return true;
             }
             break;
@@ -51,7 +51,7 @@ namespace co
 
     void Input::onFocus(const sf::Event &event)
     {
-        bubbleEvent(this, event);
+        spreadEvent(this, event);
     }
 
 }

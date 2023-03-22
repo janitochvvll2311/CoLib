@@ -1,10 +1,8 @@
 #ifndef COLIB_TASK_HPP
 #define COLIB_TASK_HPP
 
-#include <memory>
+#include <optional>
 #include <CoLib/System/Dispatcher.hpp>
-#include <CoLib/System/Job.hpp>
-#include <CoLib/System/Optional.hpp>
 
 namespace co
 {
@@ -12,72 +10,92 @@ namespace co
     template <typename T>
     class Task;
 
+    template <typename T>
+    using TaskWork = std::function<T()>;
+
+    class TaskImpl;
+    using SharedTaskImpl = std::shared_ptr<TaskImpl>;
+
+    ///////////////////////////////////////////////////////////
+
+    class COLIB_SYSTEM_API BaseTask
+    {
+    public:
+        struct Work;
+        using SharedWork = std::shared_ptr<Work>;
+
+        struct Work
+        {
+            virtual void run() = 0;
+        };
+
+        enum State
+        {
+            Empty,
+            Ready,
+            Running,
+            Done,
+            Canceled,
+            Error
+        };
+
+        /////////////////////////////////////////////////////
+
+        State getState() const;
+
+        void start(const SharedDispatcher &dispatcher = Dispatcher::Main);
+        void wait() const;
+        void cancel();
+
+        BaseTask(const SharedWork &work = nullptr);
+        virtual ~BaseTask();
+
+    protected:
+        const SharedWork &getWork() const;
+
+    private:
+        SharedTaskImpl m_impl;
+    };
+
     ////////////////////////////////////////
 
     template <>
     class Task<void>
+        : public BaseTask
     {
-
     public:
-        void start(const SharedDispatcher &dispatcher = Dispatcher::Main);
-        void wait() const;
-        void cancel();
-
-        Task(const std::function<void()> &task);
-        ~Task();
+        Task(const TaskWork<void> &work = nullptr);
+        ~Task() = default;
 
     private:
-        class Job : public co::Job
+        struct VoidWork : public Work
         {
-
-        public:
-            Job(const std::function<void()> &job);
-            virtual ~Job();
-
-        protected:
-            void onRun() override;
-
-        private:
-            std::function<void()> m_job;
+            void run() override;
+            VoidWork(const TaskWork<void> &_work);
+            TaskWork<void> work;
         };
-
-        std::shared_ptr<Job> m_job;
     };
 
-    ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////
 
     template <typename T>
     class Task
+        : public BaseTask
     {
     public:
-        const Optional<T> &getResult() const;
+        const std::optional<T> &await() const;
 
-        void start(const SharedDispatcher &dispatcher = Dispatcher::Main);
-        void wait() const;
-        void cancel();
-
-        Task(const std::function<T()> &task);
-        ~Task();
+        Task(const TaskWork<T> &work = nullptr);
+        ~Task() = default;
 
     private:
-        class Job : public co::Job
+        struct ResultWork : public Work
         {
-
-        public:
-            const Optional<T> &getResult() const;
-
-            Job(const std::function<T()> &job);
-            virtual ~Job();
-
-        protected:
-            void onRun() override;
-
-        private:
-            Optional<T> m_result;
-            std::function<T()> m_job;
+            void run() override;
+            ResultWork(const TaskWork<T> &_work);
+            TaskWork<T> work;
+            std::optional<T> result;
         };
-
-        std::shared_ptr<Job> m_job;
     };
 
 }

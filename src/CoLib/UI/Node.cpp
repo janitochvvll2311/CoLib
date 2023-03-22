@@ -1,96 +1,23 @@
+#define COLIB_UI_EXPORTS
 #include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/Node.hpp>
 
 namespace co
 {
 
-    Node *Node::getParent() const
-    {
-        return nullptr;
-    }
-
-    szt Node::getChildCount() const
-    {
-        return 0;
-    }
-
-    SharedNode Node::getChild(szt index) const
-    {
-        return NoNode;
-    }
-
-    ////////////////////////////////////////////////////////
-
-    void Node::append(const SharedNode &node)
-    {
-        node->attach(this);
-        onAppend(node);
-    }
-
-    void Node::remove(const SharedNode &node)
-    {
-        onRemove(node);
-        node->detach();
-    }
-
-    bool Node::dispatchEvent(Node *target, const sf::Event &event)
-    {
-        return handleEvent(target, event);
-    }
-
-    bool Node::bubbleEvent(Node *target, const sf::Event &event)
-    {
-        auto *parent = getParent();
-        return (handleEvent(target, event) || (parent && parent->bubbleEvent(target, event)));
-    }
-
-    bool Node::handleEvent(Node *target, const sf::Event &event)
-    {
-        return false;
-    }
-
-    Node::Node() {}
-    Node::~Node() {}
-
-    const SharedNode Node::NoNode = nullptr;
-
-    ////////////////////////////////////////////////////////////
-
-    void Node::onAttach(Node *parent)
-    {
-        throw InvalidOperationException("This node not support parent nodes");
-    }
-
-    void Node::onDetach()
-    {
-        throw InvalidOperationException("This node not support parent nodes");
-    }
-
-    void Node::onAppend(const SharedNode &node)
-    {
-        throw InvalidOperationException("This node not support child nodes");
-    }
-
-    void Node::onRemove(const SharedNode &node)
-    {
-        throw InvalidOperationException("This node not support child nodes");
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////
-
     void Node::attach(Node *parent)
     {
-        auto _parent = getParent();
-        if (_parent)
+        if (getParent() != nullptr)
         {
-            throw InvalidOperationException("This node is already attached to another node");
+            throw InvalidOperationException(NODE_ALREADY_ATTACHED_STRING);
         }
-        _parent = parent;
+        auto _parent = parent;
         while (_parent)
         {
             if (_parent == this)
             {
-                throw InvalidOperationException("This node is ancestor of the parent node");
+                throw InvalidOperationException(OWN_ANCESTOR_NODE_STRING);
             }
             _parent = _parent->getParent();
         }
@@ -99,7 +26,106 @@ namespace co
 
     void Node::detach()
     {
+        if (getParent() == nullptr)
+        {
+            throw InvalidOperationException(NODE_ALREADY_DETACHED_STRING);
+        }
         onDetach();
+    }
+
+    void Node::append(const SharedNode &child)
+    {
+        child->attach(this);
+        onAppend(child);
+    }
+
+    void Node::remove(const SharedNode &child)
+    {
+        if (child->getParent() != this)
+        {
+            throw InvalidOperationException(NODE_ALREADY_ATTACHED_STRING);
+        }
+        child->detach();
+        onRemove(child);
+    }
+
+    bool Node::dispatchEvent(Node *target, const sf::Event &event)
+    {
+        return (dispatchChildrenEvents(target, event) || handleEvent(target, event));
+    }
+
+    bool Node::bubbleEvent(Node *target, const sf::Event &event)
+    {
+        auto parent = getParent();
+        return (handleEvent(target, event) || (parent != nullptr && parent->bubbleEvent(target, event)));
+    }
+
+    bool Node::handleEvent(Node *target, const sf::Event &event)
+    {
+        return false;
+    }
+
+    void Node::spreadEvent(Node *target, const sf::Event &event)
+    {
+        auto root = this;
+        while (root->getParent())
+        {
+            root = root->getParent();
+        }
+        root->dispatchEvent(target, event);
+    }
+
+    Node::Node() {}
+    Node::~Node() {}
+
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    Node *RootNode::getParent() const
+    {
+        return nullptr;
+    }
+
+    RootNode::RootNode() {}
+    RootNode::~RootNode() {}
+
+    void RootNode::onAttach(Node *parent)
+    {
+        throw InvalidOperationException(PARENT_NODES_NOT_SUPPORTED_STRING);
+    }
+
+    void RootNode::onDetach()
+    {
+        throw InvalidOperationException(PARENT_NODES_NOT_SUPPORTED_STRING);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+
+    szt LeafNode::getChildCount() const
+    {
+        return 0;
+    }
+
+    SharedNode LeafNode::getChild(szt index) const
+    {
+        return nullptr;
+    }
+
+    LeafNode::LeafNode() {}
+    LeafNode::~LeafNode() {}
+
+    void LeafNode::onAppend(const SharedNode &child)
+    {
+        throw InvalidOperationException(CHILD_NODES_NOT_SUPPORTED_STRING);
+    }
+
+    void LeafNode::onRemove(const SharedNode &child)
+    {
+        throw InvalidOperationException(CHILD_NODES_NOT_SUPPORTED_STRING);
+    }
+
+    bool LeafNode::dispatchChildrenEvents(Node *target, const sf::Event &event) const
+    {
+        return false;
     }
 
 }

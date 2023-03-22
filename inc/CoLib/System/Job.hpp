@@ -1,75 +1,31 @@
 #ifndef COLIB_JOB_HPP
 #define COLIB_JOB_HPP
 
-#include <mutex>
-#include <CoLib/System/Object.hpp>
+#include <CoLib/System/Export.hpp>
 
 namespace co
 {
 
     class Dispatcher;
-    using SharedDispatcher = std::shared_ptr<Dispatcher>;
-    using WeakDispatcher = std::weak_ptr<Dispatcher>;
-
-    class Job;
-    using SharedJob = std::shared_ptr<Job>;
-
-    /////////////////////////////////////////////////////
 
     class COLIB_SYSTEM_API Job
-        : public Object
     {
-
     public:
-        enum State
-        {
-            Empty,
-            Ready,
-            Running,
-            Done,
-            Error,
-            Canceled
-        };
-
-        State getState() const;
-        SharedDispatcher getDispatcher() const;
+        virtual Dispatcher *getDispatcher() const = 0;
 
         void run();
-        void wait() const;
-        void cancel();
+        void attach(Dispatcher *dispatcher);
+        void detach();
 
-        Job(State state = Empty);
+        Job();
         virtual ~Job();
-
-        ////////////////////////////////////////
-
-        class Manager final
-        {
-
-        public:
-            void attach(const SharedDispatcher &dispatcher);
-            void detach();
-
-            Manager(const SharedJob &job);
-            ~Manager();
-
-        private:
-            SharedJob m_job;
-        };
 
     protected:
         virtual void onRun() = 0;
-
-    private:
-        void attach(const SharedDispatcher &dispatcher);
-        void detach();
-
-        mutable std::mutex m_monitor;
-        mutable std::mutex m_waiter;
-        State m_state;
-        WeakDispatcher m_dispatcher;
+        virtual void onAttach(Dispatcher *dispatcher) = 0;
+        virtual void onDetach() = 0;
     };
-    
+
 }
 
 #endif // COLIB_JOB_HPP

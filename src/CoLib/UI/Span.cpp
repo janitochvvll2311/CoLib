@@ -1,48 +1,46 @@
-#include <SFML/Graphics/RenderTarget.hpp>
+#define COLIB_UI_EXPORTS
 #include <CoLib/UI/Span.hpp>
 
 namespace co
 {
 
-    sf::Text &Span::getText()
+    Node *Span::getParent() const
     {
-        return m_text;
+        return m_parent;
     }
 
-    const sf::Text &Span::getText() const
+    sf::Vector2f Span::compact()
     {
-        return m_text;
+        auto bounds = getLocalBounds();
+        return {bounds.width, bounds.height};
     }
 
-    ///////////////////////////////////////////////////////////////////
-
-    void Span::compact()
+    sf::Vector2f Span::inflate(const sf::Vector2f &size)
     {
-        Widget::compact();
-        auto bounds = m_text.getLocalBounds();
-        setWidth(bounds.width);
-        setHeight(bounds.height);
+        return compact();
     }
 
-    void Span::inflate(const sf::Vector2f &size)
+    void Span::place(const sf::Vector2f &position)
     {
-        auto bounds = m_text.getLocalBounds();
-        Widget::inflate({bounds.width, bounds.height});
+        auto bounds = getLocalBounds();
+        setPosition({position.x - bounds.left, position.y - bounds.top});
     }
 
     Span::Span()
-        : m_text() {}
+        : m_parent(nullptr) {}
 
     Span::~Span() {}
 
-    ////////////////////////////////////////////////////////
+    //////////////////////////////////////////
 
-    void Span::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
+    void Span::onAttach(Node *parent)
     {
-        auto _states = states;
-        auto bounds = m_text.getLocalBounds();
-        _states.transform.translate({-bounds.left, -bounds.top});
-        target.draw(m_text, _states);
+        m_parent = parent;
+    }
+
+    void Span::onDetach()
+    {
+        m_parent = nullptr;
     }
 
 }

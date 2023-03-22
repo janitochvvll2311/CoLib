@@ -1,9 +1,7 @@
 #ifndef COLIB_ANCHOR_LAYOUT_HPP
 #define COLIB_ANCHOR_LAYOUT_HPP
 
-#include <list>
 #include <CoLib/UI/GroupLayout.hpp>
-#include <CoLib/UI/WidgetHolder.hpp>
 
 namespace co
 {
@@ -13,44 +11,27 @@ namespace co
     {
 
     public:
-        Anchor getHorizontalAnchor(const SharedWidget &widget) const;
-        void setHorizontalAnchor(const SharedWidget &widget, Anchor value);
+        Anchor getHorizontalAnchor(const SharedNode &child) const;
+        void setHorizontalAnchor(const SharedNode &child, Anchor value);
 
-        Anchor getVerticalAnchor(const SharedWidget &widget) const;
-        void setVerticalAnchor(const SharedWidget &widget, Anchor value);
-
-        //////////////////////////////////////////////////////////////////////////
-
-        void compact() override;
-        void inflate(const sf::Vector2f &size) override;
+        Anchor getVerticalAnchor(const SharedNode &child) const;
+        void setVerticalAnchor(const SharedNode &child, Anchor value);
 
         AnchorLayout();
         virtual ~AnchorLayout();
 
     protected:
-        SharedHolder createHolder() const override;
+        virtual sf::Vector2f compactContent() const override final;
+        virtual void inflateContent() const override final;
+
+        SharedHolder createHolder() const override final;
 
     private:
-        class WidgetHolder;
-        using SharedHolder = std::shared_ptr<WidgetHolder>;
-
-        /////////////////////////////////////////////////////////////
-
-        class WidgetHolder : public co::WidgetHolder
+        struct AnchorHolder
+            : public Holder
         {
-        public:
-            Anchor getHorizontalAnchor() const;
-            void setHorizontalAnchor(Anchor value);
-
-            Anchor getVerticalAnchor() const;
-            void setVerticalAnchor(Anchor value);
-
-            WidgetHolder();
-            virtual ~WidgetHolder();
-
-        private:
-            Anchor m_hAnchor;
-            Anchor m_vAnchor;
+            Anchor hAnchor;
+            Anchor vAnchor;
         };
     };
 

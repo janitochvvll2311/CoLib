@@ -1,57 +1,57 @@
 #ifndef COLIB_EXCEPTION_HPP
 #define COLIB_EXCEPTION_HPP
 
-#include <exception>
 #include <string>
+#include <exception>
+#include <functional>
 #include <CoLib/System/Constants.hpp>
 
 namespace co
 {
 
-    class COLIB_SYSTEM_API Exception
-        : public std::exception
-    {
+    class Exception;
 
-    public:
-        const char *what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_NOTHROW override final;
-        const s8t getReason() const;
-        Exception(const Exception &other) = delete;
-        Exception(const std::string &reason = UNKNOWN_EXCEPTION_MESSAGE);
-        virtual ~Exception();
+    using Action = std::function<void()>;
+    using ExceptionHandler = std::function<void(const Exception &)>;
 
-    private:
-        std::string m_reason;
-    };
+    void COLIB_SYSTEM_API runCatching(const Action &action, const ExceptionHandler &handler);
 
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    class NotImplementedException : public Exception
+    class COLIB_SYSTEM_API Exception
+        : public std::exception
     {
     public:
-        NotImplementedException(const std::string &reason = NOT_IMPLEMENTED_EXCEPTION_MESSAGE)
-            : Exception(reason) {}
+        const std::string &getReason() const;
+
+        Exception(const std::string &reason = UNKNOWN_EXCEPTION_STRING);
+        virtual ~Exception();
+
+    private:
+        const char *what() const _GLIBCXX_TXN_SAFE_DYN _GLIBCXX_USE_NOEXCEPT override;
+
+        std::string m_reason;
     };
 
-    class InvalidValueException : public Exception
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    class NotImplementedException
+        : public Exception
     {
     public:
-        InvalidValueException(const std::string &reason = INVALID_VALUE_EXCEPTION_MESSAGE)
-            : Exception(reason) {}
+        NotImplementedException(const std::string &reason = NOT_IMPLEMENTED_EXCEPTION_STRING) : Exception(reason) {}
+        virtual ~NotImplementedException() {}
     };
 
-    class InvalidOperationException : public Exception
+    class InvalidOperationException
+        : public Exception
     {
     public:
-        InvalidOperationException(const std::string &reason = INVALID_OPERATION_EXCEPTION_MESSAGE)
-            : Exception(reason) {}
+        InvalidOperationException(const std::string &reason = INVALID_OPERATION_EXCEPTION_STRING) : Exception(reason) {}
+        virtual ~InvalidOperationException() {}
     };
 
-    class InvalidStateException : public Exception
-    {
-    public:
-        InvalidStateException(const std::string &reason = INVALID_STATE_EXCEPTION_MESSAGE)
-            : Exception(reason) {}
-    };
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
 

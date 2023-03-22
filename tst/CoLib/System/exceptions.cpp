@@ -1,30 +1,40 @@
 #include <iostream>
 #include <CoLib/System/Exception.hpp>
-#include <CoLib/System/Utils.hpp>
 
 int main()
 {
 
-    auto logger = [](const co::Exception &error)
+    auto logger = [](const co::Exception &exception)
     {
-        std::cout << error.getReason() << '\n';
+        std::cout << exception.getReason() << '\n';
     };
 
-    co::runCatching([]()
-                    { throw co::Exception(); },
-                    logger);
-    co::runCatching([]()
-                    { throw co::NotImplementedException(); },
-                    logger);
-    co::runCatching([]()
-                    { throw co::InvalidOperationException(); },
-                    logger);
-    co::runCatching([]()
-                    { throw co::InvalidValueException(); },
-                    logger);
-    co::runCatching([]()
-                    { throw co::InvalidStateException(); },
-                    logger);
+    co::runCatching(
+        []()
+        {
+            throw co::Exception();
+        },
+        logger);
+    co::runCatching(
+        []()
+        {
+            throw co::NotImplementedException();
+        },
+        logger);
+    co::runCatching(
+        []()
+        {
+            try
+            {
+                throw co::InvalidOperationException();
+            }
+            catch (...)
+            {
+                std::cout << "Rethrow\n";
+                throw;
+            }
+        },
+        logger);
 
     std::cin.get();
     return 0;

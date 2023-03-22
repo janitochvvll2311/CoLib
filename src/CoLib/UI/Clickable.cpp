@@ -1,3 +1,4 @@
+#define COLIB_UI_EXPORTS
 #include <SFML/Window/Event.hpp>
 #include <CoLib/UI/Clickable.hpp>
 

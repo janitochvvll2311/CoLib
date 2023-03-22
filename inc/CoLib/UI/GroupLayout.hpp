@@ -7,35 +7,41 @@
 namespace co
 {
 
-    class WidgetHolder;
-    using SharedHolder = std::shared_ptr<WidgetHolder>;
-
-    ///////////////////////////////////////////////
-
     class COLIB_UI_API GroupLayout
         : public Block
     {
 
     public:
-        szt getChildCount() const override;
-        SharedNode getChild(szt index) const override;
-
-        bool dispatchEvent(Node *target, const sf::Event &event) override;
-        bool bubbleEvent(Node *target, const sf::Event &event) override;
+        szt getChildCount() const override final;
+        SharedNode getChild(szt index) const override final;
 
         GroupLayout();
         virtual ~GroupLayout();
 
     protected:
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-        void onUpdate() const override;
+        struct Holder;
+        using SharedHolder = std::shared_ptr<Holder>;
 
-        void onAppend(const SharedNode &widget) override;
-        void onRemove(const SharedNode &widget) override;
+        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
 
-        SharedHolder getHolder(const SharedWidget &widget) const;
-        const std::list<SharedHolder> &getHolders() const;
+        void onAppend(const SharedNode &child) override final;
+        void onRemove(const SharedNode &child) override final;
+
+        bool dispatchChildrenEvents(Node *target, const sf::Event &event) const override;
+
         virtual SharedHolder createHolder() const;
+        const std::list<SharedHolder> &getHolders() const;
+
+        SharedHolder getHolder(szt index) const;
+        SharedHolder getHolder(const SharedNode &child) const;
+
+        struct Holder
+        {
+            Holder() = default;
+            virtual ~Holder() = default;
+
+            SharedNode child;
+        };
 
     private:
         std::list<SharedHolder> m_holders;
