@@ -1,4 +1,5 @@
 #define COLIB_UI_EXPORTS
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <CoLib/UI/GroupLayout.hpp>
@@ -59,9 +60,52 @@ namespace co
                             { return holder->child == child; });
     }
 
+    bool GroupLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
+    {
+
+        if (m_holders.size() > 0)
+        {
+            bool handled = false;
+            switch (event.type)
+            {
+            case sf::Event::MouseButtonPressed:
+            case sf::Event::MouseButtonReleased:
+            {
+                auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
+                auto _event = event;
+                _event.mouseButton.x = innerPoint.x;
+                _event.mouseButton.y = innerPoint.y;
+                for (auto &holder : m_holders)
+                {
+                    if (holder->child->dispatchEvent(target, _event))
+                    {
+                        handled = true;
+                    }
+                }
+                return handled;
+            }
+            default:
+                for (auto &holder : m_holders)
+                {
+                    if (holder->child->dispatchEvent(target, event))
+                    {
+                        handled = true;
+                    }
+                }
+                return handled;
+            }
+        }
+        return false;
+    }
+
     GroupLayout::SharedHolder GroupLayout::createHolder() const
     {
         return std::make_shared<Holder>();
+    }
+
+    const std::list<GroupLayout::SharedHolder> &GroupLayout::getHolders() const
+    {
+        return m_holders;
     }
 
     GroupLayout::SharedHolder GroupLayout::getHolder(szt index) const

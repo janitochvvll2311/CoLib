@@ -1,7 +1,9 @@
 #define COLIB_UI_EXPORTS
-#include <CoLib/System/Exception.hpp>
+#include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+#include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
 
 namespace co
@@ -32,7 +34,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return m_holder->hAnchor;
     }
@@ -41,7 +43,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         m_holder->hAnchor = value;
     }
@@ -50,7 +52,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return m_holder->vAnchor;
     }
@@ -59,7 +61,7 @@ namespace co
     {
         if (!m_holder || m_holder->child != child)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         m_holder->vAnchor = value;
     }
@@ -90,7 +92,7 @@ namespace co
     {
         if (m_holder != nullptr)
         {
-            throw InvalidOperationException("Frame layout has a child already");
+            throw InvalidOperationException(CHILD_NODE_ALREADY_ATTACHED_STRING);
         }
         m_holder.reset(new Holder());
         m_holder->child = child;
@@ -102,9 +104,31 @@ namespace co
     {
         if (m_holder == nullptr || m_holder->child != child)
         {
-            throw InvalidOperationException("Frame layout has another child already");
+            throw InvalidOperationException(CHILD_NODE_ALREADY_ATTACHED_STRING);
         }
         m_holder.reset();
+    }
+
+    bool FrameLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
+    {
+        if (m_holder)
+        {
+            switch (event.type)
+            {
+            case sf::Event::MouseButtonPressed:
+            case sf::Event::MouseButtonReleased:
+            {
+                auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
+                auto _event = event;
+                _event.mouseButton.x = innerPoint.x;
+                _event.mouseButton.y = innerPoint.y;
+                return m_holder->child->dispatchEvent(target, _event);
+            }
+            default:
+                return m_holder->child->dispatchEvent(target, event);
+            }
+        }
+        return false;
     }
 
     sf::Vector2f FrameLayout::compactContent() const
@@ -127,8 +151,7 @@ namespace co
             auto inflatable = std::dynamic_pointer_cast<Inflatable>(m_holder->child);
             if (inflatable)
             {
-                auto &padding = getPadding();
-                sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
+                sf::Vector2f innerSize = getInnerSize();
                 auto size = inflatable->inflate(innerSize);
                 sf::Vector2f position(0, 0);
                 switch (m_holder->hAnchor)
@@ -156,6 +179,11 @@ namespace co
                 inflatable->place(position);
             }
         }
+    }
+
+    FrameLayout::SharedHolder FrameLayout::getHolder() const
+    {
+        return m_holder;
     }
 
 }

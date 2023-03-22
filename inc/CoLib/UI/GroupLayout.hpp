@@ -27,7 +27,11 @@ namespace co
         void onAppend(const SharedNode &child) override final;
         void onRemove(const SharedNode &child) override final;
 
+        bool dispatchChildrenEvents(Node *target, const sf::Event &event) const override;
+
         virtual SharedHolder createHolder() const;
+        const std::list<SharedHolder> &getHolders() const;
+
         SharedHolder getHolder(szt index) const;
         SharedHolder getHolder(const SharedNode &child) const;
 

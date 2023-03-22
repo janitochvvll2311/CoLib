@@ -2,6 +2,8 @@
 #define COLIB_NODE_HPP
 
 #include <memory>
+#include <functional>
+#include <list>
 #include <CoLib/UI/Export.hpp>
 
 namespace sf
@@ -19,6 +21,8 @@ namespace co
     {
 
     public:
+        using EventListener = std::function<void(Node &, const sf::Event &)>;
+
         virtual Node *getParent() const = 0;
         virtual szt getChildCount() const = 0;
         virtual SharedNode getChild(szt index) const = 0;
@@ -31,6 +35,7 @@ namespace co
         virtual bool dispatchEvent(Node *target, const sf::Event &event);
         virtual bool bubbleEvent(Node *target, const sf::Event &event);
         virtual bool handleEvent(Node *target, const sf::Event &event);
+        virtual void spreadEvent(Node *target, const sf::Event &event);
 
         Node();
         virtual ~Node();

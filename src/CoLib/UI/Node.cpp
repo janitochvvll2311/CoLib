@@ -65,6 +65,16 @@ namespace co
         return false;
     }
 
+    void Node::spreadEvent(Node *target, const sf::Event &event)
+    {
+        auto root = this;
+        while (root->getParent())
+        {
+            root = root->getParent();
+        }
+        root->dispatchEvent(target, event);
+    }
+
     Node::Node() {}
     Node::~Node() {}
 

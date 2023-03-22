@@ -48,6 +48,9 @@ namespace co
         sf::Vector2f inflate(const sf::Vector2f &size) override final;
         void place(const sf::Vector2f &position) override final;
 
+        sf::Vector2f getInnerSize() const;
+        virtual sf::Vector2f getInnerPoint(const sf::Vector2f &point) const;
+
         Block();
         virtual ~Block();
 
@@ -60,6 +63,7 @@ namespace co
 
         virtual sf::Vector2f compactContent() const;
         virtual void inflateContent() const;
+        virtual void updateContent() const;
 
     private:
         void update() const;

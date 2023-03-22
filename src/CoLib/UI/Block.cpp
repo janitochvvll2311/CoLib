@@ -108,6 +108,16 @@ namespace co
         setTop(position.y + m_margin.top);
     }
 
+    sf::Vector2f Block::getInnerSize() const
+    {
+        return {getWidth() - m_padding.getHorizontal(), getHeight() - m_padding.getVertical()};
+    }
+
+    sf::Vector2f Block::getInnerPoint(const sf::Vector2f &point) const
+    {
+        return {point.x - getLeft() - m_padding.left, point.y - getTop() - m_padding.top};
+    }
+
     Block::Block()
         : m_background(nullptr),
           m_margin(0), m_padding(0),
@@ -148,6 +158,7 @@ namespace co
     }
 
     void Block::inflateContent() const {}
+    void Block::updateContent() const {}
 
     ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -162,6 +173,7 @@ namespace co
                 inflatable->inflate({getWidth(), getHeight()});
             }
         }
+        updateContent();
     }
 
 }

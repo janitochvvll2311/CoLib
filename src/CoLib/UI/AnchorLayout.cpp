@@ -1,5 +1,6 @@
 #define COLIB_UI_EXPORTS
 #include <CoLib/System/Exception.hpp>
+#include <CoLib/UI/Constants.hpp>
 #include <CoLib/UI/AnchorLayout.hpp>
 
 namespace co
@@ -10,7 +11,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor;
     }
@@ -20,7 +21,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         std::dynamic_pointer_cast<AnchorHolder>(holder)->hAnchor = value;
     }
@@ -30,7 +31,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         return std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor;
     }
@@ -40,7 +41,7 @@ namespace co
         auto holder = getHolder(child);
         if (holder == nullptr)
         {
-            throw InvalidOperationException("This node is not a child of this layout");
+            throw InvalidOperationException(NOT_CHILD_NODE_STTRING);
         }
         std::dynamic_pointer_cast<AnchorHolder>(holder)->vAnchor = value;
     }
@@ -71,17 +72,16 @@ namespace co
     {
         if (getChildCount() > 0)
         {
-            auto &padding = getPadding();
-            sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
-            for (szt i = 0; i < getChildCount(); i++)
+            sf::Vector2f innerSize = getInnerSize();
+            for (auto &holder : getHolders())
             {
-                auto holder = std::dynamic_pointer_cast<AnchorHolder>(getHolder(i));
+                auto _holder = std::dynamic_pointer_cast<AnchorHolder>(holder);
                 auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
                 if (inflatable)
                 {
                     auto size = inflatable->inflate(innerSize);
                     sf::Vector2f position(0, 0);
-                    switch (holder->hAnchor)
+                    switch (_holder->hAnchor)
                     {
                     case Start:
                         break;
@@ -92,7 +92,7 @@ namespace co
                         position.x = (innerSize.x - size.x) / 2;
                         break;
                     }
-                    switch (holder->vAnchor)
+                    switch (_holder->vAnchor)
                     {
                     case Start:
                         break;

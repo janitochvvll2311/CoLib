@@ -2,7 +2,6 @@
 #define COLIB_INFLATABLE_HPP
 
 #include <SFML/System/Vector2.hpp>
-#include <SFML/System/Vector2.hpp>
 
 namespace co
 {
