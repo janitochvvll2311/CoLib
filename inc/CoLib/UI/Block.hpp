@@ -64,7 +64,9 @@ namespace co
     private:
         void update() const;
 
-        SharedDrawable m_background;
+        mutable bool m_needUpdate;
+        mutable SharedDrawable m_background;
+        
         Thickness m_margin;
         Thickness m_padding;
         f32t m_minWidth;

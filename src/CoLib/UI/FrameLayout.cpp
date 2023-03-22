@@ -136,16 +136,16 @@ namespace co
                 auto &padding = getPadding();
                 sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
                 auto size = inflatable->inflate(innerSize);
-                sf::Vector2f position(0, 0);
+                sf::Vector2f position(getLeft() + padding.left, getTop() + padding.top);
                 switch (m_holder->hAnchor)
                 {
                 case Start:
                     break;
                 case End:
-                    position.x = innerSize.x - size.x;
+                    position.x += innerSize.x - size.x;
                     break;
                 case Center:
-                    position.x = (innerSize.x - size.x) / 2;
+                    position.x += (innerSize.x - size.x) / 2;
                     break;
                 }
                 switch (m_holder->vAnchor)
@@ -153,10 +153,10 @@ namespace co
                 case Start:
                     break;
                 case End:
-                    position.y = innerSize.y - size.y;
+                    position.y += innerSize.y - size.y;
                     break;
                 case Center:
-                    position.y = (innerSize.y - size.y) / 2;
+                    position.y += (innerSize.y - size.y) / 2;
                     break;
                 }
                 inflatable->place(position);

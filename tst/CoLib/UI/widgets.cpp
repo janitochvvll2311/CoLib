@@ -66,7 +66,7 @@ int main()
     _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
-    co::FrameLayout layout;
+        /*co::FrameLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
     layout.setMargin(10);
     layout.setPadding(10);
@@ -75,10 +75,15 @@ int main()
     layout.append(content);
     layout.setHorizontalAnchor(content, co::FrameLayout::Center);
     layout.setVerticalAnchor(content, co::FrameLayout::Center);
+    */
+    co::Block node;
+    node.setBackground(makeBackground(sf::Color::White));
+    node.setMargin(10);
+    node.setPadding(10);
 
-    layout.compact();
-    layout.inflate(wsize);
-    layout.place({0, 0});
+    node.compact();
+    node.inflate(wsize);
+    node.place({0, 0});
 
     while (window.isOpen())
     {
@@ -94,19 +99,19 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact();
-                layout.inflate(wsize);
-                layout.place({0, 0});
+                node.compact();
+                node.inflate(wsize);
+                node.place({0, 0});
                 break;
             case sf::Event::MouseButtonPressed:
-                layout.compact();
-                layout.inflate(cursor);
-                layout.place({0, 0});
+                node.compact();
+                node.inflate(cursor);
+                node.place({0, 0});
                 break;
             }
         }
         window.clear();
-        window.draw(layout);
+        window.draw(node);
         window.display();
     }
 

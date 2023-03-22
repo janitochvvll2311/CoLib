@@ -27,6 +27,7 @@ namespace co
     {
         setWidth(0);
         setHeight(0);
+        m_needUpdate = true;
         return {0, 0};
     }
 
@@ -34,7 +35,7 @@ namespace co
     {
         setWidth(size.x);
         setHeight(size.y);
-        update();
+        m_needUpdate = true;
         return size;
     }
 
@@ -42,10 +43,11 @@ namespace co
     {
         setLeft(position.x);
         setTop(position.y);
+        m_needUpdate = true;
     }
 
     Surface::Surface()
-        : m_array(sf::PrimitiveType::TriangleFan), m_color(sf::Color::White), m_parent(nullptr)
+        : m_needUpdate(true), m_array(sf::PrimitiveType::TriangleFan), m_color(sf::Color::White), m_parent(nullptr)
     {
         Rectangle rectangle(1, 1);
         setPoints(m_array, rectangle);
@@ -58,11 +60,14 @@ namespace co
 
     void Surface::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
+        if (m_needUpdate)
+        {
+            update();
+            m_needUpdate = false;
+        }
         if (getWidth() > 0 && getHeight() > 0)
         {
-            auto _states = states;
-            _states.transform.translate({getLeft(), getTop()});
-            target.draw(m_array, _states);
+            target.draw(m_array, states);
         }
     }
 
@@ -84,7 +89,7 @@ namespace co
         auto height = getHeight();
         if (width > 0 && height > 0)
         {
-            fitPoints(m_array, sf::FloatRect({0, 0}, {width, height}));
+            fitPoints(m_array, sf::FloatRect({getLeft(), getTop()}, {width, height}));
             setColors(m_array, m_color);
         }
     }

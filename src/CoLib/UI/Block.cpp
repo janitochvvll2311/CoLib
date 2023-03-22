@@ -88,6 +88,7 @@ namespace co
         auto cSize = compactContent();
         setWidth(std::max(m_minWidth, cSize.x) + m_margin.getHorizontal() + m_padding.getHorizontal());
         setHeight(std::max(m_minHeight, cSize.y) + m_margin.getVertical() + m_padding.getVertical());
+        m_needUpdate = true;
         return {getWidth(), getHeight()};
     }
 
@@ -98,7 +99,7 @@ namespace co
         setWidth(outerSize.x - m_margin.getHorizontal());
         setHeight(outerSize.y - m_margin.getVertical());
         inflateContent();
-        update();
+        m_needUpdate = true;
         return outerSize;
     }
 
@@ -106,10 +107,11 @@ namespace co
     {
         setLeft(position.x + m_margin.left);
         setTop(position.y + m_margin.top);
+        m_needUpdate = true;
     }
 
     Block::Block()
-        : m_background(nullptr),
+        : m_needUpdate(true), m_background(nullptr),
           m_margin(0), m_padding(0),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
@@ -121,11 +123,14 @@ namespace co
 
     void Block::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
+        if (m_needUpdate)
+        {
+            update();
+            m_needUpdate = false;
+        }
         if (m_background)
         {
-            auto _states = states;
-            _states.transform.translate({getLeft(), getTop()});
-            target.draw(*m_background, _states);
+            target.draw(*m_background, states);
         }
         onDraw(target, states);
     }
@@ -160,6 +165,7 @@ namespace co
             {
                 inflatable->compact();
                 inflatable->inflate({getWidth(), getHeight()});
+                inflatable->place({getLeft(), getTop()});
             }
         }
     }
