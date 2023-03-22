@@ -38,7 +38,6 @@ namespace co
     private:
         void update() const;
 
-        mutable bool m_needUpdate;
         mutable sf::VertexArray m_array;
 
         sf::Color m_color;
