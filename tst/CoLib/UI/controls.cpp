@@ -84,6 +84,8 @@ int main()
 
     co::FrameLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
+    layout.setMargin(10);
+    layout.setPadding(10);
     layout.append(makeFrame(sf::Color::Red, makeFrame(sf::Color::Green, makeFrame(sf::Color::Blue, makeInput()))));
 
     layout.compact();
@@ -96,7 +98,12 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            layout.dispatchEvent(nullptr, event);
+            if (layout.dispatchEvent(nullptr, event))
+            {
+                layout.compact();
+                layout.inflate(wsize);
+                layout.place({0, 0});
+            }
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -107,11 +114,6 @@ int main()
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
                 layout.compact();
                 layout.inflate(wsize);
-                layout.place({0, 0});
-                break;
-            case sf::Event::MouseButtonPressed:
-                layout.compact();
-                layout.inflate(cursor);
                 layout.place({0, 0});
                 break;
             }
