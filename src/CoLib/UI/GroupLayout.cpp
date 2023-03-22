@@ -21,6 +21,22 @@ namespace co
         return nullptr;
     }
 
+    sf::Vector2f GroupLayout::getAbsolutePlace() const
+    {
+        auto parent = getParent();
+        while (parent)
+        {
+            auto layout = dynamic_cast<Layout *>(parent);
+            if (layout)
+            {
+                auto place = layout->getAbsolutePlace();
+                return {place.x + getLeft(), place.y + getTop()};
+            }
+            parent = parent->getParent();
+        }
+        return {getLeft(), getTop()};
+    }
+
     GroupLayout::GroupLayout()
         : m_holders() {}
 

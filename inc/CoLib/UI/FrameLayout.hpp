@@ -2,18 +2,21 @@
 #define COLIB_FRAME_LAYOUT_HPP
 
 #include <CoLib/UI/Block.hpp>
+#include <CoLib/UI/Layout.hpp>
 
 namespace co
 {
 
     class COLIB_UI_API FrameLayout
-        : public Block
+        : public Block,
+          public virtual Layout
 
     {
 
     public:
         szt getChildCount() const override final;
         SharedNode getChild(szt index) const override final;
+        sf::Vector2f getAbsolutePlace() const override final;
 
         Anchor getHorizontalAnchor(const SharedNode &child) const;
         void setHorizontalAnchor(const SharedNode &child, Anchor value);

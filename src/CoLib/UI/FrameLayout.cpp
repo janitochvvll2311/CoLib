@@ -29,6 +29,22 @@ namespace co
         return nullptr;
     }
 
+    sf::Vector2f FrameLayout::getAbsolutePlace() const
+    {
+        auto parent = getParent();
+        while (parent)
+        {
+            auto layout = dynamic_cast<Layout *>(parent);
+            if (layout)
+            {
+                auto place = layout->getAbsolutePlace();
+                return {place.x + getLeft(), place.y + getTop()};
+            }
+            parent = parent->getParent();
+        }
+        return {getLeft(), getTop()};
+    }
+
     FrameLayout::Anchor FrameLayout::getHorizontalAnchor(const SharedNode &child) const
     {
         if (!m_holder || m_holder->child != child)
