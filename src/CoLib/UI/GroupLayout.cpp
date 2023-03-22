@@ -103,6 +103,11 @@ namespace co
         return std::make_shared<Holder>();
     }
 
+    const std::list<GroupLayout::SharedHolder> &GroupLayout::getHolders() const
+    {
+        return m_holders;
+    }
+
     GroupLayout::SharedHolder GroupLayout::getHolder(szt index) const
     {
         if (index >= 0 && index < m_holders.size())
