@@ -7,6 +7,7 @@
 #include <CoLib/UI/Block.hpp>
 #include <CoLib/UI/Label.hpp>
 #include <CoLib/UI/Button.hpp>
+#include <CoLib/UI/Input.hpp>
 
 sf::Image image;
 sf::Texture texture;
@@ -57,20 +58,18 @@ auto makeFrame(const sf::Color &color, const co::SharedNode &child = nullptr)
     return frame;
 }
 
-auto makeButton()
+auto makeInput()
 {
-    auto button = std::make_shared<co::Button>();
-    button->setHorizontalContentAnchor(co::Label::Anchor::Center);
-    button->setVerticalContentAnchor(co::Label::Anchor::Center);
-    button->getBlock().setBackground(makeBackground(sf::Color::White));
-    button->getBlock().setMargin(10);
-    button->getBlock().setPadding(10);
-    button->getSpan().setFont(font);
-    button->getSpan().setString("It Works");
-    button->getSpan().setFillColor(sf::Color::Red);
-    button->setOnClickListener([](auto &node, auto &event)
-                               { std::cout << "Clicked\n"; });
-    return button;
+    auto input = std::make_shared<co::Input>();
+    input->setHorizontalContentAnchor(co::Label::Anchor::Center);
+    input->setVerticalContentAnchor(co::Label::Anchor::Center);
+    input->getBlock().setBackground(makeBackground(sf::Color::White));
+    input->getBlock().setMargin(10);
+    input->getBlock().setPadding(10);
+    input->getSpan().setFont(font);
+    input->getSpan().setString("It Works");
+    input->getSpan().setFillColor(sf::Color::Red);
+    return input;
 }
 
 int main()
@@ -85,7 +84,7 @@ int main()
 
     co::FrameLayout layout;
     layout.setBackground(makeBackground(sf::Color::White));
-    layout.append(makeFrame(sf::Color::Red, makeFrame(sf::Color::Green, makeFrame(sf::Color::Blue, makeButton()))));
+    layout.append(makeFrame(sf::Color::Red, makeFrame(sf::Color::Green, makeFrame(sf::Color::Blue, makeInput()))));
 
     layout.compact();
     layout.inflate(wsize);
