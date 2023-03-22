@@ -151,8 +151,7 @@ namespace co
             auto inflatable = std::dynamic_pointer_cast<Inflatable>(m_holder->child);
             if (inflatable)
             {
-                auto &padding = getPadding();
-                sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
+                sf::Vector2f innerSize = getInnerSize();
                 auto size = inflatable->inflate(innerSize);
                 sf::Vector2f position(0, 0);
                 switch (m_holder->hAnchor)
@@ -180,6 +179,11 @@ namespace co
                 inflatable->place(position);
             }
         }
+    }
+
+    FrameLayout::SharedHolder FrameLayout::getHolder() const
+    {
+        return m_holder;
     }
 
 }

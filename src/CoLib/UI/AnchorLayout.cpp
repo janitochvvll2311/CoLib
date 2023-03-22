@@ -72,8 +72,7 @@ namespace co
     {
         if (getChildCount() > 0)
         {
-            auto &padding = getPadding();
-            sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
+            sf::Vector2f innerSize = getInnerSize();
             for (auto &holder : getHolders())
             {
                 auto _holder = std::dynamic_pointer_cast<AnchorHolder>(holder);
