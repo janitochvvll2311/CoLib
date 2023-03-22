@@ -66,6 +66,11 @@ public:
         if (!target && event.type == sf::Event::MouseButtonReleased)
         {
             sf::Vector2f origin(0, 0);
+            auto layout = closestInstance<co::Layout>();
+            if (layout)
+            {
+                origin = layout->getAbsoluteInnerOrigin();
+            }
             if (getBlock().contains({event.mouseButton.x - origin.x, event.mouseButton.y - origin.y}))
             {
                 std::cout << "Clicked\n";

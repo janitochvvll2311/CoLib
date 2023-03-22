@@ -29,6 +29,18 @@ namespace co
         return nullptr;
     }
 
+    sf::Vector2f FrameLayout::getAbsoluteInnerOrigin() const
+    {
+        auto layout = closestInstance<Layout>();
+        if (layout)
+        {
+            auto &padding = getPadding();
+            auto origin = layout->getAbsoluteInnerOrigin();
+            return {origin.x + getLeft() + padding.left, origin.y + getTop() + padding.top};
+        }
+        return {getLeft(), getTop()};
+    }
+
     FrameLayout::Anchor FrameLayout::getHorizontalAnchor(const SharedNode &child) const
     {
         if (!m_holder || m_holder->child != child)

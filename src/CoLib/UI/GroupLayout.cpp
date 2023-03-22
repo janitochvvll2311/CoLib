@@ -21,6 +21,18 @@ namespace co
         return nullptr;
     }
 
+    sf::Vector2f GroupLayout::getAbsoluteInnerOrigin() const
+    {
+        auto layout = closestInstance<Layout>();
+        if (layout)
+        {
+            auto &padding = getPadding();
+            auto origin = layout->getAbsoluteInnerOrigin();
+            return {origin.x + getLeft() + padding.left, origin.y + getTop() + padding.top};
+        }
+        return {getLeft(), getTop()};
+    }
+
     GroupLayout::GroupLayout()
         : m_holders() {}
 

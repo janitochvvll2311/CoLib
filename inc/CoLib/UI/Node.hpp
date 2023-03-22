@@ -22,7 +22,6 @@ namespace co
 
     public:
         using EventHandler = std::function<void(Node &, const sf::Event &)>;
-        using Query = std::function<bool(const Node &)>;
 
         virtual Node *getParent() const = 0;
         virtual szt getChildCount() const = 0;
@@ -37,6 +36,9 @@ namespace co
         virtual bool bubbleEvent(Node *target, const sf::Event &event);
         virtual bool handleEvent(Node *target, const sf::Event &event);
         virtual void spreadEvent(Node *target, const sf::Event &event);
+
+        template <typename T>
+        T *closestInstance() const;
 
         Node();
         virtual ~Node();
@@ -86,5 +88,7 @@ namespace co
     };
 
 }
+
+#include <CoLib/UI/Node.inl>
 
 #endif // COLIB_NODE_HPP
