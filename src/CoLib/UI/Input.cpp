@@ -35,6 +35,7 @@ namespace co
                     span.setString(string + event.text.unicode);
                     break;
                 }
+                getBlock().invalidate();
                 return true;
             }
             break;

@@ -67,6 +67,16 @@ namespace co
         m_root.place(position);
     }
 
+    bool Label::isValid() const
+    {
+        return m_root.isValid();
+    }
+
+    void Label::invalidate()
+    {
+        m_root.invalidate();
+    }
+
     Label::Label()
         : m_root()
     {
@@ -90,6 +100,11 @@ namespace co
     void Label::onDetach()
     {
         m_root.detach();
+    }
+
+    void Label::onUpdate() const
+    {
+        m_root.update(true);
     }
 
 }
