@@ -6,6 +6,16 @@
 namespace co
 {
 
+    const Input::EventListener &Input::getOnTextEnteredListener() const
+    {
+        return m_onTextEntered;
+    }
+
+    void Input::setOnTextEnteredListener(const EventListener &value)
+    {
+        m_onTextEntered = value;
+    }
+
     bool Input::handleEvent(Node *target, const sf::Event &event)
     {
 
@@ -36,11 +46,20 @@ namespace co
                     break;
                 }
                 getBlock().invalidate();
+                onTextEntered(event);
                 return true;
             }
             break;
         }
         return false;
+    }
+
+    void Input::enterText(sf::Uint32 unicode)
+    {
+        sf::Event event;
+        event.type = sf::Event::TextEntered;
+        event.text.unicode = unicode;
+        onTextEntered(event);
     }
 
     Input::Input()
@@ -53,6 +72,18 @@ namespace co
     void Input::onFocus(const sf::Event &event)
     {
         spreadEvent(this, event);
+    }
+
+    void Input::onTextEntered(const sf::Event &event)
+    {
+        if (m_onTextEntered)
+        {
+            m_onTextEntered(*this, event);
+        }
+        else
+        {
+            bubbleEvent(this, event);
+        }
     }
 
 }

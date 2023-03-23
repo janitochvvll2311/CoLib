@@ -70,8 +70,11 @@ auto makeButton()
     button->getSpan().setFont(font);
     button->getSpan().setString("It Works");
     button->getSpan().setFillColor(sf::Color::Black);
-    button->setOnClickListener([](auto &node, auto &event)
-                               { std::cout << "Clicked\n"; });
+    button->setOnClickListener(
+        [](auto &node, auto &event)
+        {
+            std::cout << "Clicked\n";
+        });
     return button;
 }
 
@@ -86,6 +89,13 @@ auto makeInput()
     input->getSpan().setFont(font);
     input->getSpan().setString("It Works");
     input->getSpan().setFillColor(sf::Color::Red);
+    input->setOnTextEnteredListener(
+        [](auto &node, auto &event)
+        {
+            co::Input &input = dynamic_cast<co::Input &>(node);
+            auto text = input.getSpan().getString().toAnsiString();
+            std::cout << "Text entered: " << text << "\n";
+        });
     return input;
 }
 
