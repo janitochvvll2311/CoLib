@@ -165,7 +165,7 @@ namespace co
                 {
                     auto _states = states;
                     _states.transform = m_transform;
-                    m_texture.clear(sf::Color::Magenta);
+                    m_texture.clear(sf::Color::Transparent);
                     m_texture.draw(*drawable, _states);
                     m_texture.display();
                     //
