@@ -71,18 +71,22 @@ int main()
     auto b1 = makeBlock(sf::Color::Red);
     layout.append(b1);
     layout.setHorizontalAnchor(b1, co::AnchorLayout::Start);
+    layout.setVerticalAnchor(b1, co::AnchorLayout::Start);
 
     auto b2 = makeBlock(sf::Color::Green);
     layout.append(b2);
     layout.setHorizontalAnchor(b2, co::AnchorLayout::End);
+    layout.setVerticalAnchor(b2, co::AnchorLayout::End);
 
     auto b3 = makeBlock(sf::Color::Blue);
     layout.append(b3);
     layout.setHorizontalAnchor(b3, co::AnchorLayout::Center);
+    layout.setVerticalAnchor(b3, co::AnchorLayout::Center);
 
     layout.compact();
     layout.inflate(wsize);
     layout.place({0, 0});
+    layout.invalidate();
 
     while (window.isOpen())
     {
@@ -101,11 +105,13 @@ int main()
                 layout.compact();
                 layout.inflate(wsize);
                 layout.place({0, 0});
+                layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 layout.compact();
                 layout.inflate(cursor);
                 layout.place({0, 0});
+                layout.invalidate();
                 break;
             }
         }

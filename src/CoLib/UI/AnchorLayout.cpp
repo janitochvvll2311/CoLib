@@ -75,21 +75,37 @@ namespace co
             sf::Vector2f innerSize = getInnerSize();
             for (auto &holder : getHolders())
             {
-                auto _holder = std::dynamic_pointer_cast<AnchorHolder>(holder);
                 auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
                 if (inflatable)
                 {
-                    auto size = inflatable->inflate(innerSize);
-                    sf::Vector2f position(0, 0);
+                    std::dynamic_pointer_cast<AnchorHolder>(holder)->size = inflatable->inflate(innerSize);
+                }
+            }
+        }
+    }
+
+    void AnchorLayout::placeContent(const sf::Vector2f &origin) const
+    {
+        if (getChildCount() > 0)
+        {
+            sf::Vector2f innerSize = getInnerSize();
+            for (auto &holder : getHolders())
+            {
+                auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                if (inflatable)
+                {
+                    auto _holder = std::dynamic_pointer_cast<AnchorHolder>(holder);
+                    auto &size = _holder->size;
+                    sf::Vector2f position(origin);
                     switch (_holder->hAnchor)
                     {
                     case Start:
                         break;
                     case End:
-                        position.x = innerSize.x - size.x;
+                        position.x += innerSize.x - size.x;
                         break;
                     case Center:
-                        position.x = (innerSize.x - size.x) / 2;
+                        position.x += (innerSize.x - size.x) / 2;
                         break;
                     }
                     switch (_holder->vAnchor)
@@ -97,10 +113,10 @@ namespace co
                     case Start:
                         break;
                     case End:
-                        position.y = innerSize.y - size.y;
+                        position.y += innerSize.y - size.y;
                         break;
                     case Center:
-                        position.y = (innerSize.y - size.y) / 2;
+                        position.y += (innerSize.y - size.y) / 2;
                         break;
                     }
                     inflatable->place(position);

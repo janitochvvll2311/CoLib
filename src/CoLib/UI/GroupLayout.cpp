@@ -29,24 +29,6 @@ namespace co
 
     //////////////////////////////////////////////////////////
 
-    void GroupLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
-    {
-        if (m_holders.size() > 0)
-        {
-            auto &padding = getPadding();
-            auto _states = states;
-            _states.transform.translate({getLeft() + padding.left, getTop() + padding.top});
-            for (auto &holder : m_holders)
-            {
-                auto drawable = std::dynamic_pointer_cast<sf::Drawable>(holder->child);
-                if (drawable)
-                {
-                    target.draw(*drawable, _states);
-                }
-            }
-        }
-    }
-
     void GroupLayout::onAppend(const SharedNode &child)
     {
         auto holder = createHolder();
@@ -62,40 +44,48 @@ namespace co
 
     bool GroupLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
     {
-
         if (m_holders.size() > 0)
         {
-            bool handled = false;
-            switch (event.type)
+            auto handled = false;
+            for (auto &holder : m_holders)
             {
-            case sf::Event::MouseButtonPressed:
-            case sf::Event::MouseButtonReleased:
-            {
-                auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
-                auto _event = event;
-                _event.mouseButton.x = innerPoint.x;
-                _event.mouseButton.y = innerPoint.y;
-                for (auto &holder : m_holders)
+                if (holder->child->dispatchEvent(target, event))
                 {
-                    if (holder->child->dispatchEvent(target, _event))
-                    {
-                        handled = true;
-                    }
+                    handled = true;
                 }
-                return handled;
             }
-            default:
-                for (auto &holder : m_holders)
-                {
-                    if (holder->child->dispatchEvent(target, event))
-                    {
-                        handled = true;
-                    }
-                }
-                return handled;
-            }
+            return handled;
         }
         return false;
+    }
+
+    void GroupLayout::updateContent() const {
+        if (m_holders.size() > 0)
+        {
+            for (auto &holder : m_holders)
+            {
+                auto updatable = std::dynamic_pointer_cast<Updatable>(holder->child);
+                if (updatable)
+                {
+                    updatable->update(true);
+                }
+            }
+        }
+    }
+
+    void GroupLayout::drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const
+    {
+        if (m_holders.size() > 0)
+        {
+            for (auto &holder : m_holders)
+            {
+                auto drawable = std::dynamic_pointer_cast<sf::Drawable>(holder->child);
+                if (drawable)
+                {
+                    target.draw(*drawable, states);
+                }
+            }
+        }
     }
 
     GroupLayout::SharedHolder GroupLayout::createHolder() const

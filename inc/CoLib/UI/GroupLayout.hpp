@@ -22,12 +22,13 @@ namespace co
         struct Holder;
         using SharedHolder = std::shared_ptr<Holder>;
 
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
-
         void onAppend(const SharedNode &child) override final;
         void onRemove(const SharedNode &child) override final;
 
         bool dispatchChildrenEvents(Node *target, const sf::Event &event) const override;
+
+        void updateContent() const override final;
+        void drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
 
         virtual SharedHolder createHolder() const;
         const std::list<SharedHolder> &getHolders() const;

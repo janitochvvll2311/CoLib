@@ -8,8 +8,8 @@
 #include <CoLib/UI/Span.hpp>
 #include <CoLib/UI/Block.hpp>
 #include <CoLib/UI/FrameLayout.hpp>
-// #include <CoLib/UI/GroupLayout.hpp>
-// #include <CoLib/UI/AnchorLayout.hpp>
+#include <CoLib/UI/GroupLayout.hpp>
+#include <CoLib/UI/AnchorLayout.hpp>
 // #include <CoLib/UI/Label.hpp>
 // #include <CoLib/UI/Image.hpp>
 // #include <CoLib/UI/Focusable.hpp>
