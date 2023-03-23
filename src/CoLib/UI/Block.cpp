@@ -105,6 +105,7 @@ namespace co
     {
         setLeft(position.x + m_margin.left);
         setTop(position.y + m_margin.top);
+        placeContent({getLeft() + m_padding.left, getTop() + m_padding.top});
     }
 
     bool Block::isValid() const
@@ -133,11 +134,6 @@ namespace co
         return {getWidth() - m_padding.getHorizontal(), getHeight() - m_padding.getVertical()};
     }
 
-    sf::Vector2f Block::getInnerPoint(const sf::Vector2f &point) const
-    {
-        return {point.x - getLeft() - m_padding.left, point.y - getTop() - m_padding.top};
-    }
-
     Block::Block()
         : m_isValid(false), m_background(nullptr),
           m_margin(0), m_padding(0),
@@ -156,10 +152,8 @@ namespace co
         {
             target.draw(*m_background, states);
         }
-        onDraw(target, states);
+        drawContent(target, states);
     }
-
-    void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const {}
 
     void Block::onAttach(Node *parent)
     {
@@ -188,8 +182,8 @@ namespace co
                 updatable->update(true);
             }
         }
-        m_isValid = true;
         updateContent();
+        m_isValid = true;
     }
 
     sf::Vector2f Block::compactContent() const
@@ -198,6 +192,8 @@ namespace co
     }
 
     void Block::inflateContent() const {}
+    void Block::placeContent(const sf::Vector2f &origin) const {}
     void Block::updateContent() const {}
+    void Block::drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const {}
 
 }

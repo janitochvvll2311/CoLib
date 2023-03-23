@@ -1,6 +1,7 @@
 #ifndef COLIB_FRAME_LAYOUT_HPP
 #define COLIB_FRAME_LAYOUT_HPP
 
+#include <SFML/System/Vector2.hpp>
 #include <CoLib/UI/Block.hpp>
 
 namespace co
@@ -27,8 +28,6 @@ namespace co
         struct Holder;
         using SharedHolder = std::shared_ptr<Holder>;
 
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
-
         void onAppend(const SharedNode &child) override final;
         void onRemove(const SharedNode &child) override final;
 
@@ -36,6 +35,9 @@ namespace co
 
         sf::Vector2f compactContent() const override;
         void inflateContent() const override;
+        void placeContent(const sf::Vector2f &origin) const override;
+        void updateContent() const override;
+        void drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const override;
 
         SharedHolder getHolder() const;
 
@@ -47,6 +49,7 @@ namespace co
             SharedNode child;
             Anchor hAnchor;
             Anchor vAnchor;
+            sf::Vector2f size;
         };
 
     private:

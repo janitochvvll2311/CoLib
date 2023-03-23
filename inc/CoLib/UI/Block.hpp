@@ -54,14 +54,12 @@ namespace co
         void invalidate() override final;
 
         sf::Vector2f getInnerSize() const;
-        virtual sf::Vector2f getInnerPoint(const sf::Vector2f &point) const;
 
         Block();
         virtual ~Block();
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
-        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
 
         void onAttach(Node *parent) override final;
         void onDetach() override final;
@@ -70,7 +68,10 @@ namespace co
 
         virtual sf::Vector2f compactContent() const;
         virtual void inflateContent() const;
+        virtual void placeContent(const sf::Vector2f& origin) const;
+
         virtual void updateContent() const;
+        virtual void drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const;
 
     private:
         mutable bool m_isValid;

@@ -14,11 +14,8 @@ bool _;
 
 auto makeBackground(const sf::Color &color)
 {
-    auto texture = std::make_shared<sf::Texture>();
-    _ = texture->loadFromFile("./res/avatar.jpg");
     auto surface = std::make_shared<co::Surface>();
     surface->setColor(color);
-    surface->setTexture(texture);
     return surface;
 }
 
@@ -74,7 +71,8 @@ int main()
     layout.setMargin(10);
     layout.setPadding(10);
 
-    auto content = makeFrame(sf::Color::Magenta, makeFrame(sf::Color::Cyan, makeSpan("It Works", sf::Color::Red)));
+    // auto content = makeFrame(sf::Color::Red, makeFrame(sf::Color::Green, makeBlock(sf::Color::Blue)));
+    auto content = makeFrame(sf::Color::Red, makeFrame(sf::Color::Green, makeSpan("It Works", sf::Color::Blue)));
     layout.append(content);
     layout.setHorizontalAnchor(content, co::FrameLayout::Center);
     layout.setVerticalAnchor(content, co::FrameLayout::Center);
@@ -82,6 +80,7 @@ int main()
     layout.compact();
     layout.inflate(wsize);
     layout.place({0, 0});
+    layout.invalidate();
 
     while (window.isOpen())
     {
@@ -100,11 +99,13 @@ int main()
                 layout.compact();
                 layout.inflate(wsize);
                 layout.place({0, 0});
+                layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 layout.compact();
                 layout.inflate(cursor);
                 layout.place({0, 0});
+                layout.invalidate();
                 break;
             }
         }
