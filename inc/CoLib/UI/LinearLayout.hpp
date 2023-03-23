@@ -41,6 +41,7 @@ namespace co
     protected:
         sf::Vector2f compactContent() const override final;
         void inflateContent() const override final;
+        void placeContent(const sf::Vector2f &origin) const override final;
 
         SharedHolder createHolder() const override;
 
@@ -54,6 +55,7 @@ namespace co
             f32t weight;
             sf::Vector2f size;
         };
+        mutable f32t m_length;
 
         Orientation m_orientation;
         bool m_isReverse;
