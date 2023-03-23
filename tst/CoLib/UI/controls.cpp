@@ -105,22 +105,13 @@ int main()
     layout.setHorizontalAnchor(input3, co::AnchorLayout::Center);
     layout.setVerticalAnchor(input3, co::AnchorLayout::Center);
 
-    layout.compact();
-    layout.inflate(wsize);
-    layout.place({0, 0});
-
     while (window.isOpen())
     {
         auto cursor = sf::Vector2f(sf::Mouse::getPosition(window));
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (layout.dispatchEvent(nullptr, event))
-            {
-                layout.compact();
-                layout.inflate(wsize);
-                layout.place({0, 0});
-            }
+            layout.dispatchEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -129,12 +120,18 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact();
-                layout.inflate(wsize);
-                layout.place({0, 0});
+                layout.invalidate();
                 break;
             }
         }
+
+        if (!layout.isValid())
+        {
+            layout.compact();
+            layout.inflate(wsize);
+            layout.place({0, 0});
+        }
+
         window.clear();
         window.draw(layout);
         window.display();

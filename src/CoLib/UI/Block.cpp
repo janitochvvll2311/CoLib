@@ -98,7 +98,6 @@ namespace co
         setWidth(outerSize.x - m_margin.getHorizontal());
         setHeight(outerSize.y - m_margin.getVertical());
         inflateContent();
-        update();
         return outerSize;
     }
 
@@ -106,6 +105,28 @@ namespace co
     {
         setLeft(position.x + m_margin.left);
         setTop(position.y + m_margin.top);
+        placeContent({getLeft() + m_padding.left, getTop() + m_padding.top});
+    }
+
+    bool Block::isValid() const
+    {
+        return m_isValid;
+    }
+
+    void Block::invalidate()
+    {
+        m_isValid = false;
+        auto parent = getParent();
+        while (parent)
+        {
+            auto updatable = dynamic_cast<Updatable *>(parent);
+            if (updatable)
+            {
+                updatable->invalidate();
+                break;
+            }
+            parent = parent->getParent();
+        }
     }
 
     sf::Vector2f Block::getInnerSize() const
@@ -113,13 +134,8 @@ namespace co
         return {getWidth() - m_padding.getHorizontal(), getHeight() - m_padding.getVertical()};
     }
 
-    sf::Vector2f Block::getInnerPoint(const sf::Vector2f &point) const
-    {
-        return {point.x - getLeft() - m_padding.left, point.y - getTop() - m_padding.top};
-    }
-
     Block::Block()
-        : m_background(nullptr),
+        : m_isValid(false), m_background(nullptr),
           m_margin(0), m_padding(0),
           m_minWidth(0), m_maxWidth(std::numeric_limits<f32t>::infinity()),
           m_minHeight(0), m_maxHeight(std::numeric_limits<f32t>::infinity()),
@@ -131,16 +147,13 @@ namespace co
 
     void Block::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
+        update(false);
         if (m_background)
         {
-            auto _states = states;
-            _states.transform.translate({getLeft(), getTop()});
-            target.draw(*m_background, _states);
+            target.draw(*m_background, states);
         }
-        onDraw(target, states);
+        drawContent(target, states);
     }
-
-    void Block::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const {}
 
     void Block::onAttach(Node *parent)
     {
@@ -152,17 +165,7 @@ namespace co
         m_parent = nullptr;
     }
 
-    sf::Vector2f Block::compactContent() const
-    {
-        return {0, 0};
-    }
-
-    void Block::inflateContent() const {}
-    void Block::updateContent() const {}
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-    void Block::update() const
+    void Block::onUpdate() const
     {
         if (m_background)
         {
@@ -171,9 +174,26 @@ namespace co
             {
                 inflatable->compact();
                 inflatable->inflate({getWidth(), getHeight()});
+                inflatable->place({getLeft(), getTop()});
+            }
+            auto updatable = std::dynamic_pointer_cast<Updatable>(m_background);
+            if (updatable)
+            {
+                updatable->update(true);
             }
         }
         updateContent();
+        m_isValid = true;
     }
+
+    sf::Vector2f Block::compactContent() const
+    {
+        return {0, 0};
+    }
+
+    void Block::inflateContent() const {}
+    void Block::placeContent(const sf::Vector2f &origin) const {}
+    void Block::updateContent() const {}
+    void Block::drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const {}
 
 }

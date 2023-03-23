@@ -14,7 +14,8 @@ namespace co
     class COLIB_UI_API Label
         : public virtual sf::Drawable,
           public virtual LeafNode,
-          public virtual Inflatable
+          public virtual Inflatable,
+          public virtual Updatable
     {
 
     public:
@@ -38,6 +39,9 @@ namespace co
         sf::Vector2f inflate(const sf::Vector2f &size) override final;
         void place(const sf::Vector2f &position) override final;
 
+        bool isValid() const override final;
+        void invalidate() override final;
+
         Label();
         virtual ~Label();
 
@@ -46,6 +50,8 @@ namespace co
 
         void onAttach(Node *parent) override final;
         void onDetach() override final;
+
+        void onUpdate() const override final;
 
     private:
         FrameLayout m_root;

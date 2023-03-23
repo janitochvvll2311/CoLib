@@ -128,9 +128,50 @@ namespace co
     {
         if (getChildCount() > 0)
         {
-            auto &padding = getPadding();
-            sf::Vector2f innerSize(getWidth() - padding.getHorizontal(), getHeight() - padding.getVertical());
-            f32t length = 0;
+            auto innerSize = getInnerSize();
+            auto &holders = getHolders();
+            m_length = 0;
+            switch (m_orientation)
+            {
+            case Horizontal:
+            {
+                for (auto &holder : holders)
+                {
+                    auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                    if (inflatable)
+                    {
+                        auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
+                        auto size = inflatable->inflate({innerSize.x * _holder->weight, innerSize.y});
+                        m_length += size.x;
+                        _holder->size = size;
+                    }
+                }
+            }
+            break;
+            case Vertical:
+            {
+                for (auto &holder : holders)
+                {
+                    auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
+                    if (inflatable)
+                    {
+                        auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
+                        auto size = inflatable->inflate({innerSize.x, innerSize.y * _holder->weight});
+                        m_length += size.y;
+                        _holder->size = size;
+                    }
+                }
+            }
+            break;
+            }
+        }
+    }
+
+    void LinearLayout::placeContent(const sf::Vector2f &origin) const
+    {
+        if (getChildCount() > 0)
+        {
+            auto innerSize = getInnerSize();
             f32t offset = 0;
             auto fixOffset = [&]()
             {
@@ -158,20 +199,22 @@ namespace co
                 if (inflatable)
                 {
                     auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
-                    sf::Vector2f position(offset, 0);
+                    auto &size = _holder->size;
+                    sf::Vector2f position(origin);
+                    position.x += offset;
                     switch (_holder->anchor)
                     {
                     case Start:
                         break;
                     case End:
-                        position.y = innerSize.y - _holder->size.y;
+                        position.y += innerSize.y - size.y;
                         break;
                     case Center:
-                        position.y = (innerSize.y - _holder->size.y) / 2;
+                        position.y += (innerSize.y - size.y) / 2;
                         break;
                     }
                     inflatable->place(position);
-                    offset += _holder->size.x;
+                    offset += size.x;
                 }
             };
             auto alignVertical = [&](SharedHolder holder)
@@ -180,20 +223,22 @@ namespace co
                 if (inflatable)
                 {
                     auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
-                    sf::Vector2f position(0, offset);
+                    auto &size = _holder->size;
+                    sf::Vector2f position(origin);
+                    position.y += offset;
                     switch (_holder->anchor)
                     {
                     case Start:
                         break;
                     case End:
-                        position.x = innerSize.x - _holder->size.x;
+                        position.x += innerSize.x - size.x;
                         break;
                     case Center:
-                        position.x = (innerSize.x - _holder->size.x) / 2;
+                        position.x += (innerSize.x - size.x) / 2;
                         break;
                     }
                     inflatable->place(position);
-                    offset += _holder->size.y;
+                    offset += size.y;
                 }
             };
             auto &holders = getHolders();
@@ -201,18 +246,7 @@ namespace co
             {
             case Horizontal:
             {
-                for (auto &holder : holders)
-                {
-                    auto inflatable = std::dynamic_pointer_cast<Inflatable>(holder->child);
-                    if (inflatable)
-                    {
-                        auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
-                        auto size = inflatable->inflate({innerSize.x * _holder->weight, innerSize.y});
-                        length += size.x;
-                        _holder->size = size;
-                    }
-                }
-                offset = innerSize.x - length;
+                offset = innerSize.x - m_length;
                 fixOffset();
                 if (m_isReverse)
                 {
@@ -239,11 +273,11 @@ namespace co
                     {
                         auto _holder = std::dynamic_pointer_cast<LinearHolder>(holder);
                         auto size = inflatable->inflate({innerSize.x, innerSize.y * _holder->weight});
-                        length += size.y;
+                        m_length += size.y;
                         _holder->size = size;
                     }
                 }
-                offset = innerSize.y - length;
+                offset = innerSize.y - m_length;
                 fixOffset();
                 if (m_isReverse)
                 {

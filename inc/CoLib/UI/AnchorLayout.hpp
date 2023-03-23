@@ -23,6 +23,7 @@ namespace co
     protected:
         virtual sf::Vector2f compactContent() const override final;
         virtual void inflateContent() const override final;
+        virtual void placeContent(const sf::Vector2f &origin) const override final;
 
         SharedHolder createHolder() const override final;
 
@@ -32,6 +33,7 @@ namespace co
         {
             Anchor hAnchor;
             Anchor vAnchor;
+            sf::Vector2f size;
         };
     };
 

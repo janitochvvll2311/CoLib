@@ -6,6 +6,7 @@
 #include <CoLib/UI/Thickness.hpp>
 #include <CoLib/UI/Node.hpp>
 #include <CoLib/UI/Inflatable.hpp>
+#include <CoLib/UI/Updatable.hpp>
 
 namespace co
 {
@@ -18,7 +19,8 @@ namespace co
         : public Box,
           public virtual sf::Drawable,
           public virtual LeafNode,
-          public virtual Inflatable
+          public virtual Inflatable,
+          public virtual Updatable
     {
     public:
         Node *getParent() const override final;
@@ -48,27 +50,33 @@ namespace co
         sf::Vector2f inflate(const sf::Vector2f &size) override final;
         void place(const sf::Vector2f &position) override final;
 
+        bool isValid() const override final;
+        void invalidate() override final;
+
         sf::Vector2f getInnerSize() const;
-        virtual sf::Vector2f getInnerPoint(const sf::Vector2f &point) const;
 
         Block();
         virtual ~Block();
 
     protected:
         void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
-        virtual void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const;
 
         void onAttach(Node *parent) override final;
         void onDetach() override final;
 
+        void onUpdate() const override final;
+
         virtual sf::Vector2f compactContent() const;
         virtual void inflateContent() const;
+        virtual void placeContent(const sf::Vector2f& origin) const;
+
         virtual void updateContent() const;
+        virtual void drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const;
 
     private:
-        void update() const;
+        mutable bool m_isValid;
+        mutable SharedDrawable m_background;
 
-        SharedDrawable m_background;
         Thickness m_margin;
         Thickness m_padding;
         f32t m_minWidth;

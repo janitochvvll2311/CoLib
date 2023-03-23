@@ -45,7 +45,6 @@ namespace co
     {
         setWidth(size.x);
         setHeight(size.y);
-        update();
         return size;
     }
 
@@ -55,8 +54,31 @@ namespace co
         setTop(position.y);
     }
 
+    bool Surface::isValid() const
+    {
+        return m_isValid;
+    }
+
+    void Surface::invalidate()
+    {
+        m_isValid = false;
+        auto parent = getParent();
+        while (parent)
+        {
+            auto updatable = dynamic_cast<Updatable *>(parent);
+            if (updatable)
+            {
+                updatable->invalidate();
+                break;
+            }
+            parent = parent->getParent();
+        }
+    }
+
     Surface::Surface()
-        : m_array(sf::PrimitiveType::TriangleFan), m_color(sf::Color::White), m_texture(nullptr), m_parent(nullptr)
+        : m_isValid(false), m_array(sf::PrimitiveType::TriangleFan),
+          m_color(sf::Color::White), m_texture(nullptr),
+          m_parent(nullptr)
     {
         Rectangle rectangle(1, 1);
         setPoints(m_array, rectangle);
@@ -69,12 +91,19 @@ namespace co
 
     void Surface::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
     {
+        update(false);
         if (getWidth() > 0 && getHeight() > 0)
         {
-            auto _states = states;
-            _states.transform.translate({getLeft(), getTop()});
-            _states.texture = m_texture.get();
-            target.draw(m_array, _states);
+            if (m_texture != nullptr)
+            {
+                auto _states = states;
+                _states.texture = m_texture.get();
+                target.draw(m_array, _states);
+            }
+            else
+            {
+                target.draw(m_array, states);
+            }
         }
     }
 
@@ -88,22 +117,21 @@ namespace co
         m_parent = nullptr;
     }
 
-    //////////////////////////////////////////////////////////////////////////////
-
-    void Surface::update() const
+    void Surface::onUpdate() const
     {
         auto width = getWidth();
         auto height = getHeight();
         if (width > 0 && height > 0)
         {
-            fitPoints(m_array, sf::FloatRect({0, 0}, {width, height}));
+            fitPoints(m_array, sf::FloatRect({getLeft(), getTop()}, {width, height}));
             setColors(m_array, m_color);
-            if (m_texture)
+            if (m_texture != nullptr)
             {
                 sf::Vector2f tSize(m_texture->getSize());
                 setTexCoords(m_array, {{0, 0}, tSize});
             }
         }
+        m_isValid = true;
     }
 
 }

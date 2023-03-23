@@ -67,6 +67,16 @@ namespace co
         m_root.place(position);
     }
 
+    bool Image::isValid() const
+    {
+        return m_root.isValid();
+    }
+
+    void Image::invalidate()
+    {
+        m_root.invalidate();
+    }
+
     Image::Image()
         : m_root()
     {
@@ -90,6 +100,11 @@ namespace co
     void Image::onDetach()
     {
         m_root.detach();
+    }
+
+    void Image::onUpdate() const
+    {
+        m_root.update(true);
     }
 
 }

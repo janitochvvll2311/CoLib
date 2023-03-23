@@ -73,21 +73,6 @@ namespace co
 
     //////////////////////////////////////////////////////////////////
 
-    void FrameLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
-    {
-        if (m_holder)
-        {
-            auto drawable = std::dynamic_pointer_cast<sf::Drawable>(m_holder->child);
-            if (drawable)
-            {
-                auto &padding = getPadding();
-                auto _states = states;
-                _states.transform.translate({getLeft() + padding.left, getTop() + padding.top});
-                target.draw(*drawable, _states);
-            }
-        }
-    }
-
     void FrameLayout::onAppend(const SharedNode &child)
     {
         if (m_holder != nullptr)
@@ -111,24 +96,7 @@ namespace co
 
     bool FrameLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
     {
-        if (m_holder)
-        {
-            switch (event.type)
-            {
-            case sf::Event::MouseButtonPressed:
-            case sf::Event::MouseButtonReleased:
-            {
-                auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
-                auto _event = event;
-                _event.mouseButton.x = innerPoint.x;
-                _event.mouseButton.y = innerPoint.y;
-                return m_holder->child->dispatchEvent(target, _event);
-            }
-            default:
-                return m_holder->child->dispatchEvent(target, event);
-            }
-        }
-        return false;
+        return (m_holder && m_holder->child->dispatchEvent(target, event));
     }
 
     sf::Vector2f FrameLayout::compactContent() const
@@ -152,17 +120,30 @@ namespace co
             if (inflatable)
             {
                 sf::Vector2f innerSize = getInnerSize();
-                auto size = inflatable->inflate(innerSize);
-                sf::Vector2f position(0, 0);
+                m_holder->size = inflatable->inflate(innerSize);
+            }
+        }
+    }
+
+    void FrameLayout::placeContent(const sf::Vector2f &origin) const
+    {
+        if (m_holder)
+        {
+            auto inflatable = std::dynamic_pointer_cast<Inflatable>(m_holder->child);
+            if (inflatable)
+            {
+                auto innerSize = getInnerSize();
+                auto &size = m_holder->size;
+                sf::Vector2f position(origin);
                 switch (m_holder->hAnchor)
                 {
                 case Start:
                     break;
                 case End:
-                    position.x = innerSize.x - size.x;
+                    position.x += innerSize.x - size.x;
                     break;
                 case Center:
-                    position.x = (innerSize.x - size.x) / 2;
+                    position.x += (innerSize.x - size.x) / 2;
                     break;
                 }
                 switch (m_holder->vAnchor)
@@ -170,13 +151,37 @@ namespace co
                 case Start:
                     break;
                 case End:
-                    position.y = innerSize.y - size.y;
+                    position.y += innerSize.y - size.y;
                     break;
                 case Center:
-                    position.y = (innerSize.y - size.y) / 2;
+                    position.y += (innerSize.y - size.y) / 2;
                     break;
                 }
                 inflatable->place(position);
+            }
+        }
+    }
+
+    void FrameLayout::updateContent() const
+    {
+        if (m_holder)
+        {
+            auto updatable = std::dynamic_pointer_cast<Updatable>(m_holder->child);
+            if (updatable)
+            {
+                updatable->update(true);
+            }
+        }
+    }
+
+    void FrameLayout::drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const
+    {
+        if (m_holder)
+        {
+            auto drawable = std::dynamic_pointer_cast<sf::Drawable>(m_holder->child);
+            if (drawable)
+            {
+                target.draw(*drawable, states);
             }
         }
     }
