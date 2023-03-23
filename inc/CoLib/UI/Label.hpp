@@ -39,6 +39,8 @@ namespace co
         sf::Vector2f inflate(const sf::Vector2f &size) override final;
         void place(const sf::Vector2f &position) override final;
 
+        bool handleEvent(Node* target, const sf::Event& event) override;
+
         bool isValid() const override final;
         void invalidate() override final;
 

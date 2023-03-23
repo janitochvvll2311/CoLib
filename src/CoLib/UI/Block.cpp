@@ -108,6 +108,19 @@ namespace co
         placeContent({getLeft() + m_padding.left, getTop() + m_padding.top});
     }
 
+    bool Block::handleEvent(Node *target, const sf::Event &event)
+    {
+        if (!target && m_background)
+        {
+            auto node = std::dynamic_pointer_cast<Node>(m_background);
+            if (node)
+            {
+                node->dispatchEvent(nullptr, event);
+            }
+        }
+        return false;
+    }
+
     bool Block::isValid() const
     {
         return m_isValid;

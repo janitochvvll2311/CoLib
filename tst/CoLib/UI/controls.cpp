@@ -15,6 +15,26 @@ sf::Texture texture;
 sf::Font font;
 bool _;
 
+class ReactiveSurface : public co::Surface
+{
+
+protected:
+    bool handleEvent(Node *target, const sf::Event &event) override
+    {
+        if (contains({float(event.mouseMove.x), float(event.mouseMove.y)}))
+        {
+            setColor(sf::Color::Green);
+            invalidate();
+        }
+        else
+        {
+            setColor(sf::Color::Red);
+            invalidate();
+        }
+        return false;
+    }
+};
+
 auto makeBackground(const sf::Color &color)
 {
     auto surface = std::make_shared<co::Surface>();
@@ -64,7 +84,7 @@ auto makeInput()
     auto input = std::make_shared<co::Input>();
     input->setHorizontalContentAnchor(co::Label::Anchor::Center);
     input->setVerticalContentAnchor(co::Label::Anchor::Center);
-    input->getBlock().setBackground(makeBackground(sf::Color::Yellow));
+    input->getBlock().setBackground(std::make_shared<ReactiveSurface>());
     input->getBlock().setMargin(10);
     input->getBlock().setPadding(10);
     input->getBlock().setMaxWidth(0);

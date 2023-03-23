@@ -17,6 +17,7 @@ namespace co
 
     bool Button::handleEvent(Node *target, const sf::Event &event)
     {
+        Label::handleEvent(target, event);
         switch (event.type)
         {
         case sf::Event::MouseButtonReleased:

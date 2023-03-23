@@ -67,6 +67,11 @@ namespace co
         m_root.place(position);
     }
 
+    bool Label::handleEvent(Node *target, const sf::Event &event)
+    {
+        return m_root.handleEvent(target, event);
+    }
+
     bool Label::isValid() const
     {
         return m_root.isValid();

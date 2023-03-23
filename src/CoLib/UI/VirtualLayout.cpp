@@ -44,14 +44,31 @@ namespace co
         {
             switch (event.type)
             {
+            case sf::Event::MouseMoved:
+            case sf::Event::MouseEntered:
+            case sf::Event::MouseLeft:
+            {
+                sf::Vector2f point(f32t(event.mouseMove.x), f32t(event.mouseMove.y));
+                Box innerBox(*this);
+                innerBox.shrink(getPadding());
+                if (innerBox.contains(point))
+                {
+                    auto innerPoint = getInnerPoint(point);
+                    auto _event = event;
+                    _event.mouseMove.x = innerPoint.x;
+                    _event.mouseMove.y = innerPoint.y;
+                    return holder->child->dispatchEvent(target, _event);
+                }
+            }
             case sf::Event::MouseButtonPressed:
             case sf::Event::MouseButtonReleased:
             {
+                sf::Vector2f point(f32t(event.mouseMove.x), f32t(event.mouseMove.y));
                 Box innerBox(*this);
                 innerBox.shrink(getPadding());
-                if (innerBox.contains({f32t(event.mouseButton.x), f32t(event.mouseButton.y)}))
+                if (innerBox.contains(point))
                 {
-                    auto innerPoint = getInnerPoint({f32t(event.mouseButton.x), f32t(event.mouseButton.y)});
+                    auto innerPoint = getInnerPoint(point);
                     auto _event = event;
                     _event.mouseButton.x = innerPoint.x;
                     _event.mouseButton.y = innerPoint.y;

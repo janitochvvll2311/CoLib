@@ -11,6 +11,26 @@ sf::Texture texture;
 sf::Font font;
 bool _;
 
+class ReactiveSurface : public co::Surface
+{
+
+protected:
+    bool handleEvent(Node *target, const sf::Event &event) override
+    {
+        if (contains({float(event.mouseMove.x), float(event.mouseMove.y)}))
+        {
+            setColor(sf::Color::Green);
+            invalidate();
+        }
+        else
+        {
+            setColor(sf::Color::Red);
+            invalidate();
+        }
+        return false;
+    }
+};
+
 auto makeBackground(const sf::Color &color)
 {
     auto surface = std::make_shared<co::Surface>();
@@ -46,9 +66,10 @@ int main()
     _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
-    auto block = makeBlock(sf::Color::White);
+    auto node = makeBlock(sf::Color::White);
+    node->setBackground(std::make_shared<ReactiveSurface>());
 
-    auto &root = *block;
+    auto &root = *node;
 
     root.compact();
     root.inflate(wsize);
@@ -61,6 +82,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
+            root.dispatchEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
