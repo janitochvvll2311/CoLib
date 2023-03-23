@@ -5,8 +5,8 @@
 #include <CoLib/UI/Node.hpp>
 #include <CoLib/UI/Updatable.hpp>
 #include <CoLib/UI/Surface.hpp>
-// #include <CoLib/UI/Span.hpp>
-// #include <CoLib/UI/Block.hpp>
+#include <CoLib/UI/Span.hpp>
+#include <CoLib/UI/Block.hpp>
 // #include <CoLib/UI/FrameLayout.hpp>
 // #include <CoLib/UI/GroupLayout.hpp>
 // #include <CoLib/UI/AnchorLayout.hpp>

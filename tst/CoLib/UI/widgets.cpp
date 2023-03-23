@@ -3,6 +3,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <CoLib/UI/Surface.hpp>
+#include <CoLib/UI/Span.hpp>
+#include <CoLib/UI/Block.hpp>
 
 sf::Image image;
 sf::Texture texture;
@@ -15,8 +17,26 @@ auto makeBackground(const sf::Color &color)
     _ = texture->loadFromFile("./res/avatar.jpg");
     auto surface = std::make_shared<co::Surface>();
     surface->setColor(color);
-    surface->setTexture(texture);
+    // surface->setTexture(texture);
     return surface;
+}
+
+auto makeSpan(const sf::String &string, const sf::Color &color)
+{
+    auto span = std::make_shared<co::Span>();
+    span->setFont(font);
+    span->setString(string);
+    span->setFillColor(color);
+    return span;
+}
+
+auto makeBlock(const sf::Color &color)
+{
+    auto block = std::make_shared<co::Block>();
+    block->setBackground(makeBackground(color));
+    block->setMargin(10);
+    block->setPadding(10);
+    return block;
 }
 
 int main()
@@ -29,7 +49,9 @@ int main()
     _ = texture.loadFromImage(image);
     _ = font.loadFromFile("./res/grandview.ttf");
 
-    co::Surface root;
+    auto block = makeBlock(sf::Color::White);
+
+    auto &root = *block;
 
     root.compact();
     root.inflate(wsize);

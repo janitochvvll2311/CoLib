@@ -131,6 +131,7 @@ namespace co
                 setTexCoords(m_array, {{0, 0}, tSize});
             }
         }
+        m_isValid = true;
     }
 
 }
