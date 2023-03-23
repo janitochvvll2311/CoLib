@@ -60,6 +60,7 @@ namespace co
                     return holder->child->dispatchEvent(target, _event);
                 }
             }
+            break;
             case sf::Event::MouseButtonPressed:
             case sf::Event::MouseButtonReleased:
             {
@@ -72,6 +73,38 @@ namespace co
                     auto _event = event;
                     _event.mouseButton.x = innerPoint.x;
                     _event.mouseButton.y = innerPoint.y;
+                    return holder->child->dispatchEvent(target, _event);
+                }
+            }
+            break;
+            case sf::Event::MouseWheelScrolled:
+            {
+                sf::Vector2f point(f32t(event.mouseWheelScroll.x), f32t(event.mouseWheelScroll.y));
+                Box innerBox(*this);
+                innerBox.shrink(getPadding());
+                if (innerBox.contains(point))
+                {
+                    auto innerPoint = getInnerPoint(point);
+                    auto _event = event;
+                    _event.mouseWheelScroll.x = innerPoint.x;
+                    _event.mouseWheelScroll.y = innerPoint.y;
+                    return holder->child->dispatchEvent(target, _event);
+                }
+            }
+            break;
+            case sf::Event::TouchBegan:
+            case sf::Event::TouchEnded:
+            case sf::Event::TouchMoved:
+            {
+                sf::Vector2f point(f32t(event.touch.x), f32t(event.touch.y));
+                Box innerBox(*this);
+                innerBox.shrink(getPadding());
+                if (innerBox.contains(point))
+                {
+                    auto innerPoint = getInnerPoint(point);
+                    auto _event = event;
+                    _event.touch.x = innerPoint.x;
+                    _event.touch.y = innerPoint.y;
                     return holder->child->dispatchEvent(target, _event);
                 }
             }
