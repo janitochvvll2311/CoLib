@@ -21,8 +21,8 @@ namespace co
 
     sf::Vector2f VirtualLayout::getInnerPoint(const sf::Vector2f &point) const
     {
-        auto _point = FrameLayout::getInnerPoint(point);
-        return m_transform.getInverse().transformPoint(_point);
+        auto &padding = getPadding();
+        return m_transform.getInverse().transformPoint({point.x - getLeft() - padding.left, point.y - getLeft() - padding.top});
     }
 
     VirtualLayout::VirtualLayout()
@@ -36,33 +36,6 @@ namespace co
     VirtualLayout::~VirtualLayout() {}
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
-
-    void VirtualLayout::onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const
-    {
-        auto holder = getHolder();
-        if (holder)
-        {
-            sf::Vector2f innerSize(getInnerSize());
-            if (innerSize.x > 0 && innerSize.y > 0)
-            {
-                auto drawable = std::dynamic_pointer_cast<sf::Drawable>(holder->child);
-                if (drawable)
-                {
-                    auto _states = states;
-                    _states.transform = m_transform;
-                    m_texture.clear(sf::Color::Transparent);
-                    m_texture.draw(*drawable, _states);
-                    m_texture.display();
-                    //
-                    auto &padding = getPadding();
-                    _states = states;
-                    _states.transform.translate({getLeft() + padding.left, getTop() + padding.top});
-                    _states.texture = &(m_texture.getTexture());
-                    target.draw(m_surface, _states);
-                }
-            }
-        }
-    }
 
     bool VirtualLayout::dispatchChildrenEvents(Node *target, const sf::Event &event) const
     {
@@ -107,8 +80,14 @@ namespace co
         return {0, 0};
     }
 
+    void VirtualLayout::placeContent(const sf::Vector2f &origin) const
+    {
+        FrameLayout::placeContent({0, 0});
+    }
+
     void VirtualLayout::updateContent() const
     {
+        FrameLayout::updateContent();
         auto holder = getHolder();
         if (holder)
         {
@@ -119,6 +98,33 @@ namespace co
                 sf::Vector2f tSize(m_texture.getSize());
                 setTexCoords(m_surface, {{0, 0}, tSize});
                 fitPoints(m_surface, {{0, 0}, innerSize});
+            }
+        }
+    }
+
+    void VirtualLayout::drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const
+    {
+        auto holder = getHolder();
+        if (holder)
+        {
+            sf::Vector2f innerSize(getInnerSize());
+            if (innerSize.x > 0 && innerSize.y > 0)
+            {
+                auto drawable = std::dynamic_pointer_cast<sf::Drawable>(holder->child);
+                if (drawable)
+                {
+                    auto _states = states;
+                    _states.transform = m_transform;
+                    m_texture.clear(sf::Color::Magenta);
+                    m_texture.draw(*drawable, _states);
+                    m_texture.display();
+                    //
+                    auto &padding = getPadding();
+                    _states = states;
+                    _states.transform.translate({getLeft() + padding.left, getTop() + padding.top});
+                    _states.texture = &(m_texture.getTexture());
+                    target.draw(m_surface, _states);
+                }
             }
         }
     }

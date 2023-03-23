@@ -18,16 +18,16 @@ namespace co
         void setInnerTransform(const sf::Transform &value);
 
         bool dispatchChildrenEvents(Node *target, const sf::Event &event) const override;
-        sf::Vector2f getInnerPoint(const sf::Vector2f &point) const override final;
+        sf::Vector2f getInnerPoint(const sf::Vector2f &point) const;
 
         VirtualLayout();
         virtual ~VirtualLayout();
 
     protected:
-        void onDraw(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
-
         sf::Vector2f compactContent() const override final;
+        void placeContent(const sf::Vector2f &origin) const override final;
         void updateContent() const override final;
+        void drawContent(sf::RenderTarget &target, const sf::RenderStates &states) const override final;
 
     private:
         mutable sf::RenderTexture m_texture;

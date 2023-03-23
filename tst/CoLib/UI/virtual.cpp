@@ -159,12 +159,7 @@ int main()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (layout.dispatchEvent(nullptr, event))
-            {
-                // layout.compact();
-                // layout.inflate(wsize);
-                // layout.place({0, 0});
-            }
+            layout.dispatchEvent(nullptr, event);
             switch (event.type)
             {
             case sf::Event::Closed:
@@ -173,9 +168,7 @@ int main()
             case sf::Event::Resized:
                 wsize = sf::Vector2f(window.getSize());
                 window.setView(sf::View(sf::FloatRect({0, 0}, wsize)));
-                layout.compact();
-                layout.inflate(wsize);
-                layout.place({0, 0});
+                layout.invalidate();
                 break;
             case sf::Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Button::Right)
@@ -183,10 +176,19 @@ int main()
                     layout.compact();
                     layout.inflate(cursor);
                     layout.place({0, 0});
+                    layout.update(true);
                 }
                 break;
             }
         }
+
+        if (!layout.isValid())
+        {
+            layout.compact();
+            layout.inflate(wsize);
+            layout.place({0, 0});
+        }
+
         window.clear();
         window.draw(layout);
         window.display();
